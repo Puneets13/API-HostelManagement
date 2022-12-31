@@ -6,14 +6,14 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');   //for encrypting the password to be sent over the server
 
 // define the cloudinary variable 
-// const cloudinary = require('cloudinary').v2;
+const cloudinary = require('cloudinary').v2;
 
 // CONFIGURE THE USER BY TAKING API KEY AND API_SECRET FROM cloudinary offical website
-// cloudinary.config({
-//     cloud_name: 'dytrs9xrm',    //get these values from the cloudinary after login
-//     api_key: '497511148242921',
-//     api_secret: 'Q_600GQHaMngyaWWBfllQRkk-iQ'
-// });
+cloudinary.config({
+    cloud_name: 'dytrs9xrm',    //get these values from the cloudinary after login
+    api_key: '497511148242921',
+    api_secret: 'Q_600GQHaMngyaWWBfllQRkk-iQ'
+});
 
 module.exports.getAllUsers = function (req, res) {
     // fetching all the users from the mongoDB database
@@ -34,17 +34,69 @@ module.exports.getAllUsers = function (req, res) {
         });
 };
 
-
 // to add the file over the server at cloudinary ...add the code there in post function 
 // FUNCTION TO UPLOAD THE IMAGE IN CLOUDINARY
+module.exports.setUserProfile = function (req, res) {
+    console.log(req.body)
+    const file = req.files.photo;
+    cloudinary.uploader.upload(file.tempFilePath, (err, result) => {
+        console.log(result);
+        console.log("image uploaded to cloudinary")
+        var id = req.params.id;
 
-// module.exports.createUser = function (req, res) {
-//     console.log(req.body)
-//     const file = req.files.photo;
-//     cloudinary.uploader.upload(file.tempFilePath, (err, result) => {
-//         console.log(result);
-// }
-// )}
+        // find the user by its id and update the Photo as requested by the user
+        User.findOneAndUpdate({ _id: req.params.id }, {
+            // update on the MongoDB server also with the link of the image
+            $set: {
+                avatar: result.url //USERNAME WILL BE UPDATED BUT NOW SHOWN IN THE RESPONSE SO WE NEET TO FETCH IT FROM DATABASE ITSELF 
+                // OR FROM USER INPUT
+            }
+
+
+        })
+            .then(result1 => {
+                console.log("user Profile Updated");
+                // deleting the previous image from the cloudinary also ...since the result1 also contains the previous avatar not the updated one
+                // so we can get the image url from there and check if it is the default image or other
+                // if deafult then we fill not run this comand else we will remove from cloudinary  
+    const imageURL =result1.avatar;
+    if (imageURL.includes("res.cloudinary.com")) {
+        // trim the image to the specific part requeired to remove it from cloudinary itslef
+        // this will increase the efficiemcy of the cloudinary storage by removing it at the time when the user changes its photo
+                    const urlarr = imageURL.split("/")
+                    const image = urlarr[urlarr.length - 1];
+                    const Imagename = image.split(".")[0];
+                    cloudinary.uploader.destroy(Imagename, (err, result) => {
+                        console.log("image removed from cloduinary");
+                    })
+                }
+
+
+                user = {
+
+                    _id: result1._id,
+                    username: result1.username,
+                    email: result1.email,
+                    avatar: result.url,
+
+                }
+                res.status(200).json({
+                    messsage: 'Image Updated Successfully',
+                    user: user
+                    //the result will not be the updated value but the previous value so we created the new user json 
+
+                });
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json({
+                    Error: err
+                });
+            });
+
+    })
+
+}
 
 
 // THE CREATE FUNCTION BEFORE ADDING THE PICTURE TO CLOUDINARY 
@@ -227,6 +279,46 @@ module.exports.deleteData = function (req, res) {
         })
 }
 
+module.exports.deleteProfile = function (req, res) {
+    const imageURL = req.query.imageURL;
+    const urlarr = imageURL.split("/")
+    console.log(imageURL);
+    const image = urlarr[urlarr.length - 1];
+    const Imagename = image.split(".")[0];
+
+    const id = req.params.id;
+
+    User.findOneAndUpdate({ _id: id }, {
+        $set: {
+            avatar: "https://gravatar.com/avatar/?s=" + 200 + '&d=retro'
+        }
+    })
+        .then(result1 => {
+            console.log("user Profile Updated");
+            // remove from cloudinary too
+            cloudinary.uploader.destroy(Imagename, (err, result) => {
+                console.log(err, result);
+            })
+            user = {
+                _id: req.params.id,
+                username: result1.username,
+                email: result1.email,
+                avatar: "https://gravatar.com/avatar/?s=" + 200 + '&d=retro'  // updating the avatar with the default image so that something is visible 
+            }
+            res.status(200).json({
+                messsage: 'user Profile Updated',
+                user: user   //the result will not be the updated value but the previous value so we created the new user json 
+
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                Error: err
+            });
+        });
+}
+
 
 module.exports.deleteUser = function (req, res) {
     User.remove({ _id: req.params.id })
@@ -278,77 +370,77 @@ module.exports.UpdateUser = function (req, res) {
 
 };
 
-    // FOR UPDATING THE USER PASSWORD  
-    // TO COMPARE PASSWORD <<DONOT HASH THE OLD PASSWORD >>
-    // 2. find the old password with the id entered by the user
-    // 3. to compare hashed password and the password stored in the dDatabase ..use ==>  bcrypt.compare()
-    // 4.Once user got authenticated then findOneAndUpdate() method is used and using id the user is again found
-    // 5. the password is $set:{} and updated 
-    module.exports.updatePassword = function (req, res) {
-     
-                // find the user and compare the password
-                User.findById(req.params.id)
-                    .then(result => {
-                        console.log("userFound");
-                        bcrypt.compare(req.body.oldpassword, result.password, (err, result1) => {
-                            console.log(result1);
-                            if (!result1) {     //if result1 is true  then 
-                                return res.json({
-                                    message: "false",
-                                    error: "Password donot match"
-                                })
-                            } 
-                            if(result1) {
-                                // update the password
-                                // encrypt the new password
-                                // now update the password by encrypting new passsword
-                                bcrypt.hash(req.body.newpassword, 10, async (err, hash) => {
-                                    if (err) {
-                                        return res.status(500).json({
-                                            error: err,
-                                            message: "false"
-                                        })
-                                    } else {
-                                        // set the password using findoneandUpdate
-                                        User.findOneAndUpdate({ _id: req.params.id }, {
-                                            $set: {
-                                                password: hash  //new password
-                                            }
-                                        })
-                                            .then(result => {
-                                                console.log("Password Updated");
-                                                user = {
-                                                    username: result.username,  //since the updated username is not shown on the response body 
-                                                    email: result.email,     //accessing the properties from the result received (result will contain all the properties of user)
-                                                    avatar: result.avatar
-                                                }
-                                                res.status(200).json({
-                                                    error: 'Password Updated Successfully',
-                                                    message:"success",
-                                                    user: user   //the result will not be the updated value but the previous value so we created the new user json 
+// FOR UPDATING THE USER PASSWORD  
+// TO COMPARE PASSWORD <<DONOT HASH THE OLD PASSWORD >>
+// 2. find the old password with the id entered by the user
+// 3. to compare hashed password and the password stored in the dDatabase ..use ==>  bcrypt.compare()
+// 4.Once user got authenticated then findOneAndUpdate() method is used and using id the user is again found
+// 5. the password is $set:{} and updated 
+module.exports.updatePassword = function (req, res) {
 
-                                                });
-                                            })
-                                            .catch(err => {
-                                                console.log(err);
-                                                res.status(500).json({
-                                                    Error: err
-                                                });
-                                            });
-
-                                    }
-                                })
-                            }
-                        })
+    // find the user and compare the password
+    User.findById(req.params.id)
+        .then(result => {
+            console.log("userFound");
+            bcrypt.compare(req.body.oldpassword, result.password, (err, result1) => {
+                console.log(result1);
+                if (!result1) {     //if result1 is true  then 
+                    return res.json({
+                        message: "false",
+                        error: "Password donot match"
                     })
-                    .catch(err => {
-                        console.log(err);
-                        res.status(500).json({
-                            Error: err
-                        });
-                    });
-          
-    }
+                }
+                if (result1) {
+                    // update the password
+                    // encrypt the new password
+                    // now update the password by encrypting new passsword
+                    bcrypt.hash(req.body.newpassword, 10, async (err, hash) => {
+                        if (err) {
+                            return res.status(500).json({
+                                error: err,
+                                message: "false"
+                            })
+                        } else {
+                            // set the password using findoneandUpdate
+                            User.findOneAndUpdate({ _id: req.params.id }, {
+                                $set: {
+                                    password: hash  //new password
+                                }
+                            })
+                                .then(result => {
+                                    console.log("Password Updated");
+                                    user = {
+                                        username: result.username,  //since the updated username is not shown on the response body 
+                                        email: result.email,     //accessing the properties from the result received (result will contain all the properties of user)
+                                        avatar: result.avatar
+                                    }
+                                    res.status(200).json({
+                                        error: 'Password Updated Successfully',
+                                        message: "success",
+                                        user: user   //the result will not be the updated value but the previous value so we created the new user json 
+
+                                    });
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                    res.status(500).json({
+                                        Error: err
+                                    });
+                                });
+
+                        }
+                    })
+                }
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                Error: err
+            });
+        });
+
+}
 
 
 

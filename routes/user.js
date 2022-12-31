@@ -28,7 +28,7 @@ router.delete('/:id', callbackFunctions.deleteUser);
 
 // to delete all the data INCLUDING THE IMAGE AS WELL
 //  QUERY WILL BE USED INSTEAD OF PARAMS HERE FOR DELETING THE IMAGE AS WELLL AS DATA 
-router.delete('/', callbackFunctions.deleteData);
+router.delete('/deleteProfile/:id', callbackFunctions.deleteProfile);
 
 
 
@@ -36,6 +36,8 @@ router.delete('/', callbackFunctions.deleteData);
 router.put('/:id', callbackFunctions.UpdateUser);
 
 router.put('/password/:id',callbackFunctions.updatePassword);
+
+router.post('/uploadProfile/:id',callbackFunctions.setUserProfile);
 
 module.exports = router;
 

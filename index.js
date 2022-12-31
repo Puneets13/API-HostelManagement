@@ -6,7 +6,7 @@ const userRouter = require( './routes/user.js');
 const mongoose = require('mongoose');
 const path = require('path');
 const jwt = require('jsonwebtoken');  //for verifying the login button we include jsonwebtoken
-// const fileupload = require('express-fileupload') //for uploading file on cloudinary (IMAGES UPLOADING)
+const fileupload = require('express-fileupload') //for uploading file on cloudinary (IMAGES UPLOADING)
 const app=express();
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(bodyparser.json());
@@ -19,10 +19,10 @@ mongoose.connect('mongodb+srv://puneet123:puneet123@cluster0.yvfdylg.mongodb.net
 
 
 // // CLOUDINARY
-// // now create the variable for file  uploading
-// app.use(fileupload({
-//     useTempFiles:true
-// }))  //NEXT GO TO user.js in controller file 
+// now create the variable for file  uploading
+app.use(fileupload({
+    useTempFiles:true
+}))  //NEXT GO TO user.js in controller file 
 
 
 // IT IS USED TO DISPLAY THE ERROR IF OCCURED DURING CONNECTION
