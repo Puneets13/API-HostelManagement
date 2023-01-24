@@ -10,20 +10,16 @@ const fileupload = require('express-fileupload') //for uploading file on cloudin
 const app=express();
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(bodyparser.json());
-const PORT = process.env.PORT||5500;
+const PORT = process.env.PORT||1313;
 
-// GET THIS STRING FROM THE CONNECT BUTTON FROM CLUSTER
-// REPLACE THE PASSWORD  WITH THE PASSWORD U SET FOR THE DATABASE IN MONGODB
-// mongodb+srv://admin:<password>@cluster0.d07qcas.mongodb.net/?retryWrites=true&w=majority
-mongoose.connect('mongodb+srv://puneet123:puneet123@cluster0.yvfdylg.mongodb.net/userLoginSystem?retryWrites=true&w=majority');
 
+mongoose.connect('mongodb+srv://admin:admin123@cluster0.ywihdcq.mongodb.net/NITJ_HOSTEL_MANAGEMENT?retryWrites=true&w=majority');
 
 // // CLOUDINARY
 // now create the variable for file  uploading
 app.use(fileupload({
     useTempFiles:true
-}))  //NEXT GO TO user.js in controller file 
-
+}))  
 
 // IT IS USED TO DISPLAY THE ERROR IF OCCURED DURING CONNECTION
 mongoose.connection.on('error',err=>{
@@ -38,9 +34,10 @@ mongoose.connection.on('connected',connected=>{
 
 
 // THE APP WILL CALL ALL THE PATHS THAT ARE WRITTEN IN userRoutes object variable
-app.use('/todo',userRouter);
+app.use('/nitj_hostels',userRouter);
 
-app.get("/todo",(req,res)=>{
+
+app.get("/nitj_hostels",(req,res)=>{
     res.send("hii mesg sent")
 });
 //IN CASE USER WRITE ANY BAD URL THEN ERROR GOT PRINTED

@@ -4,7 +4,6 @@ const userSchema = new mongoose.Schema({
     _id:mongoose.Schema.Types.ObjectId,
     username: {
         type: String,
-        required: true
     },
     avatar:{
         type:String
@@ -16,6 +15,34 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+
+    },  
+    phone: {
+        type: String,
+
+    },
+    address: {
+        type: String,
+
+    },
+    rollNumber: {
+        type: String,
+
+    },
+    year: {
+        type: String,
+
+    },
+    roomNumber: {
+        type: String,
+
+    },
+    branch: {
+        type: String,
+
+    },
+    hostelName: {
+        type: String,
 
     }
 });

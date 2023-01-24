@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken'); //for signup and login facility to verify t
 const User = require('../models/User.js');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');   //for encrypting the password to be sent over the server
+const Hostels = require('../models/Hostels.js');
 
 // define the cloudinary variable 
 const cloudinary = require('cloudinary').v2;
@@ -78,6 +79,9 @@ module.exports.setUserProfile = function (req, res) {
                     username: result1.username,
                     email: result1.email,
                     avatar: result.url,
+                    rollNumber:result1.rollNumber,
+                    phone:result1.phone,
+                    address:result1.address
 
                 }
                 res.status(200).json({
@@ -110,7 +114,7 @@ module.exports.createUser = function (req, res) {
             })
         }
         else {
-            const { username, email, password } = req.body
+            const { username, email} = req.body
             // FUNCTION TO MAKE THE EMAIL ENTER ONLY ONCE IN THE DATABASE 
             let user_exist = await User.findOne({ email: email });
             if (user_exist) {
@@ -130,19 +134,11 @@ module.exports.createUser = function (req, res) {
                     password: hash,
                     username: req.body.username,
                     email: req.body.email,
-                    avatar: avatar
+                    avatar: avatar,
+                    rollNumber:req.body.rollNumber
 
                 });
-                const token = jwt.sign({
-                    username: username,
-                    email: email,
-                    avatar: avatar
-                },
-                    "This is secret key",   //this key is to be used in check_auth file for verification in verify function
-                    {
-                        expiresIn: '24h'
-                    });
-
+               
                 user.save()
                     .then(result => {
                         console.log(result);
@@ -199,16 +195,16 @@ module.exports.loginUser = function (req, res) {
                     let size = 200;
                     let avatar = "https://gravatar.com/avatar/?s=" + size + '&d=retro';
                     console.log("User logged in");
-                    const token = jwt.sign({
-                        username: user[0].username,
-                        email: user[0].email,
-                        avatar: avatar
+                    // const token = jwt.sign({
+                    //     username: user[0].username,
+                    //     email: user[0].email,
+                    //     avatar: avatar
 
-                    },
-                        "This is secret key",   //this key is to be used in check_auth file for verification in verify function
-                        {
-                            expiresIn: '24h'
-                        });
+                    // },
+                    //     "This is secret key",   //this key is to be used in check_auth file for verification in verify function
+                    //     {
+                    //         expiresIn: '24h'
+                    //     });
                     // var user = {
                     //     _id:user[0].ID,
                     //     username: user[0].username,
@@ -219,7 +215,6 @@ module.exports.loginUser = function (req, res) {
                         message: "User logged in",
                         error: "successful",
                         user: user[0],   //to get the 0th index user values out of the array received form find() function
-                        token: token
                     })
 
                 }
@@ -344,16 +339,25 @@ module.exports.deleteUser = function (req, res) {
 module.exports.UpdateUser = function (req, res) {
     User.findOneAndUpdate({ _id: req.params.id }, {
         $set: {
-            username: req.body.username //USERNAME WILL BE UPDATED BUT NOW SHOWN IN THE RESPONSE SO WE NEET TO FETCH IT FROM DATABASE ITSELF 
+            username: req.body.username, //USERNAME WILL BE UPDATED BUT NOW SHOWN IN THE RESPONSE SO WE NEET TO FETCH IT FROM DATABASE ITSELF 
+            phone : req.body.phone,
+            address : req.body.address,
+            branch:req.body.branch
             // OR FROM USER INPUT
         }
     })
         .then(result => {
             console.log("user Updated");
             user = {
+                _id:result._id,
                 username: req.body.username,  //since the updated username is not shown on the response body 
                 email: result.email,     //accessing the properties from the result received (result will contain all the properties of user)
                 avatar: result.avatar,
+                phone : req.body.phone,
+                address : req.body.address,
+                branch:req.body.branch,
+                rollNumber:result.rollNumber
+
             }
             res.status(200).json({
                 messsage: 'user Updated Successfully',
@@ -363,12 +367,14 @@ module.exports.UpdateUser = function (req, res) {
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({
-                Error: err
+            res.json({
+                message:'error'
             });
         });
 
 };
+
+
 
 // FOR UPDATING THE USER PASSWORD  
 // TO COMPARE PASSWORD <<DONOT HASH THE OLD PASSWORD >>
