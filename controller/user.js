@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken'); //for signup and login facility to verify t
 const User = require('../models/User.js');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');   //for encrypting the password to be sent over the server
-const Hostels = require('../models/Hostels.js');
+// const Hostels = require('../models/Hostels.js');
 
 // define the cloudinary variable 
 const cloudinary = require('cloudinary').v2;

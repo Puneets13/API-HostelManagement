@@ -1,21 +1,33 @@
 // DATABASE NAME = userLoginSystem
 // Cluster0
+
 const express = require('express');
 const bodyparser=require('body-parser');
 const userRouter = require( './routes/user.js');
+const userRouter2 = require( './routes/hostel.js');
 const mongoose = require('mongoose');
 const path = require('path');
 const jwt = require('jsonwebtoken');  //for verifying the login button we include jsonwebtoken
 const fileupload = require('express-fileupload') //for uploading file on cloudinary (IMAGES UPLOADING)
+// const GridFsStorage=require('multer-gridfs-storage');
+// const methodOverride= require('method-override');
+// const crypto=require('crypto');
+// const Grid=require('gridfs-stream');
+//depencies
+// const multer=require('multer')
+
 const app=express();
+
+// app.set('view engine','ejs');//
+
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(bodyparser.json());
 const PORT = process.env.PORT||1313;
 
+const mongouri='mongodb+srv://admin:admin123@cluster0.ywihdcq.mongodb.net/NITJ_HOSTEL_MANAGEMENT?retryWrites=true&w=majority';
+mongoose.connect(mongouri);
 
-mongoose.connect('mongodb+srv://admin:admin123@cluster0.ywihdcq.mongodb.net/NITJ_HOSTEL_MANAGEMENT?retryWrites=true&w=majority');
-
-// // CLOUDINARY
+// CLOUDINARY
 // now create the variable for file  uploading
 app.use(fileupload({
     useTempFiles:true
@@ -35,6 +47,7 @@ mongoose.connection.on('connected',connected=>{
 
 // THE APP WILL CALL ALL THE PATHS THAT ARE WRITTEN IN userRoutes object variable
 app.use('/nitj_hostels',userRouter);
+app.use('/nitj_hostels/hostelbook',userRouter2);
 
 
 app.get("/nitj_hostels",(req,res)=>{
