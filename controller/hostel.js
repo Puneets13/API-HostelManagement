@@ -54,12 +54,13 @@ module.exports.registerRoom =  function (req, res) {
 
     
     //---------------------------------------CODE IF SEPARATE ACTIVITY FOR PDF
-        const file = req.files.pdf;
-        var pdfurl;
+        // const file = req.files.pdf;
+        const file = "servlets_tutorial.pdf";
+        var pdfurl="s";
         cloudinary.uploader.upload(file.tempFilePath,{ folder: "NITJ_FEE" }, async (err, pdflink) => {
         // console.log(pdflink);
         console.log("image uploaded to cloudinary")
-        pdfurl=pdflink.url;
+        // pdfurl=pdflink.url;
         console.log(pdfurl);
     let room_exist = await Hostel.findOne({roomNumber:roomNumber});
     let email_exist1=await Hostel.findOne({email1:email})
@@ -68,7 +69,7 @@ module.exports.registerRoom =  function (req, res) {
     let roll_exist2=await Hostel.findOne({rollNumber2:rollNumber})
 
     if(email_exist1||roll_exist1||email_exist2||roll_exist2){
-        return res.json({
+        return res.status(200).json({
             error:"",
             message:"user exist"
         })
@@ -76,7 +77,7 @@ module.exports.registerRoom =  function (req, res) {
 
     if (room_exist) {
         if (room_exist.email2!=null) {
-            res.json({
+            res.status(200).json({
                 error: "",
                 message: "fully filled",
 
@@ -98,9 +99,9 @@ module.exports.registerRoom =  function (req, res) {
                         }
                     })
                         .then(result1 => {
-                            console.log("user Profile Updated");
+                            console.log("2nd user registered");
                             res.status(200).json({
-                                messsage: 'user Profile Updated',
+                                message: 'user two registered',
                                 hostel:result1
                                  //the result will not be the updated value but the previous value so we created the new user json 
                 
@@ -109,8 +110,8 @@ module.exports.registerRoom =  function (req, res) {
                             
                         .catch(err => {
                             console.log(err);
-                            res.status(500).json({
-                                Error: err
+                            res.json({
+                                error: err
                             });
                         });
         }
@@ -146,9 +147,8 @@ module.exports.registerRoom =  function (req, res) {
                                     //     }
                                     res.status(200).json({
                                         message: "success",
-                                        error: "No Error",
+                                        error: "success",
                                         hostel: hostel,
-                                        console1 :pdfurl
                                         // username: req.body.username,
                                         // email: req.body.email
                                     });
@@ -166,24 +166,25 @@ module.exports.registerRoom =  function (req, res) {
                 
 };
 
-// module.exports.getAllUsers = function (req, res) {
-//     // fetching all the users from the mongoDB database
-//     User.find()
-//         .then(result => {
-//             console.log(result);
-//             res.status(200).json({
-//                 users: result,
-//                 error: "successfull"
-//             });
-//         })
-//         .catch(err => {
-//             console.log(err);
-//             res.json({
-//                 error: err,
-//                 message: "false"
-//             });
-//         });
-// };
+module.exports.getAllRooms = function (req, res) {
+    // fetching all the users from the mongoDB database
+    Hostel.find()
+        .then(result => {
+            console.log(result);
+            res.json({
+                message:"successfull",
+                hostels: result,
+                error: "successfull"
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.json({
+                error: err,
+                message: "false"
+            });
+        });
+};
 
 // to add the file over the server at cloudinary ...add the code there in post function 
 // FUNCTION TO UPLOAD THE IMAGE IN CLOUDINARY
