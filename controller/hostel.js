@@ -207,27 +207,28 @@ module.exports.registerRoom =  function (req, res) {
         })
                     
     };
-    
-    module.exports.getAllRooms = function (req, res) {
-        // fetching all the users from the mongoDB database
-        Hostel.find()
-            .then(result => {
-                console.log(result);
-                res.json({
-                    message:"successfull",
-                    hostels: result,
-                    error: "successfull"
-                });
-            })
-            .catch(err => {
-                console.log(err);
-                res.json({
-                    error: err,
-                    message: "false"
-                });
-            });
-    };
+}
 
+
+module.exports.getAllRooms = function (req, res) {
+    // fetching all the users from the mongoDB database
+    Hostel.find()
+        .then(result => {
+            console.log(result);
+            res.json({
+                message:"successfull",
+                hostels: result,
+                error: "successfull"
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.json({
+                error: err,
+                message: "false"
+            });
+        });
+};
 
 // to add the file over the server at cloudinary ...add the code there in post function 
 // FUNCTION TO UPLOAD THE IMAGE IN CLOUDINARY
