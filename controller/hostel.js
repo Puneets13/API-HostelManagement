@@ -52,10 +52,7 @@ module.exports.registerRoom =  function (req, res) {
 
     
     //---------------------------------------CODE IF SEPARATE ACTIVITY FOR PDF
-    module.exports.registerRoom =  function (req, res) {
-        const roomNumber=req.body.roomNumber;
-        const email= req.body.email;
-        const rollNumber= req.body.rollNumber;
+
     
         //---------------------------------------CODE IF SEPARATE ACTIVITY FOR PDF
     
@@ -207,7 +204,7 @@ module.exports.registerRoom =  function (req, res) {
         })
                     
     };
-}
+
 
 
 module.exports.getAllRooms = function (req, res) {
