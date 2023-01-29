@@ -37,4 +37,3 @@ router.post('/uploadProfile/:id',callbackFunctions.setUserProfile);
 
 
 module.exports = router;
-
