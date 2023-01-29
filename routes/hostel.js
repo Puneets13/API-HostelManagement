@@ -2,13 +2,14 @@
 
 const express = require('express');
 const router = express.Router();
-const multer=require('multer');
 
 const callbackFunctions = require('../controller/hostel.js');
 const Hostel = require('../models/Hostel.js');
 
 router.post('/registerRoom',callbackFunctions.registerRoom);
 router.get('/getHostels',callbackFunctions.getAllRooms);
+
+
 module.exports = router;
 
 

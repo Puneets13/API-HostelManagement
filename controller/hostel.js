@@ -96,23 +96,10 @@ module.exports.registerRoom =  function (req, res) {
                         }
                     })
                         .then(result1 => {
-                            console.log("2nd user registered");
-                           var hostel1= {
-                                _id: result1._id,
-                                roomNumber: req.body.roomNumber,
-                                hostelName:req.body.hostelName,
-                                userName2: req.body.userName,
-                                email2: req.body.email,
-                                rollNumber2: req.body.rollNumber,
-                                phone2: req.body.phone,
-                                fatherName2: req.body.fatherName, 
-                                fatherPhone2:req.body.fatherPhone,
-                                address2:req.body.address,
-                                branch2:req.body.branch,
-                              }
+                            console.log("user Profile Updated");
                             res.status(200).json({
-                                message: 'User Registered',
-                                hostel:hostel1
+                                messsage: 'user Profile Updated',
+                                hostel:result1
                                  //the result will not be the updated value but the previous value so we created the new user json 
                 
                             })
@@ -340,24 +327,25 @@ module.exports.getAllRooms = function (req, res) {
                 
 // };
 
-// module.exports.getAllUsers = function (req, res) {
-//     // fetching all the users from the mongoDB database
-//     User.find()
-//         .then(result => {
-//             console.log(result);
-//             res.status(200).json({
-//                 users: result,
-//                 error: "successfull"
-//             });
-//         })
-//         .catch(err => {
-//             console.log(err);
-//             res.json({
-//                 error: err,
-//                 message: "false"
-//             });
-//         });
-// };
+module.exports.getAllRooms = function (req, res) {
+    // fetching all the users from the mongoDB database
+    Hostel.find()
+        .then(result => {
+            console.log(result);
+            res.json({
+                message:"successfull",
+                hostels: result,
+                error: "successfull"
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.json({
+                error: err,
+                message: "false"
+            });
+        });
+};
 
 // to add the file over the server at cloudinary ...add the code there in post function 
 // FUNCTION TO UPLOAD THE IMAGE IN CLOUDINARY
