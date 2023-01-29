@@ -288,7 +288,7 @@ else{
                 //     status:true,
                 //     message:`user email verified successfully`,
                 // })
-                User.findOneAndUpdate({_id:userId,$set:{
+                User.findOneAndUpdate({_id:userId},{$set:{
                     verified:"true"
                 }})
                 .then(result=>{
