@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const UserOTPVerificationSchema = new mongoose.Schema({
     _id:mongoose.Schema.Types.ObjectId,
-    userId: {
+    email: {
         type: String,
     },
     otp:{

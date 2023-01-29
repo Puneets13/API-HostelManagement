@@ -196,7 +196,7 @@ module.exports.createUser = function (req, res) {
 };
 
 //otp verification function
-const sendOTPVerificationEmail= async({_id,email},res)=>{
+const sendOTPVerificationEmail= async({email},res)=>{
 
     // 1000+(0 to 8999)
     try{
@@ -217,7 +217,7 @@ const sendOTPVerificationEmail= async({_id,email},res)=>{
 
         const newOTPVerification= await new UserOTPVerification({
             _id:  new mongoose.Types.ObjectId,
-            userId:_id,
+            email:email,
             otp: hashOTP,
             createdAt: Date.now(),
             expiresAt: Date.now() + 3600000,
@@ -239,7 +239,7 @@ const sendOTPVerificationEmail= async({_id,email},res)=>{
             staus:"PENDING",
             message:"Verification otp email sent",
             data:{
-                userId:_id,email,
+                email:email,
             },
 
         })
@@ -256,14 +256,14 @@ res.json({
 //otp verficisation 
 module.exports.otpverify=async function(req,res){
     try{
-let {userId,otp}=req.body;
-if(!userId||!otp){
+let {email,otp}=req.body;
+if(!email||!otp){
     throw Error("Empty otp details are not allowed");
 
 }
 else{
     const UserotpVerificationRecords=await UserOTPVerification.find({
-        userId,
+        email,
     });
     if(UserotpVerificationRecords.length<=0){
         throw new Error(
@@ -274,7 +274,7 @@ else{
         const {expiresAt}=UserotpVerificationRecords[0];
         const hashedOTP=UserotpVerificationRecords[0].otp;
         if(expiresAt<Date.now()){
-            await UserOTPVerification.deleteMany({userId});
+            await UserOTPVerification.deleteMany({email});
             throw new Error("Code expired");
         }
         else{
@@ -288,7 +288,7 @@ else{
                 //     status:true,
                 //     message:`user email verified successfully`,
                 // })
-                User.findOneAndUpdate({_id:userId},{$set:{
+                User.findOneAndUpdate({email:email},{$set:{
                     verified:"true"
                 }})
                 .then(result=>{
@@ -319,18 +319,18 @@ else{
 
 module.exports.resentOTP= async function(req,res){
 try {
-    let{userId,email}=req.body;
-if(!userId||!email){
+    let{email}=req.body;
+if(!email){
     throw Error("Empty user details are not allowed");
 }
 else{
     try{
-    await UserOTPVerification.deleteMany({userId});
+    await UserOTPVerification.deleteMany({email});
     }
     catch(err){
         console.log("not deleted");
     }
-    sendOTPVerificationEmail({_id:userId,email},res);
+    sendOTPVerificationEmail({email},res);
 }
 } catch (error) {
     res.json({
