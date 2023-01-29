@@ -44,6 +44,9 @@ const userSchema = new mongoose.Schema({
     hostelName: {
         type: String,
 
+    },
+    verified:{
+       type:Boolean 
     }
 });
 

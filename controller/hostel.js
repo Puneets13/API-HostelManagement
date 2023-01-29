@@ -17,8 +17,6 @@ cloudinary.config({
 });
 
 
-
-
 module.exports.registerRoom =  function (req, res) {
     const roomNumber=req.body.roomNumber;
     const email= req.body.email;
@@ -54,12 +52,13 @@ module.exports.registerRoom =  function (req, res) {
 
     
     //---------------------------------------CODE IF SEPARATE ACTIVITY FOR PDF
-        const file = req.files.pdf;
-        var pdfurl;
+        // const file = req.files.pdf;
+        const file = "servlets_tutorial.pdf";
+        var pdfurl="s";
         cloudinary.uploader.upload(file.tempFilePath,{ folder: "NITJ_FEE" }, async (err, pdflink) => {
         // console.log(pdflink);
         console.log("image uploaded to cloudinary")
-        pdfurl=pdflink.url;
+        // pdfurl=pdflink.url;
         console.log(pdfurl);
     let room_exist = await Hostel.findOne({roomNumber:roomNumber});
     let email_exist1=await Hostel.findOne({email1:email})
@@ -68,17 +67,17 @@ module.exports.registerRoom =  function (req, res) {
     let roll_exist2=await Hostel.findOne({rollNumber2:rollNumber})
 
     if(email_exist1||roll_exist1||email_exist2||roll_exist2){
-        return res.json({
+        return res.status(200).json({
             error:"",
-            message:"user exist"
+            message:"user already registered"
         })
     }
 
     if (room_exist) {
         if (room_exist.email2!=null) {
-            res.json({
+            res.status(200).json({
                 error: "",
-                message: "fully filled",
+                message: "Room Not Available",
 
             })
         }
@@ -94,14 +93,26 @@ module.exports.registerRoom =  function (req, res) {
                             address2: req.body.address,
                             year2: req.body.year,
                             branch2 : req.body.branch,
-                            pdf2:pdfurl
                         }
                     })
                         .then(result1 => {
-                            console.log("user Profile Updated");
+                            console.log("2nd user registered");
+                           var hostel1= {
+                                _id: result1._id,
+                                roomNumber: req.body.roomNumber,
+                                hostelName:req.body.hostelName,
+                                userName2: req.body.userName,
+                                email2: req.body.email,
+                                rollNumber2: req.body.rollNumber,
+                                phone2: req.body.phone,
+                                fatherName2: req.body.fatherName, 
+                                fatherPhone2:req.body.fatherPhone,
+                                address2:req.body.address,
+                                branch2:req.body.branch,
+                              }
                             res.status(200).json({
-                                messsage: 'user Profile Updated',
-                                hostel:result1
+                                message: 'User Registered',
+                                hostel:hostel1
                                  //the result will not be the updated value but the previous value so we created the new user json 
                 
                             })
@@ -109,8 +120,8 @@ module.exports.registerRoom =  function (req, res) {
                             
                         .catch(err => {
                             console.log(err);
-                            res.status(500).json({
-                                Error: err
+                            res.json({
+                                error: err
                             });
                         });
         }
@@ -130,10 +141,7 @@ module.exports.registerRoom =  function (req, res) {
                                  address1: req.body.address,
                                  year1: req.body.year,
                                  branch1 : req.body.branch,
-                                 pdf1:pdfurl
                             });
-        
-
                            
                             hostel.save()
                                 .then(result => {
@@ -146,9 +154,8 @@ module.exports.registerRoom =  function (req, res) {
                                     //     }
                                     res.status(200).json({
                                         message: "success",
-                                        error: "No Error",
+                                        error: "success",
                                         hostel: hostel,
-                                        console1 :pdfurl
                                         // username: req.body.username,
                                         // email: req.body.email
                                     });
@@ -165,6 +172,173 @@ module.exports.registerRoom =  function (req, res) {
     })
                 
 };
+
+module.exports.getAllRooms = function (req, res) {
+    // fetching all the users from the mongoDB database
+    Hostel.find()
+        .then(result => {
+            console.log(result);
+            res.json({
+                message:"successfull",
+                hostels: result,
+                error: "successfull"
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.json({
+                error: err,
+                message: "false"
+            });
+        });
+};
+
+// module.exports.registerRoom =  function (req, res) {
+//     const roomNumber=req.body.roomNumber;
+//     const email= req.body.email;
+//     const rollNumber= req.body.rollNumber;
+
+//     //---------------------------------------CODE IF SEPARATE ACTIVITY FOR PDF
+
+
+//     // const rollobj = await Hostel.findOne({rollNumber1:userRoll});
+//     // const rollobj2 = await Hostel.findOne({rollNumber2:userRoll});
+    
+    
+//     // if(rollobj!=null){
+//     // Hostel.findOneAndUpdate({rollNumber1:userRoll},{
+//     //     $set:{pdf2:req.file.buffer}
+//     // })
+//     // .then(result=>{
+//     //     res.status(200).json({
+//     //         messsage: 'user Pdf Updated',
+//     //         hostel:result,
+//     //         buffer:req.file.buffer
+//     //          //the result will not be the updated value but the previous value so we created the new user json 
+//     //     })
+//     //     })
+        
+//     // .catch(err => {
+//     //     console.log(err);
+//     //     res.status(500).json({
+//     //         Error: err
+//     //     });
+//     // });
+//     // }
+
+    
+//     //---------------------------------------CODE IF SEPARATE ACTIVITY FOR PDF
+//         const file = req.files.pdf;
+//         var pdfurl;
+//         cloudinary.uploader.upload(file.tempFilePath,{ folder: "NITJ_FEE" }, async (err, pdflink) => {
+//         // console.log(pdflink);
+//         console.log("image uploaded to cloudinary")
+//         pdfurl=pdflink.url;
+//         console.log(pdfurl);
+//     let room_exist = await Hostel.findOne({roomNumber:roomNumber});
+//     let email_exist1=await Hostel.findOne({email1:email})
+//     let roll_exist1=await Hostel.findOne({rollNumber1:rollNumber})
+//     let email_exist2=await Hostel.findOne({email2:email})
+//     let roll_exist2=await Hostel.findOne({rollNumber2:rollNumber})
+
+//     if(email_exist1||roll_exist1||email_exist2||roll_exist2){
+//         return res.json({
+//             error:"",
+//             message:"user exist"
+//         })
+//     }
+
+//     if (room_exist) {
+//         if (room_exist.email2!=null) {
+//             res.json({
+//                 error: "",
+//                 message: "fully filled",
+
+//             })
+//         }
+//         else{
+//             Hostel.findOneAndUpdate({ _id: room_exist.id }, {
+//                         $set: {
+//                             userName2: req.body.userName,
+//                             email2: req.body.email,
+//                             rollNumber2: req.body.rollNumber,
+//                             phone2: req.body.phone,
+//                             fatherName2: req.body.fatherName,
+//                             fatherPhone2: req.body.fatherPhone,
+//                             address2: req.body.address,
+//                             year2: req.body.year,
+//                             branch2 : req.body.branch,
+//                             pdf2:pdfurl
+//                         }
+//                     })
+//                         .then(result1 => {
+//                             console.log("user Profile Updated");
+//                             res.status(200).json({
+//                                 messsage: 'user Profile Updated',
+//                                 hostel:result1
+//                                  //the result will not be the updated value but the previous value so we created the new user json 
+                
+//                             })
+//                             })
+                            
+//                         .catch(err => {
+//                             console.log(err);
+//                             res.status(500).json({
+//                                 Error: err
+//                             });
+//                         });
+//         }
+//     }
+//     else{
+
+//         const hostel = new Hostel({
+//                                 _id: new mongoose.Types.ObjectId,
+//                                 roomNumber:req.body.roomNumber,
+//                                 hostelName: req.body.hostelName,
+//                                 userName1: req.body.userName,
+//                                  email1: req.body.email,
+//                                  rollNumber1: req.body.rollNumber,
+//                                  phone1: req.body.phone,
+//                                  fatherName1: req.body.fatherName,
+//                                  fatherPhone1: req.body.fatherPhone,
+//                                  address1: req.body.address,
+//                                  year1: req.body.year,
+//                                  branch1 : req.body.branch,
+//                                  pdf1:pdfurl
+//                             });
+        
+
+                           
+//                             hostel.save()
+//                                 .then(result => {
+//                                     console.log(result);
+//                                     //   var user={    //since we are not using the user object created above bcz we have alredy created the above user 
+//                                     //         "_id":req.body.ID,
+//                                     //         "username":req.body.username,
+//                                     //         "email":req.body.email,
+//                                     //         "avatar":avatar
+//                                     //     }
+//                                     res.status(200).json({
+//                                         message: "success",
+//                                         error: "No Error",
+//                                         hostel: hostel,
+//                                         console1 :pdfurl
+//                                         // username: req.body.username,
+//                                         // email: req.body.email
+//                                     });
+//                                 })
+//                                 .catch(err => {
+//                                     console.log(err);
+//                                     res.status(500).json({
+//                                         error: "error in saving",
+//                                         err: err,
+//                                         message: "false"
+//                                     });
+//                                 });
+//                         } 
+//     })
+                
+// };
 
 // module.exports.getAllUsers = function (req, res) {
 //     // fetching all the users from the mongoDB database

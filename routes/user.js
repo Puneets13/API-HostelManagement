@@ -9,6 +9,8 @@ const callbackFunctions = require('../controller/user.js');
 router.get('/fetchUsers', callbackFunctions.getAllUsers);
 
 router.post('/Signup', callbackFunctions.createUser);
+router.post("/verifyOTP",callbackFunctions.otpverify);//otp verifiaction 
+router.post('/resendOTP',callbackFunctions.resentOTP);
 router.post('/login',callbackFunctions.loginUser);
 
 
@@ -23,6 +25,7 @@ router.delete('/:id', callbackFunctions.deleteUser);
 //  QUERY WILL BE USED INSTEAD OF PARAMS HERE FOR DELETING THE IMAGE AS WELLL AS DATA 
 router.delete('/deleteProfile/:id', callbackFunctions.deleteProfile);
 
+//for otp verification
 
 
 // to update the user array Profile
@@ -31,6 +34,7 @@ router.put('/:id', callbackFunctions.UpdateUser);
 router.put('/password/:id',callbackFunctions.updatePassword);
 
 router.post('/uploadProfile/:id',callbackFunctions.setUserProfile);
+
 
 module.exports = router;
 

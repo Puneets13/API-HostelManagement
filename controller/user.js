@@ -1,7 +1,9 @@
 // THIS FILE CONTAINS ALL THE CALLBACK FUNCTIONS OF VARIOUS ROUTES
-
+const nodemailer=require('nodemailer');
 const jwt = require('jsonwebtoken'); //for signup and login facility to verify the user
 const User = require('../models/User.js');
+//for otp verification
+const UserOTPVerification=require('../models/UserOTPVerification')
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');   //for encrypting the password to be sent over the server
 // const Hostels = require('../models/Hostels.js');
@@ -15,7 +17,26 @@ cloudinary.config({
     api_key: '497511148242921',
     api_secret: 'Q_600GQHaMngyaWWBfllQRkk-iQ'
 });
+// nodemailer for otp geeration
+let transporter=nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'nitjhostelsapp@gmail.com',
+        pass:'dlhcqeiiqiicqfqx'
+    }
+})
 
+transporter.verify((error, success)=>{
+    if (error) {
+   console.log(error);
+    } else {
+      console.log('Email sent: ');
+      console.log(success);
+      // do something useful
+    }
+  });
+
+  
 module.exports.getAllUsers = function (req, res) {
     // fetching all the users from the mongoDB database
     User.find()
@@ -135,7 +156,8 @@ module.exports.createUser = function (req, res) {
                     username: req.body.username,
                     email: req.body.email,
                     avatar: avatar,
-                    rollNumber:req.body.rollNumber
+                    rollNumber:req.body.rollNumber,
+                    verified:false
 
                 });
                
@@ -148,14 +170,16 @@ module.exports.createUser = function (req, res) {
                         //         "email":req.body.email,
                         //         "avatar":avatar
                         //     }
-                        res.status(200).json({
-                            message: "success",
-                            error: "No Error",
-                            user: user,
-                            // username: req.body.username,
-                            // email: req.body.email
-                        });
+                        // res.status(200).json({
+                        //     message: "success",
+                        //     error: "No Error",
+                        //     user: user,
+                        //     // username: req.body.username,
+                        //     // email: req.body.email
+                        // });
+                        sendOTPVerificationEmail(result,res);
                     })
+
                     .catch(err => {
                         console.log(err);
                         res.status(500).json({
@@ -171,6 +195,151 @@ module.exports.createUser = function (req, res) {
     })
 };
 
+//otp verification function
+const sendOTPVerificationEmail= async({_id,email},res)=>{
+
+    // 1000+(0 to 8999)
+    try{
+        const otpreal=`${1000+Math.random()*9000}`;
+        const otp=`${Math.floor(otpreal)}`;
+        console.log(otp);
+        //mail
+        const mailOptions ={
+            from:'nitjhostelsapp@gmail.com',
+            to:email,
+            subject:"Verify your email",
+            html:`<p>Enter ${otp} un the app to verify email adress`
+        };
+        console.log(mailOptions)
+                const saltRounds=10;
+        const hashOTP = await  bcrypt.hash(otp,saltRounds);
+        console.log(hashOTP);
+
+        const newOTPVerification= await new UserOTPVerification({
+            _id:  new mongoose.Types.ObjectId,
+            userId:_id,
+            otp: hashOTP,
+            createdAt: Date.now(),
+            expiresAt: Date.now() + 3600000,
+        });
+
+        await newOTPVerification.save()
+        .then(reult=>{
+            console.log("hogya save")
+        })
+        .catch(error=>{
+            console.log("nhi hua save")
+            console.log(error);
+
+            
+        })
+
+        await transporter.sendMail(mailOptions);
+        res.json({
+            staus:"PENDING",
+            message:"Verification otp email sent",
+            data:{
+                userId:_id,email,
+            },
+
+        })
+        
+    }
+    catch(error){
+res.json({
+    status:"failrd",
+    message:"error-msg"
+})
+    }
+}
+
+//otp verficisation 
+module.exports.otpverify=async function(req,res){
+    try{
+let {userId,otp}=req.body;
+if(!userId||!otp){
+    throw Error("Empty otp details are not allowed");
+
+}
+else{
+    const UserotpVerificationRecords=await UserOTPVerification.find({
+        userId,
+    });
+    if(UserotpVerificationRecords.length<=0){
+        throw new Error(
+            "Account record doesnt exist or has been verified already"
+        );
+    }
+    else{
+        const {expiresAt}=UserotpVerificationRecords[0];
+        const hashedOTP=UserotpVerificationRecords[0].otp;
+        if(expiresAt<Date.now()){
+            await UserOTPVerification.deleteMany({userId});
+            throw new Error("Code expired");
+        }
+        else{
+            const validotp=await bcrypt.compare(otp,hashedOTP);
+            if(!validotp){
+                throw new Error("Invalid code passes. Check inbox");
+            }
+            else{
+                // User.updateOne({_id:userId},{verified:true});
+                // res.json({
+                //     status:true,
+                //     message:`user email verified successfully`,
+                // })
+                User.findOneAndUpdate({_id:userId,$set:{
+                    verified:"true"
+                }})
+                .then(result=>{
+                    console.log("updated user verify")
+                    res.json({
+                    status:true,
+                    message:`user email verified successfully`,
+                })
+                })
+                .catch(error=>{
+                    res.json({
+                        error:error.message
+                    })
+                })
+            }
+        }
+    }
+}
+    }
+    catch(error){
+        res.json({
+            status:"failed",
+            message:error.message,
+        })
+    }
+}
+//resnd otp
+
+module.exports.resentOTP= async function(req,res){
+try {
+    let{userId,email}=req.body;
+if(!userId||!email){
+    throw Error("Empty user details are not allowed");
+}
+else{
+    try{
+    await UserOTPVerification.deleteMany({userId});
+    }
+    catch(err){
+        console.log("not deleted");
+    }
+    sendOTPVerificationEmail({_id:userId,email},res);
+}
+} catch (error) {
+    res.json({
+        status:"failed",
+        message:error.message
+    })
+   
+}
+}
 // FUNCTION FOR LOGGING IN USER (REQUIRES JWT INSTALLASTION)
 module.exports.loginUser = function (req, res) {
 
