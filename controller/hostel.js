@@ -143,7 +143,7 @@ module.exports.registerRoom =  function (req, res) {
                                     // branch2:req.body.branch,
                                   }
                                 res.status(200).json({
-                                    message: 'User Registered',
+                                    message: 'success',
                                     hostel:hostel1
                                      //the result will not be the updated value but the previous value so we created the new user json 
                     

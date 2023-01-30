@@ -104,7 +104,8 @@ module.exports.setUserProfile = function (req, res) {
                     avatar: result.url,
                     rollNumber:result1.rollNumber,
                     phone:result1.phone,
-                    address:result1.address
+                    address:result1.address,
+                    branch:result1.branch
 
                 }
                 res.status(200).json({
@@ -219,7 +220,16 @@ const sendOTPVerificationEmail= async({email},res)=>{
             from:'nitjhostelsapp@gmail.com',
             to:email,
             subject:"Verify your email",
-            html:`<p>Enter this OTP ${otp} to verify email adress`
+            html:`
+            <h2>Email Confirmation\n\n</h2>
+            <h2>Welcome to NITJ Hostel Allotment Process\n</h2>
+         
+            <a href= > Enter this OTP ${otp} to verify email address.</a>
+          
+            <p>Thank you for Registering with us.</p>
+            </p>Please confirm your email for registering with NITJ Hostels.</p>`
+        
+
         };
         console.log(mailOptions)
                 const saltRounds=10;
