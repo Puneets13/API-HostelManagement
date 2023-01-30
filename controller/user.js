@@ -2,10 +2,12 @@
 const nodemailer=require('nodemailer');
 const jwt = require('jsonwebtoken'); //for signup and login facility to verify the user
 const User = require('../models/User.js');
+const Hostel= require('../models/Hostel.js');
 //for otp verification
 const UserOTPVerification=require('../models/UserOTPVerification')
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');   //for encrypting the password to be sent over the server
+const { findOne } = require('../models/User.js');
 // const Hostels = require('../models/Hostels.js');
 
 // define the cloudinary variable 
@@ -368,7 +370,7 @@ module.exports.loginUser = function (req, res) {
                     message: "not verified"
                 })
             }
-            bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+            bcrypt.compare(req.body.password, user[0].password, async (err, result) => {
                 if (!result) {
                     return res.json({
                         message: "false",
@@ -396,10 +398,16 @@ module.exports.loginUser = function (req, res) {
                     //     email: user[0].email,
                     //     avatar: avatar[0].avatar,
                     // }
+                    let hostel= await Hostel.findOne({$or:[{email1: req.body.email},{email2:req.body.email}]});
                     res.status(200).json({
                         message: "User logged in",
                         error: "successful",
-                        user: user[0],   //to get the 0th index user values out of the array received form find() function
+                        user: user[0],
+                           //to get the 0th index user values out of the array received form find() function
+                        hostel:{
+                            roomNumber:hostel.roomNumber,
+                           hostelName:hostel.hostelName
+                        }  
                     })
 
                 }
