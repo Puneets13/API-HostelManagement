@@ -399,9 +399,8 @@ module.exports.loginUser = function (req, res) {
                     //     avatar: avatar[0].avatar,
                     // }
                     let hostel= await Hostel.findOne({$or:[{email1: req.body.email},{email2:req.body.email}]});
-                    var hostel1 = {};
                     if(hostel==null){
-                        hostel1={
+                        hostel={
 
                         }
                     }
