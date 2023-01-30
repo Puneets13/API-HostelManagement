@@ -137,8 +137,8 @@ module.exports.createUser = function (req, res) {
         else {
             const { username, email} = req.body
             // FUNCTION TO MAKE THE EMAIL ENTER ONLY ONCE IN THE DATABASE 
-            let user_exist = await User.findOne({ email: email });
-            if (user_exist) {
+            let user_exist_true = await User.findOne({ email: email ,verified:true});
+            if (user_exist_true) {
                 // if we will specify the status then whiile using the API in android ...we can not get the messages as a response 
                 // bcx the status code is set as 500
                 res.json({
@@ -147,7 +147,16 @@ module.exports.createUser = function (req, res) {
 
                 })
             }
+            
             else {
+                let user_exist_false = await User.findOne({ email: email ,verified:false});
+                if(user_exist_false){
+                    await User.deleteMany({email});
+                    await UserOTPVerification.deleteMany({email});
+                    
+                    console.log("deleted pehla wala false");
+                }
+
                 let size = 200;
                 let avatar = "https://gravatar.com/avatar/?s=" + size + '&d=retro';
                 const user = new User({
@@ -208,7 +217,7 @@ const sendOTPVerificationEmail= async({email},res)=>{
             from:'nitjhostelsapp@gmail.com',
             to:email,
             subject:"Verify your email",
-            html:`<p>Enter ${otp} un the app to verify email adress`
+            html:`<p>Enter this OTP ${otp} to verify email adress`
         };
         console.log(mailOptions)
                 const saltRounds=10;
@@ -350,6 +359,13 @@ module.exports.loginUser = function (req, res) {
                 return res.json({
                     error: "user not found",
                     message: "false"
+                })
+            }
+            if (user[0].verified == false) {
+                // soecify return if the error message is to be printed without specifing the status(500) else server will crash
+                return res.json({
+                    error: "please register again",
+                    message: "not verified"
                 })
             }
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
