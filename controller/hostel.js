@@ -130,17 +130,17 @@ module.exports.registerRoom =  function (req, res) {
                             .then(result1 => {
                                 console.log("2nd user registered");
                                var hostel1= {
-                                    _id: result1._id,
+                                    // _id: result1._id,
                                     roomNumber: req.body.roomNumber,
                                     hostelName:req.body.hostelName,
-                                    userName2: req.body.userName,
-                                    email2: req.body.email,
-                                    rollNumber2: req.body.rollNumber,
-                                    phone2: req.body.phone,
-                                    fatherName2: req.body.fatherName, 
-                                    fatherPhone2:req.body.fatherPhone,
-                                    address2:req.body.address,
-                                    branch2:req.body.branch,
+                                    // userName2: req.body.userName,
+                                    // email2: req.body.email,
+                                    // rollNumber2: req.body.rollNumber,
+                                    // phone2: req.body.phone,
+                                    // fatherName2: req.body.fatherName, 
+                                    // fatherPhone2:req.body.fatherPhone,
+                                    // address2:req.body.address,
+                                    // branch2:req.body.branch,
                                   }
                                 res.status(200).json({
                                     message: 'User Registered',
@@ -184,10 +184,15 @@ module.exports.registerRoom =  function (req, res) {
                                         //         "email":req.body.email,
                                         //         "avatar":avatar
                                         //     }
+                                        var hostel1= {
+                                            roomNumber: req.body.roomNumber,
+                                            hostelName:req.body.hostelName,
+                                    
+                                          }
                                         res.status(200).json({
                                             message: "success",
                                             error: "success",
-                                            hostel: hostel,
+                                            hostel: hostel1,
                                             // username: req.body.username,
                                             // email: req.body.email
                                         });

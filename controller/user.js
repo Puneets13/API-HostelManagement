@@ -399,15 +399,23 @@ module.exports.loginUser = function (req, res) {
                     //     avatar: avatar[0].avatar,
                     // }
                     let hostel= await Hostel.findOne({$or:[{email1: req.body.email},{email2:req.body.email}]});
+                    if(hostel==null){
+                        hostel={
+
+                        }
+                    }
+                    if(hostel!=null){
+                        hostel1={
+                            roomNumber:hostel.roomNumber,
+                           hostelName:hostel.hostelName
+                        }  
+                    }
                     res.status(200).json({
                         message: "User logged in",
                         error: "successful",
                         user: user[0],
                            //to get the 0th index user values out of the array received form find() function
-                        hostel:{
-                            roomNumber:hostel.roomNumber,
-                           hostelName:hostel.hostelName
-                        }  
+                        hostel:hostel1 
                     })
 
                 }
