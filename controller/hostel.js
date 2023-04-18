@@ -17,7 +17,7 @@ cloudinary.config({
 });
 
 
-module.exports.registerRoom =  function (req, res) {
+module.exports.registerRoom = async function (req, res) {
     const roomNumber=req.body.roomNumber;
     const email= req.body.email;
     const rollNumber= req.body.rollNumber;
@@ -217,7 +217,7 @@ module.exports.getAllRooms = function (req, res) {
     Hostel.find()
         .then(result => {
             console.log(result);
-            res.json({
+            res.status(200).json({
                 message:"successfull",
                 hostels: result,
                 error: "successfull"
