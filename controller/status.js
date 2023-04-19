@@ -92,10 +92,10 @@ module.exports.proceed= async function (req,res){
 
 }
 
-module.exports.expire= function(req,res){
+module.exports.expire= async function(req,res){
     let roomNumber=req.body.roomNumber;
     let hostelName= req.body.hostelName;
-    let ans = Status.findOne({roomNumber:roomNumber,hostelName:hostelName});
+    let ans = await Status.findOne({roomNumber:roomNumber,hostelName:hostelName});
 
     ans.$set({status:"0"})
     .save().then(result=>{
