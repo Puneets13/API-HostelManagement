@@ -10,6 +10,9 @@ const statusSchema = new mongoose.Schema({
     },
     verified:{
        type:Boolean 
+    },
+    hostelName:{
+        type:String
     }
 });
 

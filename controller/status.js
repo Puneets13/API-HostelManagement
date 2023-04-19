@@ -6,6 +6,7 @@ module.exports.proceed= async function (req,res){
     const roomNumber=req.body.roomNumber;
     const email= req.body.email;
     const rollNumber= req.body.rollNumber;
+    const hostelName=req.body.hostelName;
 
     let room_exist = await Hostel.findOne({roomNumber:roomNumber});  // hostel -room =0,1,2
     let email_exist1=await Hostel.findOne({email1:email})
@@ -25,6 +26,7 @@ module.exports.proceed= async function (req,res){
         const status1 = new Status({
             _id: new mongoose.Types.ObjectId,
             roomNumber:roomNumber,
+            hostelName:hostelName,
            status:1  }); // status set to 1
                       
                        status1.save()
@@ -89,4 +91,36 @@ module.exports.proceed= async function (req,res){
     }
 
 }
+
+module.exports.expire= function(req,res){
+    Status.findOneAndUpdate({roomNumber:roomNumber},{$set:{
+        status:"0",
+    }}).save().then(result=>{
+        res.status(200).json({
+            message:"session expire",
+            error:"failed"
+        })
+    })
+}
+
+
+module.exports.getAllRoomStatus = function (req, res) {
+    // fetching all the users from the mongoDB database
+    Status.find()
+        .then(result => {
+            console.log(result);
+            res.status(200).json({
+                message:"successfull",
+                hostels: result,// list of status as result
+                error: "successfull"
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.json({
+                error: err,
+                message: "false"
+            });
+        });
+};
 
