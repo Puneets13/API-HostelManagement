@@ -10,6 +10,7 @@ router.post('/registerRoom',callbackFunctions.registerRoom);
 router.get('/getHostels',callbackFunctions.getAllRooms);
 
 
+
 module.exports = router;
 
 
