@@ -72,11 +72,11 @@ module.exports.proceed= async function (req,res){
                         console.log(err);
                         res.json({
                             error: err,
-                            message:"catch block"
+                            message:"error in saving"
                         });
                     });
     }
-    else if(room_exist_in_status.status=="0" && room_exist.email2!=null){
+    else if(room_exist_in_status.status=="0" && room_exist.email2!=null && room_exist.email1!=null){
         res.status(200).json({
             message: "fully filled",
             error: "failed"
