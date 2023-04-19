@@ -22,7 +22,7 @@ module.exports.proceed= async function (req,res){
         })
     }
 
-    if(!room_exist_in_status ){   //null in status
+    if((!room_exist_in_status )){   //null in status
         const status1 = new Status({
             _id: new mongoose.Types.ObjectId,
             roomNumber:roomNumber,
@@ -49,6 +49,34 @@ module.exports.proceed= async function (req,res){
 
 
     }
+    else if(room_exist_in_status&&room_exist_in_status.status==0&&!room_exist){
+        Status.findOneAndUpdate({ _id: room_exist_in_status.id }, {
+            //only update by 2nd user when 1st not in working condition
+                    $set: {
+                        status:"1",
+                    }
+                })
+                    .then(result1 => {
+                        console.log("1st user gone");
+                      
+                        res.status(200).json({
+                            message: 'go',
+                            error:'success'
+                        
+                             //the result will not be the updated value but the previous value so we created the new user json 
+            
+                        });
+                        })
+                        
+                    .catch(err => {
+                        console.log(err);
+                        res.json({
+                            error: err,
+                            message:"error in saving"
+                        });
+                    });
+    }
+    
     else if(room_exist_in_status.status=="0" && !room_exist.email2){  
         Status.findOneAndUpdate({ _id: room_exist_in_status.id }, {
             //only update by 2nd user when 1st not in working condition
