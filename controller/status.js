@@ -93,9 +93,12 @@ module.exports.proceed= async function (req,res){
 }
 
 module.exports.expire= function(req,res){
-    Status.findOneAndUpdate({roomNumber:roomNumber},{$set:{
-        status:"0",
-    }}).save().then(result=>{
+    let roomNumber=req.body.roomNumber;
+    let hostelName= req.body.hostelName;
+    let ans = Status.findOne({roomNumber:roomNumber,hostelName:hostelName});
+
+    ans.$set({status:"0"})
+    .save().then(result=>{
         res.status(200).json({
             message:"session expire",
             error:"failed"
@@ -106,6 +109,7 @@ module.exports.expire= function(req,res){
 
 module.exports.getAllRoomStatus = function (req, res) {
     // fetching all the users from the mongoDB database
+
     Status.find()
         .then(result => {
             console.log(result);
