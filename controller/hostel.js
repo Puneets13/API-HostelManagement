@@ -2,6 +2,7 @@
 
 const jwt = require('jsonwebtoken'); //for signup and login facility to verify the user
 const Hostel = require('../models/Hostel.js');
+const Status= require('../models/Status.js');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');   //for encrypting the password to be sent over the server
 // const Hostels = require('../models/Hostels.js');
@@ -85,18 +86,20 @@ module.exports.registerRoom = async function (req, res) {
         
         //---------------------------------------CODE IF SEPARATE ACTIVITY FOR PDF
             // const file = req.files.pdf;
-            const file = "servlets_tutorial.pdf";
-            var pdfurl="s";
-            cloudinary.uploader.upload(file.tempFilePath,{ folder: "NITJ_FEE" }, async (err, pdflink) => {
-            // console.log(pdflink);
-            console.log("image uploaded to cloudinary")
-            // pdfurl=pdflink.url;
-            console.log(pdfurl);
+            // const file = "servlets_tutorial.pdf";
+            // var pdfurl="s";
+            // cloudinary.uploader.upload(file.tempFilePath,{ folder: "NITJ_FEE" }, async (err, pdflink) => {
+            // // console.log(pdflink);
+            // console.log("image uploaded to cloudinary")
+            // // pdfurl=pdflink.url;
+            // console.log(pdfurl);
         let room_exist = await Hostel.findOne({roomNumber:roomNumber});
         let email_exist1=await Hostel.findOne({email1:email})
         let roll_exist1=await Hostel.findOne({rollNumber1:rollNumber})
         let email_exist2=await Hostel.findOne({email2:email})
         let roll_exist2=await Hostel.findOne({rollNumber2:rollNumber})
+        let status_update_room = await Status.findOne({roomNumber:roomNumber})
+         console.log(status_update_room)
     
         if(email_exist1||roll_exist1||email_exist2||roll_exist2){
             return res.status(200).json({
@@ -129,19 +132,18 @@ module.exports.registerRoom = async function (req, res) {
                         })
                             .then(result1 => {
                                 console.log("2nd user registered");
+                                
                                var hostel1= {
-                                    // _id: result1._id,
                                     roomNumber: req.body.roomNumber,
                                     hostelName:req.body.hostelName,
-                                    // userName2: req.body.userName,
-                                    // email2: req.body.email,
-                                    // rollNumber2: req.body.rollNumber,
-                                    // phone2: req.body.phone,
-                                    // fatherName2: req.body.fatherName, 
-                                    // fatherPhone2:req.body.fatherPhone,
-                                    // address2:req.body.address,
-                                    // branch2:req.body.branch,
-                                  }
+                               }
+
+
+                               // newly aded
+                               status_update_room.$set({status:"0"}).save().then(result=>{
+                                console.log(status_update_room)  
+                            })
+                                
                                 res.status(200).json({
                                     message: 'success',
                                     hostel:hostel1
@@ -159,7 +161,7 @@ module.exports.registerRoom = async function (req, res) {
             }
         }
         else{
-    
+        
             const hostel = new Hostel({
                                     _id: new mongoose.Types.ObjectId,
                                     roomNumber:req.body.roomNumber,
@@ -178,17 +180,16 @@ module.exports.registerRoom = async function (req, res) {
                                 hostel.save()
                                     .then(result => {
                                         console.log(result);
-                                        //   var user={    //since we are not using the user object created above bcz we have alredy created the above user 
-                                        //         "_id":req.body.ID,
-                                        //         "username":req.body.username,
-                                        //         "email":req.body.email,
-                                        //         "avatar":avatar
-                                        //     }
+                                
+                                        status_update_room.$set({status:"0"}).save().then(result=>{
+                                            console.log(status_update_room)
+                                        })
+                                       
                                         var hostel1= {
                                             roomNumber: req.body.roomNumber,
                                             hostelName:req.body.hostelName,
-                                    
                                           }
+
                                         res.status(200).json({
                                             message: "success",
                                             error: "success",
@@ -206,7 +207,7 @@ module.exports.registerRoom = async function (req, res) {
                                         });
                                     });
                             } 
-        })
+        // })
                     
     };
 

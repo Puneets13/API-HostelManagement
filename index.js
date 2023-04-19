@@ -5,6 +5,7 @@ const express = require('express');
 const bodyparser=require('body-parser');
 const userRouter = require( './routes/user.js');
 const userRouter2 = require( './routes/hostel.js');
+const userRouter3= require('./routes/status.js');
 const mongoose = require('mongoose');
 const path = require('path');
 const jwt = require('jsonwebtoken');  //for verifying the login button we include jsonwebtoken
@@ -48,6 +49,7 @@ mongoose.connection.on('connected',connected=>{
 // THE APP WILL CALL ALL THE PATHS THAT ARE WRITTEN IN userRoutes object variable
 app.use('/nitj_hostels',userRouter);
 app.use('/nitj_hostels/hostelbook',userRouter2);
+app.use('/nitj_hostels/hostelbook',userRouter3);
 
 
 app.get("/nitj_hostels",(req,res)=>{
