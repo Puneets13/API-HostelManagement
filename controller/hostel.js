@@ -140,7 +140,7 @@ module.exports.registerRoom = async function (req, res) {
 
 
                                // newly aded
-                               status_update_room.$set({status:"0"}).save().then(result=>{
+                               status_update_room.$set({status:"0",nums:"2"}).save().then(result=>{
                                 console.log(status_update_room)  
                             })
                                 
@@ -181,7 +181,9 @@ module.exports.registerRoom = async function (req, res) {
                                     .then(result => {
                                         console.log(result);
                                 
-                                        status_update_room.$set({status:"0"}).save().then(result=>{
+                                        status_update_room.$set({status:"0",
+                                        nums:"1"})
+                                        .save().then(result=>{
                                             console.log(status_update_room)
                                         })
                                        

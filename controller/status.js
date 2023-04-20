@@ -27,6 +27,7 @@ module.exports.proceed= async function (req,res){
             _id: new mongoose.Types.ObjectId,
             roomNumber:roomNumber,
             hostelName:hostelName,
+            nums:"0",
            status:1  }); // status set to 1
            console.log("1nd user gone when status = null");
                        status1.save()
@@ -109,8 +110,6 @@ module.exports.proceed= async function (req,res){
         res.status(200).json({
             message: "fully filled",
             error: "failed"
-
-
         });
     }
     else {

@@ -13,7 +13,12 @@ const statusSchema = new mongoose.Schema({
     },
     hostelName:{
         type:String
+    },
+    
+    nums:{
+        type:String
     }
+    
 });
 
 module.exports = mongoose.model('Status', statusSchema);
