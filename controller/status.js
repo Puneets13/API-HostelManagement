@@ -28,7 +28,7 @@ module.exports.proceed= async function (req,res){
             roomNumber:roomNumber,
             hostelName:hostelName,
            status:1  }); // status set to 1
-                      
+           console.log("1nd user gone when status = null");
                        status1.save()
                               .then(result => {
 
@@ -57,7 +57,7 @@ module.exports.proceed= async function (req,res){
                     }
                 })
                     .then(result1 => {
-                        console.log("1nd user gone");
+                        console.log("1nd user gone when status=0");
                       
                         res.status(200).json({
                             message: 'go',
