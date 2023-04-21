@@ -314,10 +314,15 @@ module.exports.searchbyRoom= async function(req,res){
     }
    
 }
+
+
+
 module.exports.searchbyName= async function(req,res){
     let userName= req.body.userName;
     let hostelName= req.body.hostelName;
-    let objectHostel = await Hostel.find({userName:userName,hostelName:hostelName}); 
+    let objectHostel = await Hostel.find({ $or:[{userName1:userName,hostelName:hostelName},{userName2:userName,hostelName:hostelName}]}); 
+
+console.log("object"+objectHostel);
     if(!objectHostel){
         res.status(200).json({
             message:"no user found",
@@ -327,6 +332,7 @@ module.exports.searchbyName= async function(req,res){
     
     else{
         let num= objectHostel.length;
+        console.log(objectHostel.length);
         let list=[];
         for(let i=0;i<num;i++){
                          if(objectHostel[i].userName1==userName&&objectHostel[i].userName2==userName){
@@ -384,7 +390,7 @@ module.exports.searchbyName= async function(req,res){
                             // it is second person
                         let avatarobj = User.findOne({rollNumber:objectHostel[i].rollNumber2});
                             let person ={
-                                userName: objectHostel[i].userName2,  //since the updated username is not shown on the response body 
+                            userName: objectHostel[i].userName2,  //since the updated username is not shown on the response body 
                             email: objectHostel[i].email2,     //accessing the properties from the result received (result will contain all the properties of user)
                             phone : objectHostel[i].phone2,
                             address : objectHostel[i].address2,
