@@ -8,7 +8,8 @@ const Hostel = require('../models/Hostel.js');
 
 router.post('/registerRoom',callbackFunctions.registerRoom);
 router.get('/getHostels',callbackFunctions.getAllRooms);
-
+router.get('/searchbyRoom',callbackFunctions.searchbyRoom);
+// router.get('/searchbyName',callbackFunctions.searchbyName);
 
 
 module.exports = router;
