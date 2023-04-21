@@ -3,6 +3,7 @@
 const jwt = require('jsonwebtoken'); //for signup and login facility to verify the user
 const Hostel = require('../models/Hostel.js');
 const Status= require('../models/Status.js');
+const User= require('../models/User.js')
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');   //for encrypting the password to be sent over the server
 // const Hostels = require('../models/Hostels.js');
@@ -235,6 +236,158 @@ module.exports.getAllRooms = function (req, res) {
         });
 };
 
+module.exports.searchbyRoom= async function(req,res){
+    let roomNumber= req.body.roomNumber;
+    let hostelName=req.body.hostelName;
+    let objectHostel = await Hostel.findOne({roomNumber:roomNumber,hostelName:hostelName}); 
+    if(!objectHostel){
+        res.status(200).json({
+            message:"no user found",
+            person1:null,
+            person2:null
+        })
+    }
+    else if(!objectHostel.rollNumber2&& objectHostel.rollNumber1){
+
+        let avatarobj = await User.findOne({rollNumber:objectHostel.rollNumber1});
+        let person1={
+            username: objectHostel.username1,  //since the updated username is not shown on the response body 
+            email: objectHostel.email1,     //accessing the properties from the result received (result will contain all the properties of user)
+            phone : objectHostel.phone1,
+            address : objectHostel.address1,
+            branch:objectHostel.branch1,
+            rollNumber:objectHostel.rollNumber1,
+            fatherName:objectHostel.fatherName1,
+            fatherPhone:objectHostel.fatherPhone1,
+            avatar:avatarobj.avatar
+
+        }
+        res.status(200).json({
+            message:"single user found",
+            person1:person1,
+            person2:null
+        })
+    }
+    else if(objectHostel.rollNumber2&& objectHostel.rollNumber1){
+
+        let avatarobj1 = await User.findOne({rollNumber:objectHostel.rollNumber1});
+        let avatarobj2 = await User.findOne({rollNumber:objectHostel.rollNumber1});
+        let person1={
+            username: objectHostel.userName1,  //since the updated username is not shown on the response body 
+            email: objectHostel.email1,     //accessing the properties from the result received (result will contain all the properties of user)
+            phone : objectHostel.phone1,
+            address : objectHostel.address1,
+            branch:objectHostel.branch1,
+            rollNumber:objectHostel.rollNumber1,
+            fatherName:objectHostel.fatherName1,
+            fatherPhone:objectHostel.fatherPhone1,
+            avatar:avatarobj1.avatar
+    
+
+        }
+        let person2={
+            userName: objectHostel.userName2,  //since the updated username is not shown on the response body 
+            email: objectHostel.email2,     //accessing the properties from the result received (result will contain all the properties of user)
+            phone : objectHostel.phone2,
+            address : objectHostel.address2,
+            branch:objectHostel.branch1,
+            rollNumber:objectHostel.rollNumber1,
+            fatherName:objectHostel.fatherName1,
+            fatherPhone:objectHostel.fatherPhone1,
+            avatar:avatarobj2.avatar
+    
+
+        }
+        res.status(200).json({
+            message:"two user found",
+            person1:person1,
+            person2: person2
+        })
+    }
+    else{
+        res.status(500).json({
+            message:"fo",
+            person1:null,
+            person2: null
+        })
+    }
+   
+}
+// module.exports.searchbyName= async function(req,res){
+//     let userName= req.body.userName;
+//     let objectHostel = await Hostel.findAll({userName:userName}); 
+//     if(!objectHostel){
+//         res.status(200).json({
+//             message:"no user found",
+//             list:null
+//         })
+//     }
+//     else if(!objectHostel.rollNumber2&& objectHostel.rollNumber1){
+
+//         let avatarobj = await User.findOne({rollNumber:objectHostel.rollNumber1});
+//         let person1={
+//             username: objectHostel.username1,  //since the updated username is not shown on the response body 
+//             email: objectHostel.email1,     //accessing the properties from the result received (result will contain all the properties of user)
+//             phone : objectHostel.phone1,
+//             address : objectHostel.address1,
+//             branch:objectHostel.branch1,
+//             rollNumber:objectHostel.rollNumber1,
+//             fatherName:objectHostel.fatherName1,
+//             fatherPhone:objectHostel.fatherPhone1,
+//             avatar:avatarobj.avatar
+
+//         }
+//         res.status(200).json({
+//             message:"single user found",
+//             person1:person1,
+//             person2:null
+//         })
+//     }
+//     else if(objectHostel.rollNumber2&& objectHostel.rollNumber1){
+
+//         let avatarobj1 = await User.findOne({rollNumber:objectHostel.rollNumber1});
+//         let avatarobj2 = await User.findOne({rollNumber:objectHostel.rollNumber1});
+//         let person1={
+//             username: objectHostel.username1,  //since the updated username is not shown on the response body 
+//             email: objectHostel.email1,     //accessing the properties from the result received (result will contain all the properties of user)
+//             phone : objectHostel.phone1,
+//             address : objectHostel.address1,
+//             branch:objectHostel.branch1,
+//             rollNumber:objectHostel.rollNumber1,
+//             fatherName:objectHostel.fatherName1,
+//             fatherPhone:objectHostel.fatherPhone1,
+//             avatar:avatarobj1.avatar
+    
+
+//         }
+//         let person2={
+//             userName: objectHostel.userName2,  //since the updated username is not shown on the response body 
+//             email: objectHostel.email2,     //accessing the properties from the result received (result will contain all the properties of user)
+//             phone : objectHostel.phone2,
+//             address : objectHostel.address2,
+//             branch:objectHostel.branch1,
+//             rollNumber:objectHostel.rollNumber1,
+//             fatherName:objectHostel.fatherName1,
+//             fatherPhone:objectHostel.fatherPhone1,
+//             avatar:avatarobj2.avatar
+    
+
+//         }
+//         res.status(200).json({
+//             message:"two user found",
+//             person1:person1,
+//             person2: person2
+//         })
+//     }
+//     else{
+//         res.status(500).json({
+//             message:"fo",
+//             person1:null,
+//             person2: null
+//         })
+//     }
+   
+// }
 // to add the file over the server at cloudinary ...add the code there in post function 
 // FUNCTION TO UPLOAD THE IMAGE IN CLOUDINARY
 // module.exports.setUserProfile = function (req, res) {

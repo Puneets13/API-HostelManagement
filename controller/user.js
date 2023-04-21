@@ -560,7 +560,7 @@ module.exports.UpdateUser = function (req, res) {
     })
         .then(result => {
             console.log("user Updated");
-            user = {
+            let user = {
                 _id:result._id,
                 username: req.body.username,  //since the updated username is not shown on the response body 
                 email: result.email,     //accessing the properties from the result received (result will contain all the properties of user)
