@@ -10,6 +10,7 @@ router.post('/registerRoom',callbackFunctions.registerRoom);
 router.get('/getHostels',callbackFunctions.getAllRooms);
 router.post('/searchbyRoom',callbackFunctions.searchbyRoom);
 router.post('/searchbyName',callbackFunctions.searchbyName);
+router.post('/searchOnlybyName',callbackFunctions.searchOnlybyName);
 
 
 module.exports = router;

@@ -13,7 +13,6 @@ router.post("/verifyOTP",callbackFunctions.otpverify);//otp verifiaction
 router.post('/resendOTP',callbackFunctions.resentOTP);
 router.post('/login',callbackFunctions.loginUser);
 
-
 // to get user with particular id 
 router.get('/:id',callbackFunctions.getUser);
 
