@@ -271,6 +271,7 @@ module.exports.loginUser2 = function (req, res) {
                     
                     res.status(200).json({
                         message: "User logged in",
+                        _id:user[0]._id,
                         username: user[0].username,
                         email: user[0].email,
                         phone: user[0].phone,
