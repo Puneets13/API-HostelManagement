@@ -207,6 +207,85 @@ module.exports.createUser = function (req, res) {
     })
 };
 
+
+//for lab work new function added
+module.exports.createUser2 = function (req, res) {
+    console.log(req.body) 
+
+        bcrypt.hash(req.body.password, 10, (err, hash) => {         //for hashing the password and posting it on the database server
+            console.log("user hashed passsword: " + hash);
+            if (err) {
+                return res.status(500).json({
+                    error: err
+                })
+            }
+            else {
+                const person = new User({
+                    _id: new mongoose.Types.ObjectId,
+                    password: hash,
+                    username: req.body.username,
+                    email: req.body.email,
+
+                });
+                person.save()
+                    .then(result => {
+                        console.log(result);
+                        res.status(200).json({
+                            newUser: result,
+                            message:"true"
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });
+            }
+        })
+
+
+    
+}
+
+
+//login for lab
+module.exports.loginUser2 = function (req, res) {
+
+    User.find({ email: req.body.email }).exec()
+        .then(user => {
+            if (user.length < 1) {
+                res.status(500).json({
+                    errr: "user not found"
+                })
+            }
+            bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+                if (!result) {
+                    return res.status(500).json({
+                        errr: "Incorrect Password"
+                    })
+                }
+                if (result) {
+                    // if result match then create the token
+                    console.log("User logged in");
+                    
+                    res.status(200).json({
+                        message: "User logged in",
+                        username: user[0].username,
+                        email: user[0].email,
+                        phone: user[0].phone
+                         })
+
+                }
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        })
+
+}
 //otp verification function
 const sendOTPVerificationEmail= async({email},res)=>{
 

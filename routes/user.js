@@ -9,6 +9,12 @@ const callbackFunctions = require('../controller/user.js');
 router.get('/fetchUsers', callbackFunctions.getAllUsers);
 
 router.post('/Signup', callbackFunctions.createUser);
+
+
+//Lab work android
+router.post('/Signup2', callbackFunctions.createUser2);
+router.post('/login2',callbackFunctions.loginUser2);
+
 router.post("/verifyOTP",callbackFunctions.otpverify);//otp verifiaction 
 router.post('/resendOTP',callbackFunctions.resentOTP);
 router.post('/login',callbackFunctions.loginUser);
