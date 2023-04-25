@@ -256,13 +256,13 @@ module.exports.loginUser2 = function (req, res) {
         .then(user => {
             if (user.length < 1) {
                 res.status(500).json({
-                    errr: "user not found"
+                    error: "user not found"
                 })
             }
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
                 if (!result) {
                     return res.status(500).json({
-                        errr: "Incorrect Password"
+                        error: "Incorrect Password"
                     })
                 }
                 if (result) {
