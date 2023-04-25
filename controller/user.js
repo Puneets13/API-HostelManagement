@@ -273,7 +273,8 @@ module.exports.loginUser2 = function (req, res) {
                         message: "User logged in",
                         username: user[0].username,
                         email: user[0].email,
-                        phone: user[0].phone
+                        phone: user[0].phone,
+                        error:"none"
                          })
 
                 }
