@@ -2,6 +2,10 @@
 const nodemailer=require('nodemailer');
 const jwt = require('jsonwebtoken'); //for signup and login facility to verify the user
 const User = require('../models/User.js');
+const User2 = require('../models/User2.js');
+
+
+
 const Hostel= require('../models/Hostel.js');
 //for otp verification
 const UserOTPVerification=require('../models/UserOTPVerification')
@@ -212,41 +216,30 @@ module.exports.createUser = function (req, res) {
 module.exports.createUser2 = function (req, res) {
     console.log(req.body) 
 
-        bcrypt.hash(req.body.password, 10, (err, hash) => {         //for hashing the password and posting it on the database server
-            console.log("user hashed passsword: " + hash);
-            if (err) {
-                return res.status(500).json({
-                    error: err
-                })
-            }
-            else {
-                const person = new User({
-                    _id: new mongoose.Types.ObjectId,
-                    password: hash,
-                    username: req.body.username,
-                    email: req.body.email,
+const person =  new User2({
+    _id: new mongoose.Types.ObjectId,
+    userName: req.body.userName,
+    collegeName: req.body.collegeName,
+    rollNumber:req.body.rollNumber
 
-                });
-                person.save()
-                    .then(result => {
-                        console.log(result);
-                        res.status(200).json({
-                            newUser: result,
-                            message:"true"
-                        });
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        res.status(500).json({
-                            error: err
-                        });
-                    });
-            }
-        })
+});
 
-
-    
+person.save()
+.then(result=>{
+    console.log(result);
+    res.status(200).json({
+        newUser: result,
+        message:"true"
+    }); 
+})
+.catch(err=>{
+    console.log(err);
+    res.status(500).json({
+        error: err
+    });
+});   
 }
+
 
 
 //login for lab
