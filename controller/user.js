@@ -85,6 +85,8 @@ module.exports.setUserProfile = function (req, res) {
 
         })
             .then(result1 => {
+
+
                 console.log("user Profile Updated");
                 // deleting the previous image from the cloudinary also ...since the result1 also contains the previous avatar not the updated one
                 // so we can get the image url from there and check if it is the default image or other
@@ -353,6 +355,56 @@ else{
     }
 }
 
+
+
+
+module.exports.resetPassword = async function(req,res){
+    const email = req.body.email;
+    const newpass= req.body.password;
+    
+    let user_exist = await User.findOne({email:req.body.email,verified:true});
+if(!user_exist){
+    console.log("user exist nhi krda");
+     res.json({
+            message:"user not registered",
+            error:"failed"
+        })
+}else{
+    // reset password
+    console.log("user exist krda");
+             // update the password
+                    // encrypt the new password
+                    // now update the password by encrypting new passsword
+                    bcrypt.hash(newpass, 10, async (err, hash) => {
+                        if (err) {
+                            return res.status(500).json({
+                                error: err,
+                                message: "false"
+                            })
+                        } else {
+
+                            User.findOneAndUpdate({email:email},{$set:{
+                                password:hash
+                            }})
+                            .then(result=>{
+                                console.log("Password updated")
+                                res.json({
+                                status:true,
+                                message:`Password updated successfully`,
+                            })
+                            })
+                            .catch(error=>{
+                                res.json({
+                                    error:error.message
+                                })
+                            })
+
+                        }
+                    })
+}
+    
+}
+    
 
 
 
@@ -688,13 +740,6 @@ module.exports.loginUser2 = function (req, res) {
 
 
 
-
-
-
-
-
-
-
 // TO DELETE THE IMAGE FROM THE CLOUDNIARY AS WELL AS FROM MONGODB USE THIS METHOD 
 // QUERY is used for deleteing the image from cloudinary using & , ?
 
@@ -823,6 +868,9 @@ module.exports.UpdateUser = function (req, res) {
         });
 
 };
+
+
+
 
 
 
