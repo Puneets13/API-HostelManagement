@@ -19,6 +19,10 @@ router.post("/verifyOTP",callbackFunctions.otpverify);//otp verifiaction
 router.post('/resendOTP',callbackFunctions.resentOTP);
 router.post('/login',callbackFunctions.loginUser);
 
+
+router.post("/submitForgetPassOTP",callbackFunctions.otpForgetverify);// Forget otp verifiaction 
+router.post("/forgetPass",callbackFunctions.forgetPassword);
+
 // to get user with particular id 
 router.get('/:id',callbackFunctions.getUser);
 

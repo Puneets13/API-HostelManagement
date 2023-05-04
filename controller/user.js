@@ -4,11 +4,11 @@ const jwt = require('jsonwebtoken'); //for signup and login facility to verify t
 const User = require('../models/User.js');
 const User2 = require('../models/User2.js');
 
-
-
 const Hostel= require('../models/Hostel.js');
 //for otp verification
-const UserOTPVerification=require('../models/UserOTPVerification')
+const UserOTPVerification=require('../models/UserOTPVerification');
+
+const UserForgetPassVerification = require('../models/UserForgetpasswordVerifications');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');   //for encrypting the password to be sent over the server
 const { findOne } = require('../models/User.js');
@@ -23,6 +23,8 @@ cloudinary.config({
     api_key: '497511148242921',
     api_secret: 'Q_600GQHaMngyaWWBfllQRkk-iQ'
 });
+
+
 // nodemailer for otp geeration
 let transporter=nodemailer.createTransport({
     service: 'gmail',
@@ -131,6 +133,32 @@ module.exports.setUserProfile = function (req, res) {
 }
 
 
+
+// to forget password
+module.exports.forgetPassword = async function(req,res){
+    let email = req.body.email;
+let user_exist = await User.findOne({email:req.body.email,verified:true});
+if(!user_exist){
+    console.log("user exist nhi krda");
+     res.json({
+            message:"user not registered",
+            error:"failed"
+        })
+}else{
+    console.log("user exist krda");
+    // res.json({
+    //     message:"user exist",
+    //     error:"failed"
+    // })
+    sendForgetOTPVerificationEmail(email,res);
+}
+
+}
+
+
+
+
+
 // THE CREATE FUNCTION BEFORE ADDING THE PICTURE TO CLOUDINARY 
 
 module.exports.createUser = function (req, res) {
@@ -212,76 +240,122 @@ module.exports.createUser = function (req, res) {
 };
 
 
-//for lab work new function added
-module.exports.createUser2 = function (req, res) {
-    console.log(req.body) 
+// Forget password email verification 
+//otp verification function
+const sendForgetOTPVerificationEmail= async(email,res)=>{
 
-const person =  new User2({
-    _id: new mongoose.Types.ObjectId,
-    userName: req.body.userName,
-    collegeName: req.body.collegeName,
-    rollNumber:req.body.rollNumber
+    // 1000+(0 to 8999)
+    try{
+        const otpreal=`${1000+Math.random()*9000}`;
+        const otp=`${Math.floor(otpreal)}`;
+        console.log(otp);
+        //mail
+        const mailOptions ={
+            from:'nitjhostelsapp@gmail.com',
+            to:email,
+            subject:"Reset Your Password",
+            html:`
+            <h2>User Confirmation Mail\n\n</h2>
+            <h2>Welcome to NITJ Hostel Allotment App\n</h2>
+         
+            <a href= > Enter this OTP ${otp} to verification.</a>
+          
+            <p>Submit this OTP for Reseting your password.</p>`
+        };
+        console.log(mailOptions)
+                const saltRounds=10;
+        const hashOTP = await  bcrypt.hash(otp,saltRounds);
+        console.log(hashOTP);
 
-});
+        const newOTPVerification= await new UserForgetPassVerification({
+            _id:  new mongoose.Types.ObjectId,
+            email:email,
+            otp: hashOTP,
+            createdAt: Date.now(),
+            expiresAt: Date.now() + 3600000,
+        });
 
-person.save()
-.then(result=>{
-    console.log(result);
-    res.status(200).json({
-        newUser: result,
-        message:"true"
-    }); 
+        await newOTPVerification.save()
+        .then(reult=>{
+            console.log("hogya save")
+        })
+        .catch(error=>{
+            console.log("nhi hua save")
+            console.log(error);
+
+        })
+
+        await transporter.sendMail(mailOptions);
+        res.json({
+            staus:"PENDING",
+            message:"Verification otp email sent",
+            data:{
+                email:email,
+            },
+
+        })
+        
+    }
+    catch(error){
+res.json({
+    status:"failed",
+    message:"error-msg"
 })
-.catch(err=>{
-    console.log(err);
-    res.status(500).json({
-        error: err
-    });
-});   
+    }
 }
 
 
+//otp verficisation 
+module.exports.otpForgetverify=async function(req,res){
+    try{
+let {email,otp}=req.body;
+if(!email||!otp){
+    throw Error("Empty otp details are not allowed");
 
-//login for lab
-module.exports.loginUser2 = function (req, res) {
-
-    User.find({ email: req.body.email }).exec()
-        .then(user => {
-            if (user.length < 1) {
-                res.status(500).json({
-                    error: "user not found"
+}
+else{
+    const UserotpVerificationRecords=await UserForgetPassVerification.find({
+        email,
+    });
+    if(UserotpVerificationRecords.length<=0){
+        throw new Error(
+            "Account record doesnt exist or has been verified already"
+        );
+    }
+    else{
+        const {expiresAt}=UserotpVerificationRecords[0];
+        const hashedOTP=UserotpVerificationRecords[0].otp;
+        if(expiresAt<Date.now()){
+            await UserOTPVerification.deleteMany({email});
+            throw new Error("Code expired");
+        }
+        else{
+            const validotp=await bcrypt.compare(otp,hashedOTP);
+            if(!validotp){
+                throw new Error("Invalid code passes. Check inbox");
+            }
+            else{
+                console.log("user verified")
+                res.json({
+                    status:true,
+                    message:`user email verified successfully`,
                 })
             }
-            bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-                if (!result) {
-                    return res.status(500).json({
-                        error: "Incorrect Password"
-                    })
-                }
-                if (result) {
-                    // if result match then create the token
-                    console.log("User logged in");
-                    
-                    res.status(200).json({
-                        message: "User logged in",
-                        // _id:user[0]._id,
-                        // username: user[0].username,
-                        // email: user[0].email,
-                        // phone: user[0].phone,
-                        error:"none",
-                        user: user[0]
-                         })
-
-                }
-            })
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: err
-            })
-        })
-
+        }
+    }
 }
+    }
+    catch(error){
+        res.json({
+            status:"failed",
+            message:error.message,
+        })
+    }
+}
+
+
+
+
 //otp verification function
 const sendOTPVerificationEmail= async({email},res)=>{
 
@@ -411,6 +485,9 @@ else{
         })
     }
 }
+
+
+
 //resnd otp
 
 module.exports.resentOTP= async function(req,res){
@@ -531,6 +608,92 @@ module.exports.getUser = function (req, res) {
         });
 
 };
+
+
+
+
+//for lab work new function added
+module.exports.createUser2 = function (req, res) {
+    console.log(req.body) 
+
+const person =  new User2({
+    _id: new mongoose.Types.ObjectId,
+    userName: req.body.userName,
+    collegeName: req.body.collegeName,
+    rollNumber:req.body.rollNumber
+
+});
+
+person.save()
+.then(result=>{
+    console.log(result);
+    res.status(200).json({
+        newUser: result,
+        message:"true"
+    }); 
+})
+.catch(err=>{
+    console.log(err);
+    res.status(500).json({
+        error: err
+    });
+});   
+}
+
+
+
+//login for lab
+module.exports.loginUser2 = function (req, res) {
+
+    User.find({ email: req.body.email }).exec()
+        .then(user => {
+            if (user.length < 1) {
+                res.status(500).json({
+                    error: "user not found"
+                })
+            }
+            bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+                if (!result) {
+                    return res.status(500).json({
+                        error: "Incorrect Password"
+                    })
+                }
+                if (result) {
+                    // if result match then create the token
+                    console.log("User logged in");
+                    
+                    res.status(200).json({
+                        message: "User logged in",
+                        // _id:user[0]._id,
+                        // username: user[0].username,
+                        // email: user[0].email,
+                        // phone: user[0].phone,
+                        error:"none",
+                        user: user[0]
+                         })
+
+                }
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        })
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // TO DELETE THE IMAGE FROM THE CLOUDNIARY AS WELL AS FROM MONGODB USE THIS METHOD 
 // QUERY is used for deleteing the image from cloudinary using & , ?
