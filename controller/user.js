@@ -269,6 +269,13 @@ const sendForgetOTPVerificationEmail= async(email,res)=>{
         const hashOTP = await  bcrypt.hash(otp,saltRounds);
         console.log(hashOTP);
 
+
+let entry_exist = await UserForgetPassVerification.findOne({email:email});
+if(entry_exist){
+    // if entry exists alredy then delete it first then create the new one
+        await UserForgetPassVerification.deleteMany({email});
+}
+
         const newOTPVerification= await new UserForgetPassVerification({
             _id:  new mongoose.Types.ObjectId,
             email:email,
