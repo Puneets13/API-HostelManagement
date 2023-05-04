@@ -328,7 +328,7 @@ else{
         const {expiresAt}=UserotpVerificationRecords[0];
         const hashedOTP=UserotpVerificationRecords[0].otp;
         if(expiresAt<Date.now()){
-            await UserOTPVerification.deleteMany({email});
+            await UserForgetPassVerification.deleteMany({email});
             throw new Error("Code expired");
         }
         else{
