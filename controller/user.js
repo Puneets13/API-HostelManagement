@@ -369,7 +369,7 @@ module.exports.resetPassword = async function(req,res){
     const email = req.body.email;
     const newpass= req.body.password;
     
-    let user_exist = await User.findOne({email:req.body.email,verified:true});
+    let user_exist = await User.findOne({email:email,verified:true});
 if(!user_exist){
     console.log("user exist nhi krda");
      res.json({
