@@ -272,7 +272,7 @@ module.exports.searchbyRoom= async function(req,res){
     else if(objectHostel.rollNumber2&& objectHostel.rollNumber1){
 
         let avatarobj1 = await User.findOne({rollNumber:objectHostel.rollNumber1});
-        let avatarobj2 = await User.findOne({rollNumber:objectHostel.rollNumber1});
+        let avatarobj2 = await User.findOne({rollNumber:objectHostel.rollNumber2});
         let person1={
             userName: objectHostel.userName1,  //since the updated username is not shown on the response body 
             email: objectHostel.email1,     //accessing the properties from the result received (result will contain all the properties of user)
@@ -291,10 +291,10 @@ module.exports.searchbyRoom= async function(req,res){
             email: objectHostel.email2,     //accessing the properties from the result received (result will contain all the properties of user)
             phone : objectHostel.phone2,
             address : objectHostel.address2,
-            branch:objectHostel.branch1,
-            rollNumber:objectHostel.rollNumber1,
-            fatherName:objectHostel.fatherName1,
-            fatherPhone:objectHostel.fatherPhone1,
+            branch:objectHostel.branch2,
+            rollNumber:objectHostel.rollNumber2,
+            fatherName:objectHostel.fatherName2,
+            fatherPhone:objectHostel.fatherPhone2,
             roomNumber:objectHostel.roomNumber,
             avatar:avatarobj2.avatar
     
@@ -339,7 +339,7 @@ let list=[];
                          if(objectHostel[i].userName1==userName&&objectHostel[i].userName2==userName){
                             //it is 1st person
                         let avatarobj1 = await User.findOne({rollNumber:objectHostel[i].rollNumber1});
-                        let avatarobj2 = await User.findOne({rollNumber:objectHostel[i].rollNumber1});
+                        let avatarobj2 = await User.findOne({rollNumber:objectHostel[i].rollNumber2});
                             let person1={
                                 userName: objectHostel[i].userName1,  //since the updated username is not shown on the response body 
                                 email: objectHostel[i].email1,     //accessing the properties from the result received (result will contain all the properties of user)
@@ -358,11 +358,11 @@ let list=[];
                             email: objectHostel[i].email2,     //accessing the properties from the result received (result will contain all the properties of user)
                             phone : objectHostel[i].phone2,
                             address : objectHostel[i].address2,
-                            branch:objectHostel[i].branch1,
-                            rollNumber:objectHostel[i].rollNumber1,
+                            branch:objectHostel[i].branch2,
+                            rollNumber:objectHostel[i].rollNumber2,
                             roomNumber:objectHostel[i].roomNumber,
-                            fatherName:objectHostel[i].fatherName1,
-                            fatherPhone:objectHostel[i].fatherPhone1,
+                            fatherName:objectHostel[i].fatherName2,
+                            fatherPhone:objectHostel[i].fatherPhone2,
                             avatar:avatarobj2.avatar
 
                                 }
@@ -395,11 +395,11 @@ let list=[];
                             email: objectHostel[i].email2,     //accessing the properties from the result received (result will contain all the properties of user)
                             phone : objectHostel[i].phone2,
                             address : objectHostel[i].address2,
-                            branch:objectHostel[i].branch1,
-                            rollNumber:objectHostel[i].rollNumber1,
+                            branch:objectHostel[i].branch2,
+                            rollNumber:objectHostel[i].rollNumber2,
                             roomNumber:objectHostel[i].roomNumber,
-                            fatherName:objectHostel[i].fatherName1,
-                            fatherPhone:objectHostel[i].fatherPhone1,
+                            fatherName:objectHostel[i].fatherName2,
+                            fatherPhone:objectHostel[i].fatherPhone2,
                             avatar:avatarobj.avatar
                                 }
                                 list.push(person);
@@ -464,10 +464,10 @@ console.log("object"+objectHostel);
                             phone : objectHostel[i].phone2,
                             address : objectHostel[i].address2,
                             branch:objectHostel[i].branch1,
-                            rollNumber:objectHostel[i].rollNumber1,
+                            rollNumber:objectHostel[i].rollNumber2,
                             roomNumber:objectHostel[i].roomNumber,
-                            fatherName:objectHostel[i].fatherName1,
-                            fatherPhone:objectHostel[i].fatherPhone1,
+                            fatherName:objectHostel[i].fatherName2,
+                            fatherPhone:objectHostel[i].fatherPhone2,
                             hostelName:objectHostel[i].hostelName,
                             avatar:avatarobj2.avatar
 
@@ -503,10 +503,10 @@ console.log("object"+objectHostel);
                             phone : objectHostel[i].phone2,
                             address : objectHostel[i].address2,
                             branch:objectHostel[i].branch1,
-                            rollNumber:objectHostel[i].rollNumber1,
+                            rollNumber:objectHostel[i].rollNumber2,
                             roomNumber:objectHostel[i].roomNumber,
-                            fatherName:objectHostel[i].fatherName1,
-                            fatherPhone:objectHostel[i].fatherPhone1,
+                            fatherName:objectHostel[i].fatherName2,
+                            fatherPhone:objectHostel[i].fatherPhone2,
                             hostelName:objectHostel[i].hostelName,
                             avatar:avatarobj.avatar
 
@@ -551,7 +551,7 @@ console.log("object"+objectHostel);
                          if(objectHostel[i].rollNumber1&&objectHostel[i].rollNumber2){
                             
                         let avatarobj1 = await User.findOne({rollNumber:objectHostel[i].rollNumber1});
-                        let avatarobj2 = await User.findOne({rollNumber:objectHostel[i].rollNumber1});
+                        let avatarobj2 = await User.findOne({rollNumber:objectHostel[i].rollNumber2});
                             let person1={
                                 username: objectHostel[i].userName1,  //since the updated username is not shown on the response body 
                                 email: objectHostel[i].email1,     //accessing the properties from the result received (result will contain all the properties of user)
@@ -571,11 +571,11 @@ console.log("object"+objectHostel);
                             email: objectHostel[i].email2,     //accessing the properties from the result received (result will contain all the properties of user)
                             phone : objectHostel[i].phone2,
                             address : objectHostel[i].address2,
-                            branch:objectHostel[i].branch1,
-                            rollNumber:objectHostel[i].rollNumber1,
+                            branch:objectHostel[i].branch2,
+                            rollNumber:objectHostel[i].rollNumber2,
                             roomNumber:objectHostel[i].roomNumber,
-                            fatherName:objectHostel[i].fatherName1,
-                            fatherPhone:objectHostel[i].fatherPhone1,
+                            fatherName:objectHostel[i].fatherName2,
+                            fatherPhone:objectHostel[i].fatherPhone2,
                             hostelName:objectHostel[i].hostelName,
                             avatar:avatarobj2.avatar
 
