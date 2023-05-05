@@ -616,6 +616,26 @@ console.log("object"+objectHostel);
 }
 
 
+module.exports.deleteUserList= async function(req,res){
+    const hostelName = req.body.hostelName;
+
+    try{
+        await Hostel.deleteMany({hostelName});
+        await Status.deleteMany({hostelName});
+        res.status(200).json({
+            messsage: 'success'
+        });
+        }
+        catch(err){
+            console.log("not deleted");
+            console.log(err);
+        }
+
+ 
+}
+
+
+
 // to add the file over the server at cloudinary ...add the code there in post function 
 // FUNCTION TO UPLOAD THE IMAGE IN CLOUDINARY
 // module.exports.setUserProfile = function (req, res) {

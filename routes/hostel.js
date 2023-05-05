@@ -12,6 +12,7 @@ router.post('/searchbyRoom',callbackFunctions.searchbyRoom);// room+hostel as in
 router.post('/searchbyName',callbackFunctions.searchbyName);//hostel+name as input =all possible persons in 1 hostel
 router.post('/searchOnlybyName',callbackFunctions.searchOnlybyName); // name  as input=all possible persons in all hostel
 router.post('/searchAllOnehostel',callbackFunctions.searchAllOnehostel);// hostel  as input=all possible persons in that hostel
+router.post('/deleteHostelList',callbackFunctions.deleteUserList);// hostel  as input=all possible persons in that hostel
 
 
 module.exports = router;

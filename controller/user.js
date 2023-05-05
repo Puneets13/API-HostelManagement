@@ -260,7 +260,7 @@ const sendForgetOTPVerificationEmail= async(email,res)=>{
             <h2>User Confirmation Mail\n\n</h2>
             <h2>Welcome to NITJ Hostel Allotment App\n</h2>
          
-            <a href= > Enter this OTP ${otp} to verification.</a>
+            <a href= > Enter this OTP ${otp} for user verification.</a>
           
             <p>Submit this OTP for Reseting your password.</p>`
         };
