@@ -623,7 +623,8 @@ module.exports.deleteUserList= async function(req,res){
         await Hostel.deleteMany({hostelName});
         await Status.deleteMany({hostelName});
         res.status(200).json({
-            messsage: 'success'
+            messsage: 'success',
+            error:'success'
         });
         }
         catch(err){
