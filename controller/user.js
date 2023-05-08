@@ -45,6 +45,42 @@ transporter.verify((error, success)=>{
   });
 
   
+module.exports.sendRegisterationEmail = async function(req,res){
+    const roomNumber = req.body.roomNumber ; 
+    const hostelName = req.body.hostelName;
+    const email = req.body.email;
+    const userName = req.body.userName ;
+    const mailOptions ={
+        from:'nitjhostelsapp@gmail.com',
+        to:email,
+        subject:"Room Registered",
+        html:`
+        \nDear ${userName},
+        <p>\nWe are pleased to inform you that your room registration has been successful.</p>
+        You have been assigned the room number ${roomNumber} at ${hostelName}.
+        <p>\nWe hope that your stay at our hostel will be comfortable and enjoyable, and we look forward to welcoming you soon.</p>
+        <p>\nThank you for choosing ${hostelName}, and we wish you a pleasant experince ahead.</p>
+        \n<p>If you have any further questions or concerns, please do not hesitate to contact us at Hostel Contact Information.</p>
+         \n\nBest regards. `
+    };
+
+    try{
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({
+            message: "successfull"
+        });
+
+    }catch(error){
+           
+        res.status(200).json({
+            message: "failed",
+            error:error
+        });
+
+    }
+
+}
+
 module.exports.getAllUsers = function (req, res) {
     // fetching all the users from the mongoDB database
     User.find()
@@ -262,7 +298,8 @@ const sendForgetOTPVerificationEmail= async(email,res)=>{
          
             <a href= > Enter this OTP ${otp} for user verification.</a>
           
-            <p>Submit this OTP for Reseting your password.</p>`
+            <p>Submit this OTP for Reseting your password.</p>
+            `
         };
         console.log(mailOptions)
                 const saltRounds=10;
