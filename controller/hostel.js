@@ -657,6 +657,9 @@ let list=[];
                         res.status(200).json({
                             message:"user 1 found",
                             hostel:hostel1,
+                            phone : objectHostel[i].phone1,
+                            address : objectHostel[i].address1,
+                            branch:objectHostel[i].branch1,
                             list:person1
                         })
                       
@@ -683,6 +686,9 @@ let list=[];
                         res.status(200).json({
                             message:"user 2 found",
                             hostel:hostel1,
+                            phone : objectHostel[i].phone2,
+                            address : objectHostel[i].address2,
+                            branch:objectHostel[i].branch2,
                             list:person2
                         })
                 }        
