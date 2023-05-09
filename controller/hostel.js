@@ -650,12 +650,16 @@ let list=[];
                             fatherPhone:objectHostel[i].fatherPhone1,
                             avatar:avatarobj1.avatar   
                         }
+                        let hostel1={
+                            roomNumber:roomNumber,
+                            hostelName:hostelName
+                        }  
                         res.status(200).json({
                             message:"user 1 found",
-                            roomNumber : roomNumber,
-                            hostelName:hostelName,
+                            hostel:hostel1,
                             list:person1
                         })
+                      
                 }
 
                 if(objectHostel[i].email2==email){
@@ -672,10 +676,13 @@ let list=[];
                             fatherPhone:objectHostel[i].fatherPhone2,
                             avatar:avatarobj2.avatar   
                         }
+                        let hostel1={
+                            roomNumber:roomNumber,
+                            hostelName:hostelName
+                        }  
                         res.status(200).json({
                             message:"user 2 found",
-                            roomNumber : roomNumber,
-                            hostelName:hostelName,
+                            hostel:hostel1,
                             list:person2
                         })
                 }        
