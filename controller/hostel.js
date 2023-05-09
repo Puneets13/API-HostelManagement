@@ -523,10 +523,6 @@ console.log("object"+objectHostel);
         })
         
     }
-
-
-   
-   
 }
 
 // one hostel everyone 
@@ -616,6 +612,78 @@ console.log("object"+objectHostel);
 }
 
 
+
+// to show the profile of the user 
+module.exports.searchUserbyEmail= async function(req,res){
+    let email= req.body.email;
+    // let hostelName= req.body.hostelName;
+    let objectHostel = await Hostel.find({ $or:[{email1:email},{email2:email}]}); 
+
+console.log("object"+objectHostel);
+let list=[];
+    if(objectHostel.length==0){
+        res.status(200).json({
+            message:"no user found",
+            list:null
+        })
+    }
+    
+    else{
+        let num= objectHostel.length;
+        console.log(objectHostel.length);
+        for(let i=0;i<num;i++){
+                const roomNumber = objectHostel[i].roomNumber;
+                const hostelName = objectHostel[i].hostelName;
+
+
+                if(objectHostel[i].email1==email){
+                    let avatarobj1 = await User.findOne({email:objectHostel[i].email1});
+                        let person1={
+                            userName: objectHostel[i].userName1,  //since the updated username is not shown on the response body 
+                            email: objectHostel[i].email1,     //accessing the properties from the result received (result will contain all the properties of user)
+                            phone : objectHostel[i].phone1,
+                            address : objectHostel[i].address1,
+                            branch:objectHostel[i].branch1,
+                            roomNumber:objectHostel[i].roomNumber,
+                            rollNumber:objectHostel[i].rollNumber1,
+                            fatherName:objectHostel[i].fatherName1,
+                            fatherPhone:objectHostel[i].fatherPhone1,
+                            avatar:avatarobj1.avatar   
+                        }
+                        res.status(200).json({
+                            message:"user 1 found",
+                            roomNumber : roomNumber,
+                            hostelName:hostelName,
+                            list:person1
+                        })
+                }
+
+                if(objectHostel[i].email2==email){
+                    let avatarobj2 = await User.findOne({email:objectHostel[i].email2});
+                        let person2={
+                            userName: objectHostel[i].userName2,  //since the updated username is not shown on the response body 
+                            email: objectHostel[i].email2,     //accessing the properties from the result received (result will contain all the properties of user)
+                            phone : objectHostel[i].phone2,
+                            address : objectHostel[i].address2,
+                            branch:objectHostel[i].branch2,
+                            roomNumber:objectHostel[i].roomNumber,
+                            rollNumber:objectHostel[i].rollNumber2,
+                            fatherName:objectHostel[i].fatherName2,
+                            fatherPhone:objectHostel[i].fatherPhone2,
+                            avatar:avatarobj2.avatar   
+                        }
+                        res.status(200).json({
+                            message:"user 2 found",
+                            roomNumber : roomNumber,
+                            hostelName:hostelName,
+                            list:person2
+                        })
+                }        
+            }  
+    }
+}
+
+
 module.exports.deleteUserList= async function(req,res){
     const hostelName = req.body.hostelName;
 
@@ -634,6 +702,12 @@ module.exports.deleteUserList= async function(req,res){
 
  
 }
+
+
+
+
+
+
 
 
 

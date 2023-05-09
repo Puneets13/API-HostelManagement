@@ -14,6 +14,7 @@ router.post('/searchOnlybyName',callbackFunctions.searchOnlybyName); // name  as
 router.post('/searchAllOnehostel',callbackFunctions.searchAllOnehostel);// hostel  as input=all possible persons in that hostel
 router.post('/deleteHostelList',callbackFunctions.deleteUserList);// hostel  as input=all possible persons in that hostel
 
+router.post('/searchbyEmailProfile',callbackFunctions.searchUserbyEmail); //profile
 
 module.exports = router;
 
