@@ -874,9 +874,7 @@ module.exports.deleteUser = function (req, res) {
 
 };
 
-// USE PUT REQUEST TO UPDATE THE DATA AND TH EUPDATED DATA IS NOT REFLECTED ON THE RESPONSE
-
-// we can either go by ID or by email ...since both are unique in ur case 
+// TO UPDATE THE PROFILE OF THE USER
 module.exports.UpdateUser = function (req, res) {
     User.findOneAndUpdate({ _id: req.params.id }, {
         $set: {
@@ -897,7 +895,8 @@ module.exports.UpdateUser = function (req, res) {
                 phone : req.body.phone,
                 address : req.body.address,
                 branch:req.body.branch,
-                rollNumber:result.rollNumber
+                rollNumber:result.rollNumber,
+                gender:result.gender
 
             }
             res.status(200).json({
