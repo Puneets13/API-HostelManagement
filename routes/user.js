@@ -23,7 +23,7 @@ router.post('/login',callbackFunctions.loginUser);
 router.post("/submitForgetPassOTP",callbackFunctions.otpForgetverify);// Forget otp verifiaction 
 router.post("/forgetPass",callbackFunctions.forgetPassword);
 router.post("/resetPassword",callbackFunctions.resetPassword);
-
+router.post("/hostelbook/sendEmail",callbackFunctions.sendRegisterationEmail);
  
 
 // to get user with particular id 

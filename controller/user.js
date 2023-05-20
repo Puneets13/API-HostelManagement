@@ -45,6 +45,43 @@ transporter.verify((error, success)=>{
   });
 
   
+module.exports.sendRegisterationEmail = async function(req,res){
+    const roomNumber = req.body.roomNumber ; 
+    const hostelName = req.body.hostelName;
+    const email = req.body.email;
+    const userName = req.body.userName ;
+    const mailOptions ={
+        from:'nitjhostelsapp@gmail.com',
+        to:email,
+        subject:"Room Registered",
+        html:`
+        \nDear ${userName},
+        <p>\nWe are pleased to inform you that your room registration has been successful.</p>
+        You have been assigned the room number ${roomNumber} at ${hostelName}.
+        <p>\nWe hope that your stay at our hostel will be comfortable and enjoyable, and we look forward to welcoming you soon.</p>
+        <p>\nThank you for choosing ${hostelName}, and we wish you a pleasant experince ahead.</p>
+        \n<p>If you have any further questions or concerns, please do not hesitate to contact us at Hostel Contact Information.</p>
+         \n\nBest regards.
+         <p>NITJ Hostels </p>`
+    };
+
+    try{
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({
+            message: "successfull"
+        });
+
+    }catch(error){
+           
+        res.status(200).json({
+            message: "failed",
+            error:error
+        });
+
+    }
+
+}
+
 module.exports.getAllUsers = function (req, res) {
     // fetching all the users from the mongoDB database
     User.find()
@@ -258,12 +295,15 @@ const sendForgetOTPVerificationEmail= async(email,res)=>{
             to:email,
             subject:"Reset Your Password",
             html:`
-            <h2>User Confirmation Mail\n\n</h2>
-            <h2>Welcome to NITJ Hostel Allotment App\n</h2>
-         
-            <a href= > Enter this OTP ${otp} to verification.</a>
+            <h3>User Confirmation Mail\n\n</h3>
+            \nDear Student,
+            <a href= >Enter this OTP ${otp} for user verification.</a>
           
-            <p>Submit this OTP for Reseting your password.</p>`
+            <p>Submit this OTP for Reseting your password.</p>
+            \n<p>If you have any further questions or concerns, please do not hesitate to contact us at Hostel Contact Information.</p>
+            Best Regards
+            <p>NITJ Hostels </p>`
+
         };
         console.log(mailOptions)
                 const saltRounds=10;
@@ -430,14 +470,13 @@ const sendOTPVerificationEmail= async({email},res)=>{
             to:email,
             subject:"Verify your email",
             html:`
-            <h2>Email Confirmation\n\n</h2>
-            <h2>Welcome to NITJ Hostel Allotment Process\n</h2>
-         
-            <a href= > Enter this OTP ${otp} to verify email address.</a>
-          
+            <h3>Email Confirmation\n\n</h3>
+            \nDear Student,
+            <a href= > Enter this OTP ${otp} to verify your email address.</a>
+            \n<p>If you have any further questions or concerns, please do not hesitate to contact us at Hostel Contact Information.</p>
             <p>Thank you for Registering with us.</p>
-            </p>Please confirm your email for registering with NITJ Hostels.</p>`
-        
+            Best Regards
+            <p>NITJ Hostels </p>`
 
         };
         console.log(mailOptions)
