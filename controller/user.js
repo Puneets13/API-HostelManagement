@@ -150,7 +150,8 @@ module.exports.setUserProfile = function (req, res) {
                     rollNumber:result1.rollNumber,
                     phone:result1.phone,
                     address:result1.address,
-                    branch:result1.branch
+                    branch:result1.branch,
+                    gender:result1.gender
 
                 }
                 res.status(200).json({
