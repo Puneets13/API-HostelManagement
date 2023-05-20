@@ -209,7 +209,7 @@ module.exports.createUser = function (req, res) {
             })
         }
         else {
-            const { username, email} = req.body
+            const { username, email,gender} = req.body
             // FUNCTION TO MAKE THE EMAIL ENTER ONLY ONCE IN THE DATABASE 
             let user_exist_true = await User.findOne({ email: email ,verified:true});
             if (user_exist_true) {
@@ -239,6 +239,7 @@ module.exports.createUser = function (req, res) {
                     username: req.body.username,
                     email: req.body.email,
                     avatar: avatar,
+                    gender:req.body.gender,
                     rollNumber:req.body.rollNumber,
                     verified:false
 

@@ -45,6 +45,9 @@ const userSchema = new mongoose.Schema({
         type: String,
 
     },
+    gender:{
+        type:String,
+    },
     verified:{
        type:Boolean 
     }
