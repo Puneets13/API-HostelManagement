@@ -45,7 +45,6 @@ mongoose.connection.on('connected',connected=>{
 });
 
 
-
 // THE APP WILL CALL ALL THE PATHS THAT ARE WRITTEN IN userRoutes object variable
 app.use('/nitj_hostels',userRouter);
 app.use('/nitj_hostels/hostelbook',userRouter2);
