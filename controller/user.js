@@ -878,6 +878,7 @@ module.exports.deleteUser = function (req, res) {
 
 // TO UPDATE THE PROFILE OF THE USER
 module.exports.UpdateUser = function (req, res) {
+    let email_whose_user_in_hostel_istobe_updated;
     User.findOneAndUpdate({ _id: req.params.id }, {
         $set: {
             username: req.body.username, //USERNAME WILL BE UPDATED BUT NOW SHOWN IN THE RESPONSE SO WE NEET TO FETCH IT FROM DATABASE ITSELF 
@@ -887,7 +888,7 @@ module.exports.UpdateUser = function (req, res) {
             // OR FROM USER INPUT
         }
     })
-        .then(result => {
+        .then(async result => {
             console.log("user Updated");
             let user = {
                 _id:result._id,
@@ -901,6 +902,37 @@ module.exports.UpdateUser = function (req, res) {
                 gender:result.gender
 
             }
+
+            email_whose_user_in_hostel_istobe_updated=result.email;
+
+            let hh= await Hostel.findOne({$or:[{email1:email_whose_user_in_hostel_istobe_updated},{email2:email_whose_user_in_hostel_istobe_updated}]});
+            let update_name=req.body.username;
+            let update_phone=req.body.phone;
+            let update_branch=req.body.branch;
+            let update_address=req.body.address;
+            
+            if(hh.email1==email_whose_user_in_hostel_istobe_updated){
+                await Hostel.findOneAndUpdate({$or:[{email1:email_whose_user_in_hostel_istobe_updated},{email2:email_whose_user_in_hostel_istobe_updated}]},{
+                    $set:{
+                        userName1:update_name,
+                        phone1:update_phone,
+                        branch1:update_branch,
+                        address1:update_address
+                    }
+                })
+            
+            }
+            else{
+                await Hostel.findOneAndUpdate({$or:[{email1:email_whose_user_in_hostel_istobe_updated},{email2:email_whose_user_in_hostel_istobe_updated}]},{
+                    $set:{
+                        userName2:update_name,
+                        phone2:update_phone,
+                        branch2:update_branch,
+                        address2:update_address
+                    }
+                })
+            }
+        
             res.status(200).json({
                 messsage: 'user Updated Successfully',
                 user: user   //the result will not be the updated value but the previous value so we created the new user json 
@@ -913,6 +945,10 @@ module.exports.UpdateUser = function (req, res) {
                 message:'error'
             });
         });
+
+
+
+          
 
 };
 
