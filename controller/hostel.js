@@ -549,7 +549,7 @@ console.log("object"+objectHostel);
                         let avatarobj1 = await User.findOne({rollNumber:objectHostel[i].rollNumber1});
                         let avatarobj2 = await User.findOne({rollNumber:objectHostel[i].rollNumber2});
                             let person1={
-                                username: objectHostel[i].userName1,  //since the updated username is not shown on the response body 
+                                userName: objectHostel[i].userName1,  //since the updated username is not shown on the response body 
                                 email: objectHostel[i].email1,     //accessing the properties from the result received (result will contain all the properties of user)
                                 phone : objectHostel[i].phone1,
                                 address : objectHostel[i].address1,
