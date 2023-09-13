@@ -7,7 +7,6 @@ const Status = require('../models/Status.js');
 router.post('/proceed',callbackFunctions.proceed);
 router.post('/expire',callbackFunctions.expire);
 router.get('/getAllRoomStatus',callbackFunctions.getAllRoomStatus);
-
-
+router.post('/proceed_single',callbackFunctions.proceed_single);
 
 module.exports = router;
