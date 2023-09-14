@@ -256,7 +256,7 @@ module.exports.proceed_single= async function (req,res){
     else {
         //status 1
         res.status(200).json({
-            message: "booking in process",
+            message: "fully filled",
             error: "failed"
         });
     }
