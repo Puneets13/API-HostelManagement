@@ -8,5 +8,6 @@ router.post('/proceed',callbackFunctions.proceed);
 router.post('/expire',callbackFunctions.expire);
 router.get('/getAllRoomStatus',callbackFunctions.getAllRoomStatus);
 router.post('/proceed_single',callbackFunctions.proceed_single);
+router.post('/destroy',callbackFunctions.simpledestroy);
 
 module.exports = router;

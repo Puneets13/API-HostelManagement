@@ -263,3 +263,19 @@ module.exports.proceed_single= async function (req,res){
 
 }
 
+module.exports.simpledestroy= async function(req,res)
+{
+    const roomNumber=req.body.roomNumber;
+    const hostelName=req.body.hostelName;
+    let ans = await Status.findOne({roomNumber:roomNumber,hostelName:hostelName});
+    ans.$set({status:"0"})
+    .save().then(result=>{
+
+        res.status(200).json({
+            message: "back before",
+            error : "back before"
+        })
+       
+        
+    })
+}
