@@ -541,8 +541,8 @@ else{
         );
     }
     else{
-        const {expiresAt}=UserotpVerificationRecords[0];
-        const hashedOTP=UserotpVerificationRecords[0].otp;
+        const {expiresAt}=UserotpVerificationRecords[UserotpVerificationRecords.length-1];
+        const hashedOTP=UserotpVerificationRecords[UserotpVerificationRecords.length-1].otp;
         if(expiresAt<Date.now()){
             await UserOTPVerification.deleteMany({email});
             throw new Error("Code expired");
