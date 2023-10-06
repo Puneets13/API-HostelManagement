@@ -6,6 +6,8 @@ const bodyparser=require('body-parser');
 const userRouter = require( './routes/user.js');
 const userRouter2 = require( './routes/hostel.js');
 const userRouter3= require('./routes/status.js');
+const userRouter4= require('./routes/mess.js');
+const userRouter5 = require("./routes/constants.js");
 const mongoose = require('mongoose');
 const path = require('path');
 const jwt = require('jsonwebtoken');  //for verifying the login button we include jsonwebtoken
@@ -49,7 +51,8 @@ mongoose.connection.on('connected',connected=>{
 app.use('/nitj_hostels',userRouter);
 app.use('/nitj_hostels/hostelbook',userRouter2);
 app.use('/nitj_hostels/hostelbook',userRouter3);
-
+app.use('/nitj_hostels/hostelbook',userRouter4);
+app.use('/nitj_hostels/hostelbook',userRouter5);
 
 app.get("/nitj_hostels",(req,res)=>{
     res.send("hii mesg sent")
