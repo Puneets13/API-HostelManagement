@@ -17,7 +17,7 @@ const mongoose = require('mongoose');
         if(entry.rollNumber1!=null || entry.rollNumber2 != null){
             if(rollNumber==entry.rollNumber1){
             var hostelUser = {
-                username:entry.userName1,
+                userName:entry.userName1,
                 email: entry.email1,
                 rollNumber:rollNumber,
                 roomNumber:roomNumber,
@@ -27,7 +27,7 @@ const mongoose = require('mongoose');
         }
         else if(rollNumber==entry.rollNumber2){
             var hostelUser = {
-                username:entry.userName2,
+                userName:entry.userName2,
                 email: entry.email2,
                 rollNumber:rollNumber,
                 roomNumber:roomNumber,
