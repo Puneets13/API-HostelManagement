@@ -12,10 +12,37 @@ const mongoose = require('mongoose');
 
         let alreadyexist=await  Mess.findOne({rollNumber:rollNumber});    
         let entry= await Hostel.findOne({ $or:[{rollNumber1:rollNumber},{rollNumber2:rollNumber}]});
+        console.log(entry.rollNumber1+entry.rollNumber2+entry.email1);
+// PUNEET SINGH
+        if(entry.rollNumber1!=null || entry.rollNumber2 != null){
+            if(rollNumber==entry.rollNumber1){
+            var hostelUser = {
+                username:entry.userName1,
+                email: entry.email1,
+                rollNumber:rollNumber,
+                roomNumber:roomNumber,
+                hostelName:hostelName
+            }
+            console.log(hostelUser);
+        }
+        else if(rollNumber==entry.rollNumber2){
+            var hostelUser = {
+                username:entry.userName2,
+                email: entry.email2,
+                rollNumber:rollNumber,
+                roomNumber:roomNumber,
+                hostelName:hostelName
+            }
+            console.log(hostelUser);
+        }
+    }
         if(alreadyexist!=null){
             res.json({
                 message:"already exist",
-                err:"0"
+                err:"0",
+                hostelResponse: hostelUser
+
+                
             })
         }
         else if(entry==null){
@@ -27,7 +54,7 @@ const mongoose = require('mongoose');
         else{
             let currentobj= await Constants.findOne({hostelName:hostelName});
             console.log(currentobj);
-            const money= currentobj.initialAmount;
+            const money= currentobj.initialAmount; // fetched from
             console.log(money);
             let newacc= new Mess({
                 _id: new mongoose.Types.ObjectId,
@@ -35,12 +62,16 @@ const mongoose = require('mongoose');
                 roomNumber:roomNumber,
                 hostelName:hostelName,
                 currentBalance:money
-            })
+            });
 
+          
+            console.log("hostel user"+hostelUser);
             await newacc.save().then(result=>{
                 res.status(200).json({
                     message:"success",
-                    error:"0"
+                    error:"0",
+                    hostelResponse: hostelUser
+
                 })
             })
             .catch(err=>{
