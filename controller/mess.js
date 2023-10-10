@@ -9,14 +9,20 @@ const mongoose = require('mongoose');
         const roomNumber=req.body.roomNumber;
         const rollNumber= req.body.rollNumber;
         const hostelName=req.body.hostelName;
-
+        var hostelUser;
         let alreadyexist=await  Mess.findOne({rollNumber:rollNumber});    
         let entry= await Hostel.findOne({ $or:[{rollNumber1:rollNumber},{rollNumber2:rollNumber}]});
-        console.log(entry.rollNumber1+entry.rollNumber2+entry.email1);
 // PUNEET SINGH
-        if(entry.rollNumber1!=null || entry.rollNumber2 != null){
+            if(entry==null){
+                res.status(200).json({
+                    message:"Hostel not registered",
+                    err:"1"
+                });
+            }
+        else if(entry.rollNumber1!=null || entry.rollNumber2 != null){
+        console.log(entry.rollNumber1+entry.rollNumber2+entry.email1);
             if(rollNumber==entry.rollNumber1){
-            var hostelUser = {
+             hostelUser = {
                 userName:entry.userName1,
                 email: entry.email1,
                 rollNumber:rollNumber,
@@ -26,7 +32,7 @@ const mongoose = require('mongoose');
             console.log(hostelUser);
         }
         else if(rollNumber==entry.rollNumber2){
-            var hostelUser = {
+             hostelUser = {
                 userName:entry.userName2,
                 email: entry.email2,
                 rollNumber:rollNumber,
@@ -35,20 +41,12 @@ const mongoose = require('mongoose');
             }
             console.log(hostelUser);
         }
-    }
+
         if(alreadyexist!=null){
             res.json({
                 message:"already exist",
                 err:"0",
                 hostelResponse: hostelUser
-
-                
-            })
-        }
-        else if(entry==null){
-            res.json({
-                message:"cannot access",
-                err:"1"
             })
         }
         else{
@@ -81,6 +79,9 @@ const mongoose = require('mongoose');
                 })
             })
         }
+
+
+    }
     }
 
     module.exports.getdailymeal=async function (req,res){
