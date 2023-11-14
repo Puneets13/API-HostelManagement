@@ -11,6 +11,9 @@ const constantSchema = new mongoose.Schema({
     hostelName:{
         type:String,
         unique:true
+    },
+    messStartDate:{
+        type:String
     }
 });
 

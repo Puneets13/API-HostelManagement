@@ -29,7 +29,7 @@ app.use(bodyparser.urlencoded({extended:false}));
 app.use(bodyparser.json());
 const PORT = process.env.PORT||1313;
 
-// mongoose.set('strictQuery', false);
+mongoose.set('strictQuery', false);
 
 const mongouri='mongodb+srv://admin:admin123@cluster0.ywihdcq.mongodb.net/NITJ_HOSTEL_MANAGEMENT?retryWrites=true&w=majority';
 mongoose.connect(mongouri);
