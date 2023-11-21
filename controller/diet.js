@@ -51,15 +51,23 @@ module.exports.countDietOfStudent = async function (req, res) {
 
     // Iterate through the retrieved diet records and calculate the total diet
     dietRecords.forEach((record) => {
+      let firstrec=0
       record.meals.forEach((meal) => {
       var month = meal.date.split('-')[1].toString();
          if(month==monthFromConstant && year == yearFromConstant){
-          if(meal.date >= FormattedDate){  // count only when the current date is greater then the mess start date
-            totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-            console.log("i m considered and from START MONTH : "+meal.date)
-          }else{
-            console.log("i m not considered and from START MONTH")
+
+          if(firstrec==0 && (meal.breakfast==0&& meal.lunch==0&& meal.dinner==0)){
           }
+          else{
+            firstrec=1;
+            if(meal.date >= FormattedDate){  // count only when the current date is greater then the mess start date
+              totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
+              console.log("i m considered and from START MONTH : "+meal.date)
+            }else{
+              console.log("i m not considered and from START MONTH")
+            }
+          }
+          
          }else{
           totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
           console.log("i m considered and from other MONTH : "+meal.date)
@@ -111,14 +119,21 @@ module.exports.countDietPerMonth = async function (req, res) {
       console.log("year : " + yearFromConstant)
         
      let totalDiet = 0;
+     console.log("month from front : "+month)
 
      if(monthFromConstant==month && yearFromConstant==year){
       console.log("this is the starting month of mess")
       dietRecords.forEach((record) => {
+      let firstrec=0
         record.meals.forEach((meal) => {
           if(meal.date >= FormattedDate){  // count only when the current date is greater then the mess start date
-            totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-            console.log("i m considered :"+meal.date)
+            if(firstrec==0 && (meal.breakfast==0&& meal.lunch==0&& meal.dinner==0)){
+            }else{
+              firstrec = 1 ;
+              totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
+              console.log("i m considered :"+meal.date)
+            }
+           
           }else{
             console.log("i m not considered")
           }
@@ -185,10 +200,16 @@ module.exports.countDietPerMonthForHostel = async function (req, res) {
     if(monthFromConstant==month && yearFromConstant==year){
       console.log("this is the starting month of mess")
       dietRecords.forEach((record) => {
+      let firstrec=0
         record.meals.forEach((meal) => {
           if(meal.date >= FormattedDate){  // count only when the current date is greater then the mess start date
-            totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-            console.log("i m considered :"+meal.date)
+            if(firstrec==0 && (meal.breakfast==0&& meal.lunch==0&& meal.dinner==0)){
+            }else{
+              firstrec=1;
+              totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
+              console.log("i m considered :"+meal.date)
+            }
+           
           }else{
             console.log("i m not considered")
           }
@@ -776,7 +797,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                     // mark current meal as 1 as he can eat now
                     res.status(200).json({
                       message: "Prev diet not effected, consecutive 3 meals found",
-                      error: "No error",
+                      error: "Leave",
                       scan: "yes"
                     });
                     currentMeal.breakfast = 1;
@@ -810,7 +831,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
                     res.status(200).json({
                       message: "Prev diet effected, consecutive 3 meals not found",
-                      error: "error",
+                      error: "Leave",
                       scan: "yes"
 
                     });
@@ -944,7 +965,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                 }
                 res.status(200).json({
                   message: "Prev diet not effected, consecutive 3 meals found",
-                  error: "No error",
+                  error: "Leave",
                   scan: "yes"
                 });
               } else {
@@ -1060,7 +1081,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                 }
                 res.status(200).json({
                   message: "Prev diet effected, consecutive 3 meals not found",
-                  error: "error",
+                  error: "Leave",
                   scan: "yes"
                 });
 
@@ -1130,7 +1151,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
             console.log('you can scan');
             res.status(200).json({
               message: "you can scan",
-              error: "No error",
+              error: "Leave",
               scan: "yes"
             });
           }
