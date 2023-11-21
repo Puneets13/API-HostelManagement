@@ -14,6 +14,7 @@ const mongoose = require('mongoose');
 //  2 -> on leave 
 
 
+// PUNEET CHANGED HERE
 
 // to count all the diets consumed by the student till Now 
 // for all the months
@@ -60,7 +61,9 @@ module.exports.countDietOfStudent = async function (req, res) {
           }
           else{
             firstrec=1;
-            if(meal.date >= FormattedDate){  // count only when the current date is greater then the mess start date
+           
+            // +6 condition so that while calculatiing the total diets , it will not
+            if(meal.date >= FormattedDate && month <= monthFromConstant+6 && month>= monthFromConstant ){  // count only when the current date is greater then the mess start date
               totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
               console.log("i m considered and from START MONTH : "+meal.date)
             }else{
@@ -76,7 +79,7 @@ module.exports.countDietOfStudent = async function (req, res) {
     });
 
     res.status(200).json({
-      totalDiet,
+       dietCount :totalDiet,
       message: 'Total diet count retrieved successfully',
     });
   } catch (error) {
