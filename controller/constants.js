@@ -32,13 +32,13 @@ module.exports.createConstants=async function (req,res){
     const initialAmount= req.body.initialAmount;
     const dailyDietCharge= req.body.dailyDietCharge;
     const messStartDate = req.body.messStartDate;
+    
     let constantObject2= new Constants({
         _id:new mongoose.Types.ObjectId,
         hostelName:hostelName,
         dailyDietCharge:dailyDietCharge,
         initialAmount:initialAmount,
-        messStartDate:messStartDate
-
+        messStartDate:messStartDate,
     })
 
     constantObject2.save().then(result=>{
