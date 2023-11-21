@@ -16,14 +16,14 @@ const dietRecords= new mongoose.Schema({
     _id:mongoose.Schema.Types.ObjectId,
     rollNumber: {
         type: String,
-    },
+        },
     roomNumber:{
         type:String,
     },
     hostelName:{
-       type:String, 
+       type:String,
     },
-  month: Number, // Month number (e.g., 1 for January)
+    month: Number, // Month number (e.g., 1 for January)
   year: Number, // Year
   meals: [mealSchema], // Array of daily meal data
 
