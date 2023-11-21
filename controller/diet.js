@@ -154,7 +154,7 @@ module.exports.countDietPerMonth = async function (req, res) {
       });
      } 
     res.status(200).json({
-      totalDiet,
+      dietCount: totalDiet,
       message: 'Total diet count retrieved successfully',
     });
   } catch (error) {
@@ -253,7 +253,7 @@ module.exports.countDietPerMonthForHostel = async function (req, res) {
 
 
     res.status(200).json({
-      totalDiet,
+      dietCount:totalDiet,
       message: 'Total diet count retrieved successfully for a month',
     });
   } catch (error) {
