@@ -2,6 +2,7 @@
 const Hostel = require('../models/Hostel.js');
 const Status = require('../models/Status.js');
 const User = require('../models/User.js');
+// const DietRecords = require('../models/diet.js');
 const DietRecords = require('../models/diet.js');
 const Mess = require('../models/Mess.js');
 const Constants = require('../models/Constants.js');
