@@ -8,7 +8,7 @@ const mealSchema = new mongoose.Schema({
    breakfast: Number, // 0 for false, 1 for true
    lunch: Number,     // 0 for false, 1 for true
    dinner: Number,    //
-
+//
 });
 
 
