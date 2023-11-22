@@ -27,7 +27,7 @@ const app=express();
 
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(bodyparser.json());
-const PORT = process.env.PORT||1020;
+const PORT = process.env.PORT||1313;
 
 mongoose.set('strictQuery', false);
 

@@ -27,59 +27,59 @@ module.exports.countDietOfStudent = async function (req, res) {
     const hostelName = req.body.hostelName;
     var messStartDate;
     let constantRecords = await Constants.findOne({ hostelName });
-  
-      messStartDate = constantRecords.messStartDate;
-      console.log("Mess start date found : " + messStartDate);
-      
-      messStartDate = new Date(messStartDate);
-      messStartDate.setDate(messStartDate.getDate());
-      console.log("mess start date : " + messStartDate);
-  
-      const FormattedDate = [
-        messStartDate.getFullYear(),
-        (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
-        messStartDate.getDate().toString().padStart(2, '0')
-      ].join('-');
-  
-      console.log("formated date :" + FormattedDate)
-      var monthFromConstant = FormattedDate.split('-')[1].toString();
-      var yearFromConstant = FormattedDate.split('-')[0].toString();
-      console.log("month : " + monthFromConstant)
-      console.log("year : " + yearFromConstant)
-        
 
-     let totalDiet = 0;
+    messStartDate = constantRecords.messStartDate;
+    console.log("Mess start date found : " + messStartDate);
+
+    messStartDate = new Date(messStartDate);
+    messStartDate.setDate(messStartDate.getDate());
+    console.log("mess start date : " + messStartDate);
+
+    const FormattedDate = [
+      messStartDate.getFullYear(),
+      (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
+      messStartDate.getDate().toString().padStart(2, '0')
+    ].join('-');
+
+    console.log("formated date :" + FormattedDate)
+    var monthFromConstant = FormattedDate.split('-')[1].toString();
+    var yearFromConstant = FormattedDate.split('-')[0].toString();
+    console.log("month : " + monthFromConstant)
+    console.log("year : " + yearFromConstant)
+
+
+    let totalDiet = 0;
 
     // Iterate through the retrieved diet records and calculate the total diet
     dietRecords.forEach((record) => {
-      let firstrec=0
+      let firstrec = 0
       record.meals.forEach((meal) => {
-      var month = meal.date.split('-')[1].toString();
-         if(month==monthFromConstant && year == yearFromConstant){
+        var month = meal.date.split('-')[1].toString();
+        if (month == monthFromConstant && year == yearFromConstant) {
 
-          if(firstrec==0 && (meal.breakfast==0&& meal.lunch==0&& meal.dinner==0)){
+          if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
           }
-          else{
-            firstrec=1;
-           
+          else {
+            firstrec = 1;
+
             // +6 condition so that while calculatiing the total diets , it will not
-            if(meal.date >= FormattedDate && month <= monthFromConstant+6 && month>= monthFromConstant ){  // count only when the current date is greater then the mess start date
+            if (meal.date >= FormattedDate && month <= monthFromConstant + 6 && month >= monthFromConstant) {  // count only when the current date is greater then the mess start date
               totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-              console.log("i m considered and from START MONTH : "+meal.date)
-            }else{
+              console.log("i m considered and from START MONTH : " + meal.date)
+            } else {
               console.log("i m not considered and from START MONTH")
             }
           }
-          
-         }else{
+
+        } else {
           totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-          console.log("i m considered and from other MONTH : "+meal.date)
-         }
+          console.log("i m considered and from other MONTH : " + meal.date)
+        }
       });
     });
 
     res.status(200).json({
-       dietCount :totalDiet,
+      dietCount: totalDiet,
       message: 'Total diet count retrieved successfully',
     });
   } catch (error) {
@@ -101,58 +101,58 @@ module.exports.countDietPerMonth = async function (req, res) {
     const hostelName = req.body.hostelName;
     var messStartDate;
     let constantRecords = await Constants.findOne({ hostelName });
-  
-      messStartDate = constantRecords.messStartDate;
-      console.log("Mess start date found : " + messStartDate);
-      
-      messStartDate = new Date(messStartDate);
-      messStartDate.setDate(messStartDate.getDate());
-      console.log("mess start date : " + messStartDate);
-  
-      const FormattedDate = [
-        messStartDate.getFullYear(),
-        (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
-        messStartDate.getDate().toString().padStart(2, '0')
-      ].join('-');
-  
-      console.log("formated date :" + FormattedDate)
-      var monthFromConstant = FormattedDate.split('-')[1].toString();
-      var yearFromConstant = FormattedDate.split('-')[0].toString();
-      console.log("month : " + monthFromConstant)
-      console.log("year : " + yearFromConstant)
-        
-     let totalDiet = 0;
-     console.log("month from front : "+month)
 
-     if(monthFromConstant==month && yearFromConstant==year){
+    messStartDate = constantRecords.messStartDate;
+    console.log("Mess start date found : " + messStartDate);
+
+    messStartDate = new Date(messStartDate);
+    messStartDate.setDate(messStartDate.getDate());
+    console.log("mess start date : " + messStartDate);
+
+    const FormattedDate = [
+      messStartDate.getFullYear(),
+      (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
+      messStartDate.getDate().toString().padStart(2, '0')
+    ].join('-');
+
+    console.log("formated date :" + FormattedDate)
+    var monthFromConstant = FormattedDate.split('-')[1].toString();
+    var yearFromConstant = FormattedDate.split('-')[0].toString();
+    console.log("month : " + monthFromConstant)
+    console.log("year : " + yearFromConstant)
+
+    let totalDiet = 0;
+    console.log("month from front : " + month)
+
+    if (monthFromConstant == month && yearFromConstant == year) {
       console.log("this is the starting month of mess")
       dietRecords.forEach((record) => {
-      let firstrec=0
+        let firstrec = 0
         record.meals.forEach((meal) => {
-          if(meal.date >= FormattedDate){  // count only when the current date is greater then the mess start date
-            if(firstrec==0 && (meal.breakfast==0&& meal.lunch==0&& meal.dinner==0)){
-            }else{
-              firstrec = 1 ;
+          if (meal.date >= FormattedDate) {  // count only when the current date is greater then the mess start date
+            if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
+            } else {
+              firstrec = 1;
               totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-              console.log("i m considered :"+meal.date)
+              console.log("i m considered :" + meal.date)
             }
-           
-          }else{
+
+          } else {
             console.log("i m not considered")
           }
         });
       });
 
-     }else{
-   // Iterate through the retrieved diet records and calculate the total diet
-   console.log("this is not the starting month of mess")
-        dietRecords.forEach((record) => {
+    } else {
+      // Iterate through the retrieved diet records and calculate the total diet
+      console.log("this is not the starting month of mess")
+      dietRecords.forEach((record) => {
         record.meals.forEach((meal) => {
           totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-          console.log("i m considered :"+meal.date)
+          console.log("i m considered :" + meal.date)
         });
       });
-     } 
+    }
     res.status(200).json({
       dietCount: totalDiet,
       message: 'Total diet count retrieved successfully',
@@ -176,84 +176,84 @@ module.exports.countDietPerMonthForHostel = async function (req, res) {
 
     var messStartDate;
     let constantRecords = await Constants.findOne({ hostelName });
-  
-      messStartDate = constantRecords.messStartDate;
-      console.log("Mess start date found : " + messStartDate);
-      
-      messStartDate = new Date(messStartDate);
-      messStartDate.setDate(messStartDate.getDate());
-      console.log("mess start date : " + messStartDate);
-  
-      const FormattedDate = [
-        messStartDate.getFullYear(),
-        (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
-        messStartDate.getDate().toString().padStart(2, '0')
-      ].join('-');
-  
-      console.log("formated date :" + FormattedDate)
-      var monthFromConstant = FormattedDate.split('-')[1].toString();
-      var yearFromConstant = FormattedDate.split('-')[0].toString();
-      console.log("month : " + monthFromConstant)
-      console.log("year : " + yearFromConstant)
-        
+
+    messStartDate = constantRecords.messStartDate;
+    console.log("Mess start date found : " + messStartDate);
+
+    messStartDate = new Date(messStartDate);
+    messStartDate.setDate(messStartDate.getDate());
+    console.log("mess start date : " + messStartDate);
+
+    const FormattedDate = [
+      messStartDate.getFullYear(),
+      (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
+      messStartDate.getDate().toString().padStart(2, '0')
+    ].join('-');
+
+    console.log("formated date :" + FormattedDate)
+    var monthFromConstant = FormattedDate.split('-')[1].toString();
+    var yearFromConstant = FormattedDate.split('-')[0].toString();
+    console.log("month : " + monthFromConstant)
+    console.log("year : " + yearFromConstant)
+
 
 
     let totalDiet = 0;
 
-    if(monthFromConstant==month && yearFromConstant==year){
+    if (monthFromConstant == month && yearFromConstant == year) {
       console.log("this is the starting month of mess")
       dietRecords.forEach((record) => {
-      let firstrec=0
+        let firstrec = 0
         record.meals.forEach((meal) => {
-          if(meal.date >= FormattedDate){  // count only when the current date is greater then the mess start date
-            if(firstrec==0 && (meal.breakfast==0&& meal.lunch==0&& meal.dinner==0)){
-            }else{
-              firstrec=1;
+          if (meal.date >= FormattedDate) {  // count only when the current date is greater then the mess start date
+            if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
+            } else {
+              firstrec = 1;
               totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-              console.log("i m considered :"+meal.date)
+              console.log("i m considered :" + meal.date)
             }
-           
-          }else{
+
+          } else {
             console.log("i m not considered")
           }
         });
       });
 
-     }else{
-   // Iterate through the retrieved diet records and calculate the total diet
-   console.log("this is not the starting month of mess")
-        dietRecords.forEach((record) => {
+    } else {
+      // Iterate through the retrieved diet records and calculate the total diet
+      console.log("this is not the starting month of mess")
+      dietRecords.forEach((record) => {
         record.meals.forEach((meal) => {
           totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-          console.log("i m considered :"+meal.date)
+          console.log("i m considered :" + meal.date)
         });
       });
-     }
+    }
 
 
 
 
-  // // Iterate through the retrieved diet records and calculate the total diet
-  // dietRecords.forEach((record) => {
-  //   record.meals.forEach((meal) => {
-  //   var month = meal.date.split('-')[1].toString();
-  //      if(month==monthFromConstant && year == yearFromConstant){
-  //       if(meal.date >= FormattedDate){  // count only when the current date is greater then the mess start date
-  //         totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-  //         console.log("i m considered and from START MONTH : "+meal.date)
-  //       }else{
-  //         console.log("i m not considered and from START MONTH")
-  //       }
-  //      }else{
-  //       totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-  //       console.log("i m considered and from other MONTH : "+meal.date)
-  //      }
-  //   });
-  // });
+    // // Iterate through the retrieved diet records and calculate the total diet
+    // dietRecords.forEach((record) => {
+    //   record.meals.forEach((meal) => {
+    //   var month = meal.date.split('-')[1].toString();
+    //      if(month==monthFromConstant && year == yearFromConstant){
+    //       if(meal.date >= FormattedDate){  // count only when the current date is greater then the mess start date
+    //         totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
+    //         console.log("i m considered and from START MONTH : "+meal.date)
+    //       }else{
+    //         console.log("i m not considered and from START MONTH")
+    //       }
+    //      }else{
+    //       totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
+    //       console.log("i m considered and from other MONTH : "+meal.date)
+    //      }
+    //   });
+    // });
 
 
     res.status(200).json({
-      dietCount:totalDiet,
+      dietCount: totalDiet,
       message: 'Total diet count retrieved successfully for a month',
     });
   } catch (error) {
@@ -2018,7 +2018,7 @@ module.exports.fillStartMeals = async function (req, res) {
   if (constantRecords) {
     messStartDate = constantRecords.messStartDate;
     console.log("Mess start date found : " + messStartDate);
-    
+
     messStartDate = new Date(messStartDate);
     messStartDate.setDate(messStartDate.getDate());
     console.log("mess start date : " + messStartDate);
@@ -2042,35 +2042,108 @@ module.exports.fillStartMeals = async function (req, res) {
       firstDay.getDate().toString().padStart(2, '0')
     ].join('-');
 
-    console.log("first date : "+firstDay)
-    console.log("first date in format : "+FormattedFirstDateMonth)
-   
+    console.log("first date : " + firstDay)
+    console.log("first date in format : " + FormattedFirstDateMonth)
+
     let dietRecord = await DietRecords.findOne({ rollNumber, month, year, hostelName, roomNumber });
   }
 }
 
 
 
-module.exports.getDietRecordList = async function(req,res){
-  const { rollNumber, hostelName , roomNumber } = req.body;
+module.exports.getDietRecordList = async function (req, res) {
+  const { rollNumber, hostelName, roomNumber } = req.body;
+  const dietRecords = await DietRecords.find({ rollNumber, hostelName, roomNumber });
 
-  const dietRecords = await DietRecords.find({ rollNumber, hostelName , roomNumber });
-  if(!dietRecords){
+  let constantRecords = await Constants.findOne({ hostelName });
+
+  messStartDate = constantRecords.messStartDate;
+  console.log("Mess start date found : " + messStartDate);
+
+  messStartDate = new Date(messStartDate);
+  messStartDate.setDate(messStartDate.getDate());
+  console.log("mess start date : " + messStartDate);
+
+  const FormattedDate = [
+    messStartDate.getFullYear(),
+    (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
+    messStartDate.getDate().toString().padStart(2, '0')
+  ].join('-');
+
+  console.log("formated date :" + FormattedDate)
+  var monthFromConstant = FormattedDate.split('-')[1].toString();
+  var yearFromConstant = FormattedDate.split('-')[0].toString();
+  console.log("month : " + monthFromConstant)
+  console.log("year : " + yearFromConstant)
+  const arraydiets = [];
+  if (!dietRecords) {
     console.log("no record found");
-  }else{
-    const allMeals = dietRecords.meals.map(meal => {
-      return {
-        date: meal.date,
-        breakfast: meal.breakfast,
-        lunch: meal.lunch,
-        dinner: meal.dinner
-      };
+  } else {
+
+    dietRecords.forEach((record) => {
+      let firstrec = 0
+      record.meals.forEach((meal) => {
+        var month = meal.date.split('-')[1].toString();
+        var year = meal.date.split('-')[0].toString();
+        if (monthFromConstant == month && yearFromConstant == year) {
+          console.log("this is the starting month of mess")
+
+          if (meal.date >= FormattedDate) {  // count only when the current date is greater then the mess start date
+            if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
+            } else {
+              firstrec = 1;
+              const diets = {
+                date: meal.date,
+                breakfast: meal.breakfast,
+                lunch: meal.lunch,
+                dinner: meal.dinner
+              }
+              arraydiets.push(diets);
+            }
+
+          } else {
+            console.log("i m not considered")
+          }
+        }
+        else {
+          // totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
+          // console.log("i m considered and from other MONTH : "+meal.date)
+          const currentDate = new Date().toISOString().split('T')[0];
+          if (meal.date >= currentDate) {
+
+          }
+          else {
+            const diets = {
+              date: meal.date,
+              breakfast: meal.breakfast,
+              lunch: meal.lunch,
+              dinner: meal.dinner
+            }
+            arraydiets.push(diets);
+          }
+        }
+
+      });
     });
 
-    // Get the latest 20 meals by date
-    const latestMeals = allMeals.slice(0, 20);
+    //  }
 
-    // Send the response as a JSON array
-    res.json(latestMeals);
+
+
+
   }
+
+
+  // arraydiets.sort((a, b) => {
+  //   const dateA = new Date(a.date);
+  //   const dateB = new Date(b.date);
+  //   return dateB - dateA; // Sort in descending order (most recent to oldest)
+  // });
+
+  res.json({
+    rollNumber: rollNumber,
+    roomNumber: roomNumber,
+    hostelName: hostelName,
+    mealList: arraydiets
+  })
 }
