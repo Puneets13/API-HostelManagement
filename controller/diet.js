@@ -154,7 +154,7 @@ module.exports.countDietPerMonth = async function (req, res) {
       });
      } 
     res.status(200).json({
-      totalDiet,
+      dietCount: totalDiet,
       message: 'Total diet count retrieved successfully',
     });
   } catch (error) {
@@ -253,7 +253,7 @@ module.exports.countDietPerMonthForHostel = async function (req, res) {
 
 
     res.status(200).json({
-      totalDiet,
+      dietCount:totalDiet,
       message: 'Total diet count retrieved successfully for a month',
     });
   } catch (error) {
@@ -2046,5 +2046,31 @@ module.exports.fillStartMeals = async function (req, res) {
     console.log("first date in format : "+FormattedFirstDateMonth)
    
     let dietRecord = await DietRecords.findOne({ rollNumber, month, year, hostelName, roomNumber });
+  }
+}
+
+
+
+module.exports.getDietRecordList = async function(req,res){
+  const { rollNumber, hostelName , roomNumber } = req.body;
+
+  const dietRecords = await DietRecords.find({ rollNumber, hostelName , roomNumber });
+  if(!dietRecords){
+    console.log("no record found");
+  }else{
+    const allMeals = dietRecords.meals.map(meal => {
+      return {
+        date: meal.date,
+        breakfast: meal.breakfast,
+        lunch: meal.lunch,
+        dinner: meal.dinner
+      };
+    });
+
+    // Get the latest 20 meals by date
+    const latestMeals = allMeals.slice(0, 20);
+
+    // Send the response as a JSON array
+    res.json(latestMeals);
   }
 }
