@@ -12,4 +12,7 @@ router.post('/countDietPerMonthForHostel',callbackFunctions.countDietPerMonthFor
 
 router.post('/applyLeave',callbackFunctions.applyLeave); // leave
 
+
+router.post('/getDietRecordList',callbackFunctions.getDietRecordList);
+
 module.exports = router;
