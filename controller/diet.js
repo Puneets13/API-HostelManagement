@@ -2069,6 +2069,7 @@ module.exports.getDietRecordList = async function (req, res) {
     (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
     messStartDate.getDate().toString().padStart(2, '0')
   ].join('-');
+  const currentDate = new Date().toISOString().split('T')[0];
 
   console.log("formated date :" + FormattedDate)
   var monthFromConstant = FormattedDate.split('-')[1].toString();
@@ -2086,19 +2087,25 @@ module.exports.getDietRecordList = async function (req, res) {
         var month = meal.date.split('-')[1].toString();
         var year = meal.date.split('-')[0].toString();
         if (monthFromConstant == month && yearFromConstant == year) {
-          console.log("this is the starting month of mess")
+          // console.log("this is the starting month of mess")
 
           if (meal.date >= FormattedDate) {  // count only when the current date is greater then the mess start date
             if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
             } else {
-              firstrec = 1;
-              const diets = {
-                date: meal.date,
-                breakfast: meal.breakfast,
-                lunch: meal.lunch,
-                dinner: meal.dinner
+              if(meal.date>currentDate){
+
+              }
+              else{
+                firstrec = 1;
+                const diets = {
+                  date: meal.date,
+                  breakfast: meal.breakfast,
+                  lunch: meal.lunch,
+                  dinner: meal.dinner
               }
               arraydiets.push(diets);
+              }
+              
             }
 
           } else {
@@ -2108,7 +2115,6 @@ module.exports.getDietRecordList = async function (req, res) {
         else {
           // totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
           // console.log("i m considered and from other MONTH : "+meal.date)
-          const currentDate = new Date().toISOString().split('T')[0];
           if (meal.date >= currentDate) {
 
           }
@@ -2134,11 +2140,11 @@ module.exports.getDietRecordList = async function (req, res) {
   }
 
 
-  // arraydiets.sort((a, b) => {
-  //   const dateA = new Date(a.date);
-  //   const dateB = new Date(b.date);
-  //   return dateB - dateA; // Sort in descending order (most recent to oldest)
-  // });
+  arraydiets.sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateB - dateA; // Sort in descending order (most recent to oldest)
+  });
 
   res.json({
     rollNumber: rollNumber,
