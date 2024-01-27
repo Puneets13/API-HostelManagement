@@ -47,29 +47,63 @@ module.exports.countDietOfStudent = async function (req, res) {
     console.log("month : " + monthFromConstant)
     console.log("year : " + yearFromConstant)
 
+    const currentDate = new Date().toISOString().split('T')[0];
+
 
     let totalDiet = 0;
-
+    let whichMealFirstday = 0;
     // Iterate through the retrieved diet records and calculate the total diet
     dietRecords.forEach((record) => {
-      let firstrec = 0
+    let firstrec = 0
       record.meals.forEach((meal) => {
         var month = meal.date.split('-')[1].toString();
         if (month == monthFromConstant && year == yearFromConstant) {
 
-          if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
-          }
-          else {
-            firstrec = 1;
+          if(meal.date>FormattedDate){
+            if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
+              console.log("i am skiped huehuehuheehehe : "+meal.date);
+            }
+            else {
+              firstrec = 1;
+              // for start of mess by student this will run
 
-            // +6 condition so that while calculatiing the total diets , it will not
-            if (meal.date >= FormattedDate && month <= monthFromConstant + 6 && month >= monthFromConstant) {  // count only when the current date is greater then the mess start date
-              totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-              console.log("i m considered and from START MONTH : " + meal.date)
-            } else {
-              console.log("i m not considered and from START MONTH")
+              // ERRORR 
+              // IF STUDENT EATS BREAKFAST AND SKIP LUNCH THEN IT WILL NOT BE COUNTED
+              // HOW ARE YOU 
+              // MY NAME IS KIRSANKEET
+                
+              
+              if(firstrec==1 && whichMealFirstday==0 ){
+                if(meal.breakfast==1){
+                  totalDiet += 1;
+                }
+                if(meal.lunch==1 || meal.dinner !=2 || meal.breakfast !=2 ){
+                  totalDiet += 1;
+                }
+                if(meal.dinner==1){
+                  totalDiet += 1;
+                }
+                whichMealFirstday = -1; // change this to -1 so that it can never be implemented again
+              }else{
+              // +6 condition so that while calculatiing the total diets , it will not
+              if (meal.date >= FormattedDate && month <= monthFromConstant + 6 && month >= monthFromConstant) {  // count only when the current date is greater then the mess start date
+             
+                if(meal.date>currentDate){
+
+                }else{
+                  totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
+                  console.log("i m considered and from START MONTH : " + meal.date)
+                  }
+              
+             
+              } else {
+                console.log("i m not considered and from START MONTH")
+              }   
+              }
+             
             }
           }
+       
 
         } else {
           totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
