@@ -7,6 +7,160 @@ const DietRecords = require('../models/diet.js');
 const Mess = require('../models/Mess.js');
 const Constants = require('../models/Constants.js');
 const mongoose = require('mongoose');
+const moment = require('moment');
+
+
+// const xlsx = require('xlsx-populate');
+// const dbName = 'NITJ_HOSTEL_MANAGEMENT';
+// const collectionName = 'dietrecords';
+
+// const db = mongoose.connection;
+// const collection = db.collection(collectionName);
+// const DietModel = mongoose.model('Diet', DietRecords);
+
+// const changeStream = DietRecords.watch();
+
+// // const changeStream = collection.watch();
+// // const excelFilePath = 'output.xlsx';
+
+
+// console.log('Listening for changes in MongoDB...');
+
+//  // Handle change events
+//  changeStream.on('change', async (change) => {
+//   try {
+//     const document = change.fullDocument;
+
+//     // Generate Excel file with dynamic filename
+//     const fileName = `output_file.xlsx`;
+//     const workbook = await xlsx.fromBlankAsync();
+//     const sheet = workbook.sheet(0);
+//     sheet.addRow(Object.keys(document));
+//     sheet.addRow(Object.values(document));
+//     console.log("Row added to a file");
+//     // Save the changes to the Excel file
+//     await workbook.toFileAsync(fileName);
+//     console.log(`Excel file (${fileName}) updated.`);
+
+//   } catch (error) {
+//       console.error('Error processing change:', error);
+//   }
+// });
+
+
+// module.exports.createFIle = function(req,res){
+//   // const fileName = `output_${moment().format('YYYY-MM-DD_HH-mm-ss')}.xlsx`;
+//   const fileName = `output_file.xlsx`;
+//   // Send the Excel file as a response
+//   res.download(fileName, fileName, (err) => {
+//       if (err) {
+//           console.error('Error sending Excel file:', err);
+//           res.status(500).send('Internal Server Error');
+//       } else {
+//           console.log('Excel file sent.');
+//       }
+//   });
+// }
+
+// module.exports.createExcleFile = function (req, res)=>{
+//   // You can add additional logic here if needed before sending the file
+//   // const fileName = `output_${moment().format('YYYY-MM-DD_HH-mm-ss')}.xlsx`;
+//   const fileName = `ouptut_file.xlsx`;
+//   // Send the Excel file as a response
+//   res.download(fileName, fileName, (err) => {
+//       if (err) {
+//           console.error('Error sending Excel file:', err);
+//           res.status(500).send('Internal Server Error');
+//       } else {
+//           console.log('Excel file sent.');
+//       }
+//   });
+// };
+
+
+
+
+
+
+
+
+// FOR MESS LIST PRINT TO SCREEN
+
+// API endpoint to fetch data based on the current date
+module.exports.messList =  async function(req, res){
+
+  const hostelName = req.body.hostelName;
+  const messRecords = [];
+
+  try {
+      // const currentDate = new Date().toISOString().split('T')[0]; // Today's date in "YYYY-MM-DD" format
+
+      // Query MongoDB based on the current date
+      const todayDate = moment().format('YYYY-MM-DD');
+      // Get the current date
+      const currentDate = moment();
+
+      // Extract the year and month
+      const year = currentDate.year();
+      const month = currentDate.month() + 1; // Note: Months are zero-based, so add 1 to get the correct month
+
+
+      const data = await DietRecords.find({
+          month: month,
+          year: year,
+          hostelName: hostelName
+      });
+
+
+      messDate = new Date(currentDate);
+      const FormattedDate = [
+          messDate.getFullYear(),
+          (messDate.getMonth() + 1).toString().padStart(2, '0'),
+          messDate.getDate().toString().padStart(2, '0')
+      ].join('-');
+      console.log(FormattedDate);
+
+      var currentDayMeal;
+      // Assuming data is an array of objects, you can iterate over each object
+      data.forEach((entry) => {
+          // Check if 'meals' array exists and is an array
+          if (entry.meals && Array.isArray(entry.meals)) {
+              // Find the meal entry for the current date
+               currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate);
+              console.log(currentDate);
+            
+              var messRecordObj = {
+                userName : entry.userName,
+                rollNumber: entry.rollNumber,
+                roomNumber: entry.roomNumber,
+                date: currentDayMeal.date,
+                breakfast: currentDayMeal.breakfast,
+                lunch: currentDayMeal.lunch,
+                dinner: currentDayMeal.dinner
+              }
+            messRecords.push(messRecordObj);
+              if (currentDayMeal) {
+                  // Do something with the found meal entry
+                  console.log('Found meal for the current date:', currentDayMeal);
+              } else {
+                  console.log('No meal entry found for the current date');
+              }
+          } else {
+              console.log('Invalid or missing "meals" array in the entry');
+          }
+      });
+
+      res.status(200).json({
+        message:"success",
+        mealList:messRecords,
+      })
+
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 
 
 //  0 -> not taken

@@ -15,4 +15,6 @@ router.post('/applyLeave',callbackFunctions.applyLeave); // leave
 
 router.post('/getDietRecordList',callbackFunctions.getDietRecordList);
 
+router.post('/messList',callbackFunctions.messList);
+
 module.exports = router;
