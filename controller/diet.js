@@ -87,77 +87,123 @@ const moment = require('moment');
 // FOR MESS LIST PRINT TO SCREEN
 
 // API endpoint to fetch data based on the current date
-module.exports.messList =  async function(req, res){
+module.exports.messList = async function (req, res) {
 
   const hostelName = req.body.hostelName;
   const messRecords = [];
 
   try {
-      // const currentDate = new Date().toISOString().split('T')[0]; // Today's date in "YYYY-MM-DD" format
+    // const currentDate = new Date().toISOString().split('T')[0]; // Today's date in "YYYY-MM-DD" format
 
-      // Query MongoDB based on the current date
-      const todayDate = moment().format('YYYY-MM-DD');
-      // Get the current date
-      const currentDate = moment();
+    // Query MongoDB based on the current date
+    const todayDate = moment().format('YYYY-MM-DD');
+    // Get the current date
+    const currentDate = moment();
 
-      // Extract the year and month
-      const year = currentDate.year();
-      const month = currentDate.month() + 1; // Note: Months are zero-based, so add 1 to get the correct month
-
-
-      const data = await DietRecords.find({
-          month: month,
-          year: year,
-          hostelName: hostelName
-      });
+    // Extract the year and month
+    const year = currentDate.year();
+    const month = currentDate.month() + 1; // Note: Months are zero-based, so add 1 to get the correct month
 
 
-      messDate = new Date(currentDate);
-      const FormattedDate = [
-          messDate.getFullYear(),
-          (messDate.getMonth() + 1).toString().padStart(2, '0'),
-          messDate.getDate().toString().padStart(2, '0')
-      ].join('-');
-      console.log(FormattedDate);
+    const data = await DietRecords.find({
+      month: month,
+      year: year,
+      hostelName: hostelName
+    });
 
-      var currentDayMeal;
-      // Assuming data is an array of objects, you can iterate over each object
-      data.forEach((entry) => {
-          // Check if 'meals' array exists and is an array
-          if (entry.meals && Array.isArray(entry.meals)) {
-              // Find the meal entry for the current date
-               currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate);
-              console.log(currentDate);
-            
-              var messRecordObj = {
-                userName : entry.userName,
-                rollNumber: entry.rollNumber,
-                roomNumber: entry.roomNumber,
-                date: currentDayMeal.date,
-                breakfast: currentDayMeal.breakfast,
-                lunch: currentDayMeal.lunch,
-                dinner: currentDayMeal.dinner
-              }
-            messRecords.push(messRecordObj);
-              if (currentDayMeal) {
-                  // Do something with the found meal entry
-                  console.log('Found meal for the current date:', currentDayMeal);
-              } else {
-                  console.log('No meal entry found for the current date');
-              }
-          } else {
-              console.log('Invalid or missing "meals" array in the entry');
-          }
-      });
 
-      res.status(200).json({
-        message:"success",
-        mealList:messRecords,
-      })
+    messDate = new Date(currentDate);
+    const FormattedDate = [
+      messDate.getFullYear(),
+      (messDate.getMonth() + 1).toString().padStart(2, '0'),
+      messDate.getDate().toString().padStart(2, '0')
+    ].join('-');
+    console.log(FormattedDate);
+
+
+    // Iterate over each DietRecord entry
+    for (const entry of data) {
+      // Check if 'meals' array exists and is an array
+      if (entry.meals && Array.isArray(entry.meals)) {
+        // Find the meal entry for the current date
+        const currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate);
+
+        // Find the corresponding user data based on rollNumber
+        const userData = await User.findOne({
+          rollNumber: entry.rollNumber
+        });
+
+        if (currentDayMeal) {
+          const messRecordObj = {
+            userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
+            avatar: userData? userData.avatar:"https://gravatar.com/avatar/?s=200&d=retro",
+            rollNumber: entry.rollNumber,
+            roomNumber: entry.roomNumber,
+            date: currentDayMeal.date,
+            breakfast: currentDayMeal.breakfast,
+            lunch: currentDayMeal.lunch,
+            dinner: currentDayMeal.dinner
+          };
+          messRecords.push(messRecordObj);
+          console.log('Found meal for the current date:', currentDayMeal);
+        } else {
+          console.log('No meal entry found for the current date');
+        }
+      } else {
+        console.log('Invalid or missing "meals" array in the entry');
+      }
+    }
+
+    res.status(200).json({
+      message: "success",
+      mealList: messRecords,
+    });
+
+
+
+    // var currentDayMeal;
+    // // Assuming data is an array of objects, you can iterate over each object
+    // data.forEach((entry) => {
+    //   // Check if 'meals' array exists and is an array
+    //   if (entry.meals && Array.isArray(entry.meals)) {
+    //     // Find the meal entry for the current date
+    //     currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate);
+    //     console.log(currentDate);
+
+    //     const userData = User.find(
+    //       {
+    //         rollNumber:entry.rollNumber
+    //       })
+
+    //     var messRecordObj = {
+    //       userName: userData.username,
+    //       rollNumber: entry.rollNumber,
+    //       roomNumber: entry.roomNumber,
+    //       date: currentDayMeal.date,
+    //       breakfast: currentDayMeal.breakfast,
+    //       lunch: currentDayMeal.lunch,
+    //       dinner: currentDayMeal.dinner
+    //     }
+    //     messRecords.push(messRecordObj);
+    //     if (currentDayMeal) {
+    //       // Do something with the found meal entry
+    //       console.log('Found meal for the current date:', currentDayMeal);
+    //     } else {
+    //       console.log('No meal entry found for the current date');
+    //     }
+    //   } else {
+    //     console.log('Invalid or missing "meals" array in the entry');
+    //   }
+    // });
+
+    // res.status(200).json({
+    //   message: "success",
+    //   mealList: messRecords,
+    // })
 
   } catch (error) {
-      console.error('Error fetching data:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -208,14 +254,14 @@ module.exports.countDietOfStudent = async function (req, res) {
     let whichMealFirstday = 0;
     // Iterate through the retrieved diet records and calculate the total diet
     dietRecords.forEach((record) => {
-    let firstrec = 0
+      let firstrec = 0
       record.meals.forEach((meal) => {
         var month = meal.date.split('-')[1].toString();
         if (month == monthFromConstant && year == yearFromConstant) {
 
-          if(meal.date>FormattedDate){
+          if (meal.date > FormattedDate) {
             if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
-              console.log("i am skiped huehuehuheehehe : "+meal.date);
+              console.log("i am skiped huehuehuheehehe : " + meal.date);
             }
             else {
               firstrec = 1;
@@ -225,39 +271,39 @@ module.exports.countDietOfStudent = async function (req, res) {
               // IF STUDENT EATS BREAKFAST AND SKIP LUNCH THEN IT WILL NOT BE COUNTED
               // HOW ARE YOU 
               // MY NAME IS KIRSANKEET
-                
-              
-              if(firstrec==1 && whichMealFirstday==0 ){
-                if(meal.breakfast==1){
+
+
+              if (firstrec == 1 && whichMealFirstday == 0) {
+                if (meal.breakfast == 1) {
                   totalDiet += 1;
                 }
-                if(meal.lunch==1 || meal.dinner !=2 || meal.breakfast !=2 ){
+                if (meal.lunch == 1 || meal.dinner != 2 || meal.breakfast != 2) {
                   totalDiet += 1;
                 }
-                if(meal.dinner==1){
+                if (meal.dinner == 1) {
                   totalDiet += 1;
                 }
                 whichMealFirstday = -1; // change this to -1 so that it can never be implemented again
-              }else{
-              // +6 condition so that while calculatiing the total diets , it will not
-              if (meal.date >= FormattedDate && month <= monthFromConstant + 6 && month >= monthFromConstant) {  // count only when the current date is greater then the mess start date
-             
-                if(meal.date>currentDate){
-
-                }else{
-                  totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-                  console.log("i m considered and from START MONTH : " + meal.date)
-                  }
-              
-             
               } else {
-                console.log("i m not considered and from START MONTH")
-              }   
+                // +6 condition so that while calculatiing the total diets , it will not
+                if (meal.date >= FormattedDate && month <= monthFromConstant + 6 && month >= monthFromConstant) {  // count only when the current date is greater then the mess start date
+
+                  if (meal.date > currentDate) {
+
+                  } else {
+                    totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
+                    console.log("i m considered and from START MONTH : " + meal.date)
+                  }
+
+
+                } else {
+                  console.log("i m not considered and from START MONTH")
+                }
               }
-             
+
             }
           }
-       
+
 
         } else {
           totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
@@ -2280,20 +2326,20 @@ module.exports.getDietRecordList = async function (req, res) {
           if (meal.date >= FormattedDate) {  // count only when the current date is greater then the mess start date
             if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
             } else {
-              if(meal.date>currentDate){
+              if (meal.date > currentDate) {
 
               }
-              else{
+              else {
                 firstrec = 1;
                 const diets = {
                   date: meal.date,
                   breakfast: meal.breakfast,
                   lunch: meal.lunch,
                   dinner: meal.dinner
+                }
+                arraydiets.push(diets);
               }
-              arraydiets.push(diets);
-              }
-              
+
             }
 
           } else {
