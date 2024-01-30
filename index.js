@@ -11,6 +11,11 @@ const userRouter5 = require("./routes/constants.js");
 const userRouter6 = require("./routes/diet.js");
 const moment = require('moment');
 
+
+const http = require('http');
+const socketIo = require('socket.io');
+
+
 const mongoose = require('mongoose');
 const path = require('path');
 const jwt = require('jsonwebtoken');  //for verifying the login button we include jsonwebtoken
@@ -30,15 +35,19 @@ const DietModel = require('./models/diet.js');
 
 const app = express();
 
+const server = http.createServer(app);
+const io = socketIo(server);
+
+
 // app.set('view engine','ejs');//
 
 
-// const express = require('express');
-const http = require('http');
-const { setupSocketIO } = require('./controller/messListUpdate.js'); // Adjust the path based on your project structure
-const server = http.createServer(app);
+// // const express = require('express');
+// const http = require('http');
+// const { setupSocketIO } = require('./controller/messListUpdate.js'); // Adjust the path based on your project structure
+// const server = http.createServer(app);
 
-const io = setupSocketIO(server);
+// const io = setupSocketIO(server);
 
 
 
@@ -69,6 +78,30 @@ mongoose.connection.on('connected', connected => {
 });
 
 
+// const Meal = mongoose.model('Meal', DietModel);
+
+// // Socket.io setup
+// io.on('connection', (socket) => {
+//     console.log('A user connected');
+  
+//     // Listen for disconnect events
+//     socket.on('disconnect', () => {
+//       console.log('User disconnected');
+//     });
+//   });
+
+  
+//   // Mongoose middleware to capture changes
+// DietModel.post('save', function (doc) {
+//     // Emit the updated document to connected clients
+//     io.emit('mealUpdated', doc);
+//   });
+  
+//   // Serve the Socket.io client library
+//   app.get('/socket.io.js', (req, res) => {
+//     res.sendFile(__dirname + '/node_modules/socket.io/client-dist/socket.io.js');
+//   });
+  
 
 // const db = mongoose.connection;
 
