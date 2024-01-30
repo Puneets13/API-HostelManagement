@@ -147,7 +147,7 @@ module.exports.messList = async function (req, res) {
           message="success";
           currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.lunch ===1 );
         }
-        else if(((currentTime >= '19:00' && currentTime <= '23:30'))){
+        else if(((currentTime >= '19:00' && currentTime <= '24:00'))){
           meal = "dinner"
           message="success";
           currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.dinner===1 );
