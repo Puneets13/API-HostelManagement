@@ -147,7 +147,7 @@ module.exports.messList = async function (req, res) {
           message="success";
           currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.lunch ===1 );
         }
-        else if(((currentTime >= '19:00' && currentTime <= '22:30'))){
+        else if(((currentTime >= '19:00' && currentTime <= '23:30'))){
           meal = "dinner"
           message="success";
           currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.dinner===1 );
@@ -167,7 +167,7 @@ module.exports.messList = async function (req, res) {
             avatar: userData? userData.avatar:"https://gravatar.com/avatar/?s=200&d=retro",
             rollNumber: entry.rollNumber,
             roomNumber: entry.roomNumber,
-            date: currentDayMeal.date,
+            date: currentDayMeal.date+" "+currentTime,
             meal:meal    
           };
           messRecords.push(messRecordObj);
