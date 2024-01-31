@@ -135,26 +135,26 @@ module.exports.messList = async function (req, res) {
       if (entry.meals && Array.isArray(entry.meals)) {
         // Find the meal entry for the current date
 
-        if ((currentTime >= '07:00' && currentTime <= '10:30')) {
-          meal_type = "breakfast"
-          message = "success";
-          currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.breakfast === 1);
-        }
-        else if ((currentTime >= '12:00' && currentTime <= '15:00')) {
-          meal_type = "lunch"
-          message = "success";
-          currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.lunch === 1);
-        }
-        else if (((currentTime >= '19:00' && currentTime <= '23:50'))) {
-          meal_type = "dinner"
-          message = "success";
-          currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.dinner === 1);
-        } else {
-          message = "Out of time";
-        }
+        // if ((currentTime >= '07:00' && currentTime <= '10:30')) {
+        //   meal_type = "breakfast"
+        //   message = "success";
+        //   currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.breakfast === 1);
+        // }
+        // else if ((currentTime >= '12:00' && currentTime <= '15:00')) {
+        //   meal_type = "lunch"
+        //   message = "success";
+        //   currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.lunch === 1);
+        // }
+        // else if (((currentTime >= '19:00' && currentTime <= '23:50'))) {
+        //   meal_type = "dinner"
+        //   message = "success";
+        //   currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.dinner === 1);
+        // } else {
+        //   message = "Out of time";
+        // }
 
 
-        // const currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate);
+        const currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate);
 
         // Find the corresponding user data based on rollNumber
         const userData = await User.findOne({
@@ -162,7 +162,7 @@ module.exports.messList = async function (req, res) {
         });
 
         if (currentDayMeal) {
-          const messRecordObj = {
+          var messRecordObj = {
             userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
             avatar: userData ? userData.avatar : "https://gravatar.com/avatar/?s=200&d=retro",
             rollNumber: entry.rollNumber,
@@ -184,8 +184,8 @@ module.exports.messList = async function (req, res) {
     }
 
     res.status(200).json({
-      message: "success",
-      mealList: messRecords,
+      message: message,
+      mealList: messRecords
     });
 
   } catch (error) {
