@@ -83,114 +83,191 @@ const moment = require('moment');
 
 
 
-
-// FOR MESS LIST PRINT TO SCREEN
-
-// API endpoint to fetch data based on the current date
-module.exports.messList = async function (req, res) {
+module.exports.messList =  async function(req, res){
 
   const hostelName = req.body.hostelName;
   const messRecords = [];
 
   try {
-    // const currentDate = new Date().toISOString().split('T')[0]; // Today's date in "YYYY-MM-DD" format
+      // const currentDate = new Date().toISOString().split('T')[0]; // Today's date in "YYYY-MM-DD" format
 
-    // Query MongoDB based on the current date
-    const todayDate = moment().format('YYYY-MM-DD');
-    // Get the current date
-    const currentDate1 = moment();
-    const currentDate = new Date();
+      // Query MongoDB based on the current date
+      const todayDate = moment().format('YYYY-MM-DD');
+      // Get the current date
+      const currentDate = moment();
 
-    // Extract the year and month
-    const year = currentDate1.year();
-    const month = currentDate1.month() + 1; // Note: Months are zero-based, so add 1 to get the correct month
-
-
-    const data = await DietRecords.find({
-      month: month,
-      year: year,
-      hostelName: hostelName
-    });
+      // Extract the year and month
+      const year = currentDate.year();
+      const month = currentDate.month() + 1; // Note: Months are zero-based, so add 1 to get the correct month
 
 
-    messDate = new Date(currentDate1);
-    const FormattedDate = [
-      messDate.getFullYear(),
-      (messDate.getMonth() + 1).toString().padStart(2, '0'),
-      messDate.getDate().toString().padStart(2, '0')
-    ].join('-');
-    console.log(FormattedDate);
+      const data = await DietRecords.find({
+          month: month,
+          year: year,
+          hostelName: hostelName
+      });
 
-    const hours = currentDate.getHours();
-    const minutes = currentDate.getMinutes();
-    const ampm = hours >= 12 ? 'pm' : 'am';
 
-    // const currentTime = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
-      // Format the time as HH:mm
-      const currentTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
-   
-    var meal="" ,message="";
+      messDate = new Date(currentDate);
+      const FormattedDate = [
+          messDate.getFullYear(),
+          (messDate.getMonth() + 1).toString().padStart(2, '0'),
+          messDate.getDate().toString().padStart(2, '0')
+      ].join('-');
+      console.log(FormattedDate);
 
-    // Iterate over each DietRecord entry
-    for (const entry of data) {
-      // Check if 'meals' array exists and is an array
-      if (entry.meals && Array.isArray(entry.meals)) {
-        // Find the meal entry for the current date
-        var currentDayMeal;
-        if((currentTime >= '07:00' && currentTime <= '10:30') ){
-          meal = "breakfast"
-          message="success";
-          currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.breakfast ===1 );
-        }
-        else if((currentTime >= '12:00' && currentTime <= '15:00') ){
-          meal = "lunch"
-          message="success";
-          currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.lunch ===1 );
-        }
-        else if(((currentTime >= '19:00' && currentTime <= '24:00'))){
-          meal = "dinner"
-          message="success";
-          currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.dinner===1 );
-        }else{
-          message="Out of time";
-        }
+      var currentDayMeal;
+      // Assuming data is an array of objects, you can iterate over each object
+      data.forEach((entry) => {
+          // Check if 'meals' array exists and is an array
+          if (entry.meals && Array.isArray(entry.meals)) {
+              // Find the meal entry for the current date
+               currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate);
+              console.log(currentDate);
 
-        // Find the corresponding user data based on rollNumber
-        const userData = await User.findOne({
-          rollNumber: entry.rollNumber
-        });
+              var messRecordObj = {
+                userName : entry.userName,
+                rollNumber: entry.rollNumber,
+                roomNumber: entry.roomNumber,
+                date: currentDayMeal.date,
+                breakfast: currentDayMeal.breakfast,
+                lunch: currentDayMeal.lunch,
+                dinner: currentDayMeal.dinner
+              }
+            messRecords.push(messRecordObj);
+              if (currentDayMeal) {
+                  // Do something with the found meal entry
+                  console.log('Found meal for the current date:', currentDayMeal);
+              } else {
+                  console.log('No meal entry found for the current date');
+              }
+          } else {
+              console.log('Invalid or missing "meals" array in the entry');
+          }
+      });
 
-        console.log(currentTime);
-        if (currentDayMeal) {
-          const messRecordObj = {
-            userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
-            avatar: userData? userData.avatar:"https://gravatar.com/avatar/?s=200&d=retro",
-            rollNumber: entry.rollNumber,
-            roomNumber: entry.roomNumber,
-            date: currentDayMeal.date+" "+currentTime,
-            meal:meal    
-          };
-          messRecords.push(messRecordObj);
-          console.log('Found meal for the current date:', currentDayMeal);
-        } else {
-          console.log('No meal entry found for the current date');
-        }
-      } else {
-        console.log('Invalid or missing "meals" array in the entry');
-      }
-    }
-
-    res.status(200).json({
-      message: message,
-      mealList: messRecords,
-    });
-
+      res.status(200).json({
+        message:"success",
+        mealList:messRecords,
+      })
 
   } catch (error) {
-    console.error('Error fetching data:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+      console.error('Error fetching data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+
+
+
+
+// // FOR MESS LIST PRINT TO SCREEN
+
+// // API endpoint to fetch data based on the current date
+// module.exports.messList = async function (req, res) {
+
+//   const hostelName = req.body.hostelName;
+//   const messRecords = [];
+
+//   try {
+//     // const currentDate = new Date().toISOString().split('T')[0]; // Today's date in "YYYY-MM-DD" format
+
+//     // Query MongoDB based on the current date
+//     const todayDate = moment().format('YYYY-MM-DD');
+//     // Get the current date
+//     const currentDate1 = moment();
+//     const currentDate = new Date();
+
+//     // Extract the year and month
+//     const year = currentDate1.year();
+//     const month = currentDate1.month() + 1; // Note: Months are zero-based, so add 1 to get the correct month
+
+
+//     const data = await DietRecords.find({
+//       month: month,
+//       year: year,
+//       hostelName: hostelName
+//     });
+
+
+//     var messDate = new Date(currentDate1);
+//     const FormattedDate = [
+//       messDate.getFullYear(),
+//       (messDate.getMonth() + 1).toString().padStart(2, '0'),
+//       messDate.getDate().toString().padStart(2, '0')
+//     ].join('-');
+//     console.log(FormattedDate);
+
+//     const hours = currentDate.getHours();
+//     const minutes = currentDate.getMinutes();
+//     const ampm = hours >= 12 ? 'pm' : 'am';
+
+//     // const currentTime = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+//       // Format the time as HH:mm
+//       const currentTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+   
+//     var meal="" ,message="";
+
+//     // Iterate over each DietRecord entry
+//     for (const entry of data) {
+//       // Check if 'meals' array exists and is an array
+//       if (entry.meals && Array.isArray(entry.meals)) {
+//         // Find the meal entry for the current date
+//         var currentDayMeal;
+//         if((currentTime >= '07:00' && currentTime <= '10:30') ){
+//           meal = "breakfast"
+//           message="success";
+//           currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.breakfast ===1 );
+//         }
+//         else if((currentTime >= '12:00' && currentTime <= '15:00') ){
+//           meal = "lunch"
+//           message="success";
+//           currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.lunch ===1 );
+//         }
+//         else if(((currentTime >= '19:00' && currentTime <= '23:50'))){
+//           meal = "dinner"
+//           message="success";
+//           currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.dinner===1 );
+//         }else{
+//           message="Out of time";
+//         }
+
+//         // Find the corresponding user data based on rollNumber
+//         const userData = await User.findOne({
+//           rollNumber: entry.rollNumber
+//         });
+
+//         console.log(currentTime);
+//         if (currentDayMeal) {
+//           const messRecordObj = {
+//             userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
+//             avatar: userData? userData.avatar:"https://gravatar.com/avatar/?s=200&d=retro",
+//             rollNumber: entry.rollNumber,
+//             roomNumber: entry.roomNumber,
+//             date: currentDayMeal.date+" "+currentTime,
+//             meal:meal    
+//           };
+//           messRecords.push(messRecordObj);
+//           console.log('Found meal for the current date:', currentDayMeal);
+//         } else {
+//           console.log('No meal entry found for the current date');
+//         }
+//       } else {
+//         console.log('Invalid or missing "meals" array in the entry');
+//       }
+//     }
+
+//     res.status(200).json({
+//       message: "success",
+//       mealList: messRecords,
+//     });
+
+
+//   } catch (error) {
+//     console.error('Error fetching data:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// };
 
 
 
