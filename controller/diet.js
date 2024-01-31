@@ -87,6 +87,7 @@ const moment = require('moment');
 module.exports.messList = async function (req, res) {
 
   const hostelName = req.body.hostelName;
+  const meal_received = req.body.meal_received;
   const messRecords = [];
 
   try {
@@ -141,10 +142,11 @@ module.exports.messList = async function (req, res) {
       if (entry.meals && Array.isArray(entry.meals)) {
         // Find the meal entry for the current date
 
-        if ((currentTime >= '07:00' && currentTime <= '10:30')) {
+        if (meal_received == "breakfast") {
           meal_type = "breakfast"
           message = "success";
           currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.breakfast === 1);
+          console.log(currentDayMeal);
           if(currentDayMeal){
         var messRecordObj = {
             userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
@@ -161,7 +163,7 @@ module.exports.messList = async function (req, res) {
           console.log('Found meal for the current date:', currentDayMeal);
           }
         }
-        else if ((currentTime >= '12:00' && currentTime <= '15:00')) {
+        else if (meal_received=="lunch") {
           meal_type = "lunch"
           message = "success";
           currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.lunch === 1);
@@ -182,7 +184,7 @@ module.exports.messList = async function (req, res) {
         }
         }
 
-        else if (((currentTime >= '19:00' && currentTime <= '23:50'))) {
+        else if (meal_received=="dinner") {
           meal_type = "dinner"
           message = "success";
           currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.dinner === 1);
