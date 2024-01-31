@@ -96,7 +96,7 @@ module.exports.messList = async function (req, res) {
     // const todayDate = moment().format('YYYY-MM-DD');
     // Get the current date
     const currentDate = moment();
-    const currentDate1=new Date();
+    const currentDate1 = new Date();
 
     // Extract the year and month
     const year = currentDate.year();
@@ -131,37 +131,41 @@ module.exports.messList = async function (req, res) {
     var currentDayMeal;
     // Iterate over each DietRecord entry
     for (const entry of data) {
+
+      // Find the corresponding user data based on rollNumber
+      const userData = await User.findOne({
+        rollNumber: entry.rollNumber
+      });
+
       // Check if 'meals' array exists and is an array
       if (entry.meals && Array.isArray(entry.meals)) {
         // Find the meal entry for the current date
 
-        // if ((currentTime >= '07:00' && currentTime <= '10:30')) {
-        //   meal_type = "breakfast"
-        //   message = "success";
-      // currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.breakfast === 1);
-        // }
-        // else if ((currentTime >= '12:00' && currentTime <= '15:00')) {
-        //   meal_type = "lunch"
-        //   message = "success";
-        //   currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.lunch === 1);
-        // }
-        // else if (((currentTime >= '19:00' && currentTime <= '23:50'))) {
-        //   meal_type = "dinner"
-        //   message = "success";
-        //   currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.dinner === 1);
-        // } else {
-        //   message = "Out of time";
-        // }
-
-
-        const currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate&& meal.dinner===1);
-
-        // Find the corresponding user data based on rollNumber
-        const userData = await User.findOne({
-          rollNumber: entry.rollNumber
-        });
-
-        if (currentDayMeal) {
+        if ((currentTime >= '07:00' && currentTime <= '10:30')) {
+          meal_type = "breakfast"
+          message = "success";
+          currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.breakfast === 1);
+          if(currentDayMeal){
+        var messRecordObj = {
+            userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
+            avatar: userData ? userData.avatar : "https://gravatar.com/avatar/?s=200&d=retro",
+            rollNumber: entry.rollNumber,
+            roomNumber: entry.roomNumber,
+            date: currentDayMeal.date,
+            breakfast: currentDayMeal.breakfast,
+            lunch: currentDayMeal.lunch,
+            dinner: currentDayMeal.dinner,
+            meal_type: meal_type
+          };
+          messRecords.push(messRecordObj);
+          console.log('Found meal for the current date:', currentDayMeal);
+          }
+        }
+        else if ((currentTime >= '12:00' && currentTime <= '15:00')) {
+          meal_type = "lunch"
+          message = "success";
+          currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.lunch === 1);
+          if(currentDayMeal){
           var messRecordObj = {
             userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
             avatar: userData ? userData.avatar : "https://gravatar.com/avatar/?s=200&d=retro",
@@ -171,13 +175,56 @@ module.exports.messList = async function (req, res) {
             breakfast: currentDayMeal.breakfast,
             lunch: currentDayMeal.lunch,
             dinner: currentDayMeal.dinner,
-            meal_type:meal_type
+            meal_type: meal_type
           };
           messRecords.push(messRecordObj);
           console.log('Found meal for the current date:', currentDayMeal);
-        } else {
-          console.log('No meal entry found for the current date');
         }
+        }
+
+        else if (((currentTime >= '19:00' && currentTime <= '23:50'))) {
+          meal_type = "dinner"
+          message = "success";
+          currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.dinner === 1);
+          if(currentDayMeal){
+          var messRecordObj = {
+            userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
+            avatar: userData ? userData.avatar : "https://gravatar.com/avatar/?s=200&d=retro",
+            rollNumber: entry.rollNumber,
+            roomNumber: entry.roomNumber,
+            date: currentDayMeal.date,
+            breakfast: currentDayMeal.breakfast,
+            lunch: currentDayMeal.lunch,
+            dinner: currentDayMeal.dinner,
+            meal_type: meal_type
+          };
+          messRecords.push(messRecordObj);
+          console.log('Found meal for the current date:', currentDayMeal);
+        }
+        }
+
+        else {
+          message = "Out of time";
+        }
+
+        // const currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate);
+        // if (currentDayMeal) {
+        //   var messRecordObj = {
+        //     userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
+        //     avatar: userData ? userData.avatar : "https://gravatar.com/avatar/?s=200&d=retro",
+        //     rollNumber: entry.rollNumber,
+        //     roomNumber: entry.roomNumber,
+        //     date: currentDayMeal.date,
+        //     breakfast: currentDayMeal.breakfast,
+        //     lunch: currentDayMeal.lunch,
+        //     dinner: currentDayMeal.dinner,
+        //     meal_type: meal_type
+        //   };
+        //   messRecords.push(messRecordObj);
+        //   console.log('Found meal for the current date:', currentDayMeal);
+        // } else {
+        //   console.log('No meal entry found for the current date');
+        // }
       } else {
         console.log('Invalid or missing "meals" array in the entry');
       }
