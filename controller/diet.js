@@ -138,7 +138,7 @@ module.exports.messList = async function (req, res) {
         // if ((currentTime >= '07:00' && currentTime <= '10:30')) {
         //   meal_type = "breakfast"
         //   message = "success";
-        //   currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.breakfast === 1);
+      // currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.breakfast === 1);
         // }
         // else if ((currentTime >= '12:00' && currentTime <= '15:00')) {
         //   meal_type = "lunch"
@@ -154,7 +154,7 @@ module.exports.messList = async function (req, res) {
         // }
 
 
-        const currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate);
+        const currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate&& meal.dinner===1);
 
         // Find the corresponding user data based on rollNumber
         const userData = await User.findOne({
