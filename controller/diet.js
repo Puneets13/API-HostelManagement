@@ -93,9 +93,10 @@ module.exports.messList = async function (req, res) {
     // const currentDate = new Date().toISOString().split('T')[0]; // Today's date in "YYYY-MM-DD" format
 
     // Query MongoDB based on the current date
-    const todayDate = moment().format('YYYY-MM-DD');
+    // const todayDate = moment().format('YYYY-MM-DD');
     // Get the current date
     const currentDate = moment();
+    const currentDate1=new Date();
 
     // Extract the year and month
     const year = currentDate.year();
@@ -109,7 +110,7 @@ module.exports.messList = async function (req, res) {
     });
 
 
-    messDate = new Date(currentDate);
+    var messDate = new Date(currentDate);
     const FormattedDate = [
       messDate.getFullYear(),
       (messDate.getMonth() + 1).toString().padStart(2, '0'),
@@ -117,13 +118,43 @@ module.exports.messList = async function (req, res) {
     ].join('-');
     console.log(FormattedDate);
 
+    const hours = currentDate1.getHours();
+    const minutes = currentDate1.getMinutes();
+    const ampm = hours >= 12 ? 'pm' : 'am';
 
+    // const currentTime = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+    // Format the time as HH:mm
+    const currentTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+
+
+    var meal_type = "", message = "";
+    var currentDayMeal;
     // Iterate over each DietRecord entry
     for (const entry of data) {
       // Check if 'meals' array exists and is an array
       if (entry.meals && Array.isArray(entry.meals)) {
         // Find the meal entry for the current date
-        const currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate);
+
+        if ((currentTime >= '07:00' && currentTime <= '10:30')) {
+          meal_type = "breakfast"
+          message = "success";
+          currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.breakfast === 1);
+        }
+        else if ((currentTime >= '12:00' && currentTime <= '15:00')) {
+          meal_type = "lunch"
+          message = "success";
+          currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.lunch === 1);
+        }
+        else if (((currentTime >= '19:00' && currentTime <= '23:50'))) {
+          meal_type = "dinner"
+          message = "success";
+          currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.dinner === 1);
+        } else {
+          message = "Out of time";
+        }
+
+
+        // const currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate);
 
         // Find the corresponding user data based on rollNumber
         const userData = await User.findOne({
@@ -133,13 +164,14 @@ module.exports.messList = async function (req, res) {
         if (currentDayMeal) {
           const messRecordObj = {
             userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
-            avatar: userData? userData.avatar:"https://gravatar.com/avatar/?s=200&d=retro",
+            avatar: userData ? userData.avatar : "https://gravatar.com/avatar/?s=200&d=retro",
             rollNumber: entry.rollNumber,
             roomNumber: entry.roomNumber,
             date: currentDayMeal.date,
             breakfast: currentDayMeal.breakfast,
             lunch: currentDayMeal.lunch,
-            dinner: currentDayMeal.dinner
+            dinner: currentDayMeal.dinner,
+            meal_type:meal_type
           };
           messRecords.push(messRecordObj);
           console.log('Found meal for the current date:', currentDayMeal);
@@ -209,7 +241,7 @@ module.exports.messList = async function (req, res) {
 //     // const currentTime = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
 //       // Format the time as HH:mm
 //       const currentTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
-   
+
 //     var meal="" ,message="";
 
 //     // Iterate over each DietRecord entry
