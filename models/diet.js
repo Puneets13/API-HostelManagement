@@ -1,5 +1,20 @@
 const mongoose = require('mongoose');
 const moment = require('moment')
+
+
+
+const extraSchema = new mongoose.Schema({
+  _id:mongoose.Schema.Types.ObjectId,
+  item:{
+    type:String
+  },
+
+  amount:{
+    type:Number
+  }
+});
+
+
 const mealSchema = new mongoose.Schema({
   _id:mongoose.Schema.Types.ObjectId,
   date: {
@@ -8,26 +23,16 @@ const mealSchema = new mongoose.Schema({
    },
    breakfast: Number, // 0 for false, 1 for true
 
-    breakfastExtra: [{
-      item: String,
-      amount: Number
-  }],  // array of MAP
+    breakfastExtra: [extraSchema],  // array of MAP
    lunch: Number,     // 0 for false, 1 for true
-   lunchExtra:[{
-    item: String,
-    amount: Number
-   }],
-   eveningExtra:[{
-    item: String,
-    amount: Number
-   }],
+   lunchExtra:[extraSchema],
+   eveningExtra:[extraSchema],
    dinner: Number,    //
-   dinnerExtra:[{
-    item: String,
-    amount: Number
-   }],
+   dinnerExtra:[extraSchema],
 
 });
+
+
 
 
 const dietRecords= new mongoose.Schema({
@@ -55,7 +60,7 @@ const dietRecords= new mongoose.Schema({
 dietRecords.pre('save', function (next) {
   if (this.isNew) {
 
-    this.timeStamp = moment().format("YYYY-MM-DD : HH:mm");
+    // this.timeStamp = moment().format("YYYY-MM-DD : HH:mm");
 
     // Initialize meals for the entire month
     const firstDay = new Date(this.year, this.month - 1, 1); // Month is 0-based

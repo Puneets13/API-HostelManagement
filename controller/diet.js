@@ -147,62 +147,62 @@ module.exports.messList = async function (req, res) {
           message = "success";
           currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.breakfast === 1);
           console.log(currentDayMeal);
-          if(currentDayMeal){
-        var messRecordObj = {
-            userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
-            avatar: userData ? userData.avatar : "https://gravatar.com/avatar/?s=200&d=retro",
-            rollNumber: entry.rollNumber,
-            roomNumber: entry.roomNumber,
-            date: currentDayMeal.date,
-            breakfast: currentDayMeal.breakfast,
-            lunch: currentDayMeal.lunch,
-            dinner: currentDayMeal.dinner,
-            meal_type: meal_type
-          };
-          messRecords.push(messRecordObj);
-          console.log('Found meal for the current date:', currentDayMeal);
+          if (currentDayMeal) {
+            var messRecordObj = {
+              userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
+              avatar: userData ? userData.avatar : "https://gravatar.com/avatar/?s=200&d=retro",
+              rollNumber: entry.rollNumber,
+              roomNumber: entry.roomNumber,
+              date: currentDayMeal.date,
+              breakfast: currentDayMeal.breakfast,
+              lunch: currentDayMeal.lunch,
+              dinner: currentDayMeal.dinner,
+              meal_type: meal_type
+            };
+            messRecords.push(messRecordObj);
+            console.log('Found meal for the current date:', currentDayMeal);
           }
         }
-        else if (meal_received=="lunch") {
+        else if (meal_received == "lunch") {
           meal_type = "lunch"
           message = "success";
           currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.lunch === 1);
-          if(currentDayMeal){
-          var messRecordObj = {
-            userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
-            avatar: userData ? userData.avatar : "https://gravatar.com/avatar/?s=200&d=retro",
-            rollNumber: entry.rollNumber,
-            roomNumber: entry.roomNumber,
-            date: currentDayMeal.date,
-            breakfast: currentDayMeal.breakfast,
-            lunch: currentDayMeal.lunch,
-            dinner: currentDayMeal.dinner,
-            meal_type: meal_type
-          };
-          messRecords.push(messRecordObj);
-          console.log('Found meal for the current date:', currentDayMeal);
-        }
+          if (currentDayMeal) {
+            var messRecordObj = {
+              userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
+              avatar: userData ? userData.avatar : "https://gravatar.com/avatar/?s=200&d=retro",
+              rollNumber: entry.rollNumber,
+              roomNumber: entry.roomNumber,
+              date: currentDayMeal.date,
+              breakfast: currentDayMeal.breakfast,
+              lunch: currentDayMeal.lunch,
+              dinner: currentDayMeal.dinner,
+              meal_type: meal_type
+            };
+            messRecords.push(messRecordObj);
+            console.log('Found meal for the current date:', currentDayMeal);
+          }
         }
 
-        else if (meal_received=="dinner") {
+        else if (meal_received == "dinner") {
           meal_type = "dinner"
           message = "success";
           currentDayMeal = entry.meals.find((meal) => meal.date === FormattedDate && meal.dinner === 1);
-          if(currentDayMeal){
-          var messRecordObj = {
-            userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
-            avatar: userData ? userData.avatar : "https://gravatar.com/avatar/?s=200&d=retro",
-            rollNumber: entry.rollNumber,
-            roomNumber: entry.roomNumber,
-            date: currentDayMeal.date,
-            breakfast: currentDayMeal.breakfast,
-            lunch: currentDayMeal.lunch,
-            dinner: currentDayMeal.dinner,
-            meal_type: meal_type
-          };
-          messRecords.push(messRecordObj);
-          console.log('Found meal for the current date:', currentDayMeal);
-        }
+          if (currentDayMeal) {
+            var messRecordObj = {
+              userName: userData ? userData.username : 'Unknown', // Use the username or provide a default value
+              avatar: userData ? userData.avatar : "https://gravatar.com/avatar/?s=200&d=retro",
+              rollNumber: entry.rollNumber,
+              roomNumber: entry.roomNumber,
+              date: currentDayMeal.date,
+              breakfast: currentDayMeal.breakfast,
+              lunch: currentDayMeal.lunch,
+              dinner: currentDayMeal.dinner,
+              meal_type: meal_type
+            };
+            messRecords.push(messRecordObj);
+            console.log('Found meal for the current date:', currentDayMeal);
+          }
         }
 
         else {
@@ -976,7 +976,7 @@ module.exports.applyLeave = async function (req, res) {
 // // modification for leave records if student continue in btw
 module.exports.createmonthlydietRecord = async function (req, res) {
 
-  const { rollNumber, hostelName, roomNumber, month, year, timestamp, mealType } = req.body;
+  const { rollNumber, hostelName, roomNumber, month, year, timestamp, mealType, formatedTime_24 } = req.body;
   let scanyes = 0;
   try {
     // Find the student's diet record based on roll number, month, and year
@@ -993,6 +993,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
         month,
         year,
         meals: [],
+        timeStamp: "" + timestamp + " : " + formatedTime_24
       });
 
       // Generate meal records for the entire month
@@ -1006,6 +1007,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
           breakfast: 0,
           lunch: 0,
           dinner: 0,
+          // HERE DO WE NEED TO INIIALISE THE breakfastextraMeal array
         };
         dietRecord.meals.push(meal);
       }
@@ -1082,6 +1084,9 @@ module.exports.createmonthlydietRecord = async function (req, res) {
             // }
 
             console.log('you can scan');
+
+            studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
+
             res.status(200).json({
               message: "you can scan",
               error: "No error",
@@ -1179,6 +1184,10 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                     }
                     currentMeal.breakfast = 1;
                     // mark current meal as 1 as he can eat now
+
+                    studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
+
+
                     res.status(200).json({
                       message: "Prev diet not effected, consecutive 3 meals found",
                       error: "Leave",
@@ -1212,6 +1221,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                     }
 
                     currentMeal.breakfast = 1; // we are setting it again as 1 here
+                    studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
 
                     res.status(200).json({
                       message: "Prev diet effected, consecutive 3 meals not found",
@@ -1286,6 +1296,8 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                   }
                 }
                 currentMeal.breakfast = 1;
+                studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
+
 
                 // checking if the leave has been applied for next month
                 if (nextMonthLeave == 1) {
@@ -1340,6 +1352,9 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
                   try {
                     // Save the updated student record
+
+                    studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
+
                     await nextMonthStudentRecord.save();
                     console.log('Meal records updated and saved successfully.');
                   } catch (error) {
@@ -1347,6 +1362,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                   }
 
                 }
+
                 res.status(200).json({
                   message: "Prev diet not effected, consecutive 3 meals found",
                   error: "Leave",
@@ -1456,6 +1472,8 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
                   try {
                     // Save the updated student record
+                    studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
+
                     await nextMonthStudentRecord.save();
                     console.log('Meal records updated and saved successfully.');
                   } catch (error) {
@@ -1463,6 +1481,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                   }
 
                 }
+
                 res.status(200).json({
                   message: "Prev diet effected, consecutive 3 meals not found",
                   error: "Leave",
@@ -1478,6 +1497,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
           // update the data record on server
           try {
             // Save the updated student record
+            timeStamp= "" + timestamp + " : " + formatedTime_24;
             await studentRecord.save();
             // await nextMonthStudentRecord.save();
             console.log('Meal records updated and saved successfully.');
@@ -1787,6 +1807,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
                   try {
                     // Save the updated student record
+                    timeStamp: "" + timestamp + " : " + formatedTime_24;
                     await nextMonthStudentRecord.save();
                     console.log('Meal records updated and saved successfully.');
                   } catch (error) {
@@ -1924,6 +1945,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
           // update the data record on server
           try {
             // Save the updated student record
+            timeStamp: "" + timestamp + " : " + formatedTime_24;
             await studentRecord.save();
             console.log('Meal records updated and saved successfully.');
           } catch (error) {
@@ -2230,6 +2252,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
                   try {
                     // Save the updated student record
+                    timeStamp: "" + timestamp + " : " + formatedTime_24;
                     await nextMonthStudentRecord.save();
                     console.log('Meal records updated and saved successfully.');
                   } catch (error) {
@@ -2345,6 +2368,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
                   try {
                     // Save the updated student record
+                    timeStamp: "" + timestamp + " : " + formatedTime_24;
                     await nextMonthStudentRecord.save();
                     console.log('Meal records updated and saved successfully.');
                   } catch (error) {
@@ -2367,6 +2391,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
           // update the data record on server
           try {
             // Save the updated student record
+            timeStamp: "" + timestamp + " : " + formatedTime_24;
             await studentRecord.save();
             console.log('Meal records updated and saved successfully.');
           } catch (error) {
@@ -2387,6 +2412,347 @@ module.exports.createmonthlydietRecord = async function (req, res) {
   }
 
 };
+
+
+
+
+
+module.exports.getextrameal = async function (req, res) {
+
+  const { rollNumber, hostelName, roomNumber, month, year, timestamp, mealType, formatedTime_24 } = req.body;
+  let scanyes = 0;
+
+  const { item, amount } = req.body;
+  const studentRecord = await DietRecords.findOne({ rollNumber, month, year, hostelName, roomNumber });
+
+
+  if (!studentRecord) {
+    // Student record not found, you can handle this case as needed
+    console.log("Student record not found.creating new");
+    dietRecord = new DietRecords({
+      _id: new mongoose.Types.ObjectId(),
+      rollNumber,
+      roomNumber,
+      hostelName,
+      month,
+      year,
+      meals: [],
+      timeStamp: "" + timestamp + " : " + formatedTime_24
+    });
+
+
+    // Generate meal records for the entire month
+    const firstDay = new Date(year, month - 1, 1); // Month is 0-based
+    const lastDay = new Date(year, month, 0);
+
+    for (let date = firstDay; date <= lastDay; date = new Date(date.getTime() + 86400000)) {
+      const dateString = date.toISOString().split('T')[0];
+      const meal = {
+        date: dateString,
+        breakfast: 0,
+        lunch: 0,
+        dinner: 0,
+        breakfastExtra:[],
+        lunchExtra:[],
+        eveningExtra:[],
+        dinnerExtra:[]
+
+        // HERE DO WE NEED TO INIIALISE THE breakfastextraMeal array
+      };
+      dietRecord.meals.push(meal);
+    }
+
+    console.log("Diet Record with Meals:", dietRecord);
+    // Save the new diet record
+    await dietRecord.save();
+    // GIVING SOME EXCEPTION AS NULL MEALS CANT PUSH , BUT WORKING FINE
+    module.exports.createmonthlydietRecord(req, res); // to again call this function so that once after creating the records , we can set the leave again
+  } else {
+    console.log(studentRecord);
+
+    if (mealType == 'breakfast') {
+
+      console.log("iam in brekfast")
+
+      // to find the particular index from the student record
+      var recordIndex = -1;
+      const mealsArray = studentRecord.meals;
+
+      for (let i = 0; i < mealsArray.length; i++) {
+        if (mealsArray[i].date == timestamp) {
+          recordIndex = i; // Return the index if the date matches
+          console.log('record found')
+        }
+      }
+
+      console.log("record Index: " + recordIndex)
+
+      if (recordIndex != -1) {
+        // Meal data found for the specified date
+        const currentMeal = studentRecord.meals[recordIndex];
+        console.log("current Meal : " + currentMeal)
+        // Update the meal based on the meal type provided in the request
+
+
+        if (mealType == 'breakfast') {
+          console.log("iam in brekfast")
+
+          if (currentMeal.breakfast != 2) {
+            // currentMeal.breakfast = 1;
+            console.log('you can eat extra');
+
+            studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
+            var extras = {
+              item: item,
+              amount: amount
+            }
+            studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
+            currentMeal.breakfastExtra.push(extras);
+            
+            res.status(200).json({
+              message: "you have consumed extras",
+              error: "No error",
+              scan: "yes"
+            });
+
+          }
+          else if (currentMeal.breakfast == 2) {
+            console.log('you have applied leave');
+            res.status(200).json({
+              message: "you are on leave",
+              error: "error",
+              scan: "No"
+            });
+
+          }
+        }
+      }else{
+        console.log("record not found");
+      }
+
+      // update the data record on server
+      try {
+        // Save the updated student record
+        await studentRecord.save();
+        // await nextMonthStudentRecord.save();
+        console.log('Meal records updated and saved successfully.');
+      } catch (error) {
+        console.error('Error saving updated student record:', error);
+      }
+    }
+
+    
+    if (mealType == 'lunch') {
+
+      console.log("iam in lunch")
+
+      // to find the particular index from the student record
+      var recordIndex = -1;
+      const mealsArray = studentRecord.meals;
+
+      for (let i = 0; i < mealsArray.length; i++) {
+        if (mealsArray[i].date == timestamp) {
+          recordIndex = i; // Return the index if the date matches
+          console.log('record found')
+        }
+      }
+
+      console.log("record Index: " + recordIndex)
+
+      if (recordIndex != -1) {
+        // Meal data found for the specified date
+        const currentMeal = studentRecord.meals[recordIndex];
+        console.log("current Meal : " + currentMeal)
+        // Update the meal based on the meal type provided in the request
+
+
+        if (mealType == 'lunch') {
+          if (currentMeal.breakfast != 2) {
+            console.log('you can eat extra');
+            studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
+            var extras = {
+              item: item,
+              amount: amount
+            }
+            studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
+            currentMeal.lunchExtra.push(extras);
+            
+            res.status(200).json({
+              message: "you have consumed extras",
+              error: "No error",
+              scan: "yes"
+            });
+
+          }
+          else if (currentMeal.lunch == 2) {
+            console.log('you have applied leave');
+            res.status(200).json({
+              message: "you are on leave",
+              error: "error",
+              scan: "No"
+            });
+
+          }
+        }
+      }else{
+        console.log("record not found");
+      }
+
+      // update the data record on server
+      try {
+        // Save the updated student record
+        await studentRecord.save();
+        // await nextMonthStudentRecord.save();
+        console.log('Meal records updated and saved successfully.');
+      } catch (error) {
+        console.error('Error saving updated student record:', error);
+      }
+    }
+
+
+    if (mealType == 'evening') {
+
+      console.log("iam in evening")
+
+      // to find the particular index from the student record
+      var recordIndex = -1;
+      const mealsArray = studentRecord.meals;
+
+      for (let i = 0; i < mealsArray.length; i++) {
+        if (mealsArray[i].date == timestamp) {
+          recordIndex = i; // Return the index if the date matches
+          console.log('record found')
+        }
+      }
+
+      console.log("record Index: " + recordIndex)
+
+      if (recordIndex != -1) {
+        // Meal data found for the specified date
+        const currentMeal = studentRecord.meals[recordIndex];
+        console.log("current Meal : " + currentMeal)
+        // Update the meal based on the meal type provided in the request
+
+
+        if (mealType == 'evening') {
+          // checking previous meal before snack
+          if (currentMeal.lunch != 2) {
+            console.log('you can eat extra');
+            studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
+            var extras = {
+              item: item,
+              amount: amount
+            }
+            studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
+            currentMeal.eveningExtra.push(extras);
+            
+            res.status(200).json({
+              message: "you have consumed extras",
+              error: "No error",
+              scan: "yes"
+            });
+
+          }
+          else if (currentMeal.lunch == 2) {
+            console.log('you have applied leave');
+            res.status(200).json({
+              message: "you are on leave",
+              error: "error",
+              scan: "No"
+            });
+
+          }
+        }
+      }else{
+        console.log("record not found");
+      }
+
+      // update the data record on server
+      try {
+        // Save the updated student record
+        await studentRecord.save();
+        // await nextMonthStudentRecord.save();
+        console.log('Meal records updated and saved successfully.');
+      } catch (error) {
+        console.error('Error saving updated student record:', error);
+      }
+    }
+
+    if (mealType == 'dinner') {
+
+      console.log("iam in dinner")
+
+      // to find the particular index from the student record
+      var recordIndex = -1;
+      const mealsArray = studentRecord.meals;
+
+      for (let i = 0; i < mealsArray.length; i++) {
+        if (mealsArray[i].date == timestamp) {
+          recordIndex = i; // Return the index if the date matches
+          console.log('record found')
+        }
+      }
+
+      console.log("record Index: " + recordIndex)
+
+      if (recordIndex != -1) {
+        // Meal data found for the specified date
+        const currentMeal = studentRecord.meals[recordIndex];
+        console.log("current Meal : " + currentMeal)
+        // Update the meal based on the meal type provided in the request
+
+
+        if (mealType == 'dinner') {
+          if (currentMeal.breakfast != 2) {
+            console.log('you can eat extra');
+            studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
+            var extras = {
+              item: item,
+              amount: amount
+            }
+            studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
+            currentMeal.dinnerExtra.push(extras);
+            
+            res.status(200).json({
+              message: "you have consumed extras",
+              error: "No error",
+              scan: "yes"
+            });
+
+          }
+          else if (currentMeal.dinner == 2) {
+            console.log('you have applied leave');
+            res.status(200).json({
+              message: "you are on leave",
+              error: "error",
+              scan: "No"
+            });
+
+          }
+        }
+      }else{
+        console.log("record not found");
+      }
+
+      // update the data record on server
+      try {
+        // Save the updated student record
+        await studentRecord.save();
+        // await nextMonthStudentRecord.save();
+        console.log('Meal records updated and saved successfully.');
+      } catch (error) {
+        console.error('Error saving updated student record:', error);
+      }
+    }
+
+
+
+
+  }
+
+}
+
+
 
 
 // it will consume alot of time in setting the records of all the students of the hostels as -1 for intial mess days

@@ -17,4 +17,7 @@ router.post('/getDietRecordList',callbackFunctions.getDietRecordList);
 
 router.post('/messList',callbackFunctions.messList);
 
+router.post('/createExtraMealRecord',callbackFunctions.getextrameal);
+
+
 module.exports = router;
