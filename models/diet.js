@@ -55,7 +55,7 @@ const dietRecords= new mongoose.Schema({
 dietRecords.pre('save', function (next) {
   if (this.isNew) {
 
-    this.timeStamp = moment.tz.setDefault('Asia/Kolkata').format("YYYY-MM-DD : HH:mm");
+    this.timeStamp = moment().format("YYYY-MM-DD : HH:mm");
 
     // Initialize meals for the entire month
     const firstDay = new Date(this.year, this.month - 1, 1); // Month is 0-based
