@@ -2578,14 +2578,14 @@ module.exports.getextrameal = async function (req, res) {
             currentMeal.lunchExtra.push(extras);
             
             res.status(200).json({
-              message: "you have consumed extras",
+              message: "you have consumed extras", 
               error: "No error",
               scan: "yes"
             });
 
           }
           else if (currentMeal.lunch == 2) {
-            console.log('you have applied leave');
+            console.log('you are on leave');
             res.status(200).json({
               message: "you are on leave",
               error: "error",
@@ -2610,9 +2610,9 @@ module.exports.getextrameal = async function (req, res) {
     }
 
 
-    if (mealType == 'evening') {
+    if (mealType == 'snacks') {
 
-      console.log("iam in evening")
+      console.log("iam in snacks")
 
       // to find the particular index from the student record
       var recordIndex = -1;
@@ -2634,7 +2634,7 @@ module.exports.getextrameal = async function (req, res) {
         // Update the meal based on the meal type provided in the request
 
 
-        if (mealType == 'evening') {
+        if (mealType == 'snacks') {
           // checking previous meal before snack
           if (currentMeal.lunch != 2) {
             console.log('you can eat extra');
@@ -2654,7 +2654,7 @@ module.exports.getextrameal = async function (req, res) {
 
           }
           else if (currentMeal.lunch == 2) {
-            console.log('you have applied leave');
+            console.log('you are on leave');
             res.status(200).json({
               message: "you are on leave",
               error: "error",
