@@ -14,6 +14,10 @@ const constantSchema = new mongoose.Schema({
     },
     messStartDate:{
         type:String
+    },
+    items:{
+        type: Map,
+        of: Number
     }
 });
 
