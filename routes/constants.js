@@ -10,4 +10,5 @@ router.post('/updateExtraList',callbackFunctions.updateExtraList);//add  items t
 router.delete('/deleteExtraListEntry',callbackFunctions.deleteExtraListEntry);//delte one entry in list
 router.delete('/deleteExtraList',callbackFunctions.deleteExtraList);// delete whole list
 router.post('/updateExtraListEntry',callbackFunctions.updateExtraListEntry);//change name and price of item
+router.post('/fetchItems',callbackFunctions.fetchItems);//fetch list of constants
 module.exports = router;
