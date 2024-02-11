@@ -7,8 +7,8 @@ router.post('/setdailymeal',callbackFunctions.setdailymeal);//daily scanner meal
 router.post('/createcollection',callbackFunctions.createConstants);//setting value of constants
 router.post('/deletecollection',callbackFunctions.deleteCollection);//deleting all collection at end of sem
 router.post('/addExtraItem',callbackFunctions.addExtraItem);//add  items to list
-router.delete('/deleteEntry',callbackFunctions.deleteEntry);//delte one entry in list
-router.delete('/deleteAllList',callbackFunctions.deleteAllList);// delete whole list
+router.post('/deleteEntry',callbackFunctions.deleteEntry);//delte one entry in list
+router.post('/deleteAllList',callbackFunctions.deleteAllList);// delete whole list
 router.post('/editExtraItem',callbackFunctions.editExtraItem);//change name and price of item
 router.post('/fetchItems',callbackFunctions.fetchItems);//fetch list of constants
 module.exports = router;
