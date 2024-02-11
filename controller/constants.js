@@ -109,9 +109,7 @@ module.exports.createConstants=async function (req,res){
     const itemPrice= req.body.itemPrice;
     const hostelName= req.body.hostelName;
 
-    const newEntry={
-        itemName:itemPrice
-    };
+    
     try{
         const constRecord = await Constants.findOne({ hostelName: hostelName});
                
@@ -119,10 +117,11 @@ module.exports.createConstants=async function (req,res){
             constRecord.items.set(itemName,itemPrice);
               // Save the updated hostel document
               await constRecord.save();
-                console.log('Hostel document updated:', constRecord);
+                
                 res.json({
                     message: "success",
-                    error: "0"
+                    error: "0",
+                    items:constRecord.items
                 })
               
              
