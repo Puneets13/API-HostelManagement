@@ -103,7 +103,7 @@ module.exports.createConstants=async function (req,res){
       }
  }
 
- module.exports.updateExtraList= async function(req,res){
+ module.exports.addExtraItem= async function(req,res){
     const itemNamer= req.body.itemName;
     const itemName= itemNamer.toUpperCase();
     const itemPrice= req.body.itemPrice;
@@ -154,7 +154,7 @@ Constants.findOneAndUpdate({hostelName:hostelName}, {$set:{ items: extraMap }}, 
     
  }
 
- module.exports.deleteExtraListEntry= async function(req,res){
+ module.exports.deleteEntry= async function(req,res){
     const itemNamer= req.body.itemName;
     const itemName= itemNamer.toUpperCase();
     const hostelName= req.body.hostelName;
@@ -181,7 +181,7 @@ Constants.findOneAndUpdate({hostelName:hostelName}, {$set:{ items: extraMap }}, 
     
  }
 
- module.exports.deleteExtraList= async function(req,res){
+ module.exports.deleteAllList= async function(req,res){
     const hostelName= req.body.hostelName;
 
     const constRecord = await Constants.findOne({ hostelName: hostelName});
@@ -203,7 +203,7 @@ Constants.findOneAndUpdate({hostelName:hostelName}, {$set:{ items: extraMap }}, 
   
   }
 
-  module.exports.updateExtraListEntry= async function(req,res){
+  module.exports.editExtraItem= async function(req,res){
     const prevItemName= req.body.prevItemName.toUpperCase();
     const hostelName= req.body.hostelName;
     const itemName= req.body.itemName.toUpperCase();
