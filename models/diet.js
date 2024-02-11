@@ -5,10 +5,7 @@ const moment = require('moment')
 
 const extraSchema = new mongoose.Schema({
   _id:mongoose.Schema.Types.ObjectId,
-  item:{
-    type:String
-  },
-
+  item:[String],
   amount:{
     type:Number
   }
