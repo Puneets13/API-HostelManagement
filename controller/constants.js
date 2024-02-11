@@ -5,6 +5,7 @@ const Mess=require('../models/Mess.js');
 const Constants= require('../models/Constants.js')
 const mongoose = require('mongoose');
 const moment = require('moment');
+const { constants } = require('crypto');
 
 
 module.exports.setdailymeal=async function (req,res){
@@ -74,6 +75,33 @@ module.exports.createConstants=async function (req,res){
            
  }
 
+
+ module.exports.fetchItems  = async function (req,res){
+    const hostelName = req.body.hostelName;
+
+    const hostelDocument = await Constants.findOne({ hostelName });
+
+    if (!hostelDocument) {
+        return res.status(404).json({ 
+            message: 'Hostel not found' 
+        });
+    }
+
+      // Access the items field from the hostelDocument
+      const items = hostelDocument.items;
+
+      if(items==null){
+        res.json({
+            message: "no item found"
+          });    
+      }else{
+      // Send the items array in the response
+      res.json({
+        item : items,
+        message: "success"
+      });
+      }
+ }
 
  module.exports.updateExtraList= async function(req,res){
     const itemNamer= req.body.itemName;
