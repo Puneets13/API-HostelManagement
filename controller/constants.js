@@ -177,35 +177,32 @@ Constants.findOneAndUpdate({hostelName:hostelName}, {$set:{ items: extraMap }}, 
 
   module.exports.updateExtraListEntry= async function(req,res){
     const prevItemName= req.body.prevItemName.toUpperCase();
-    const prevItemPrice= req.body.prevItemPrice;
     const hostelName= req.body.hostelName;
-    const itemName= req.body.itemName;
+    const itemName= req.body.itemName.toUpperCase();
     const itemPrice= req.body.itemPrice;
 
-    //samoa : 110  -> samosa
-                    //   80
-                    //   dono
-    // const constRecord = await Constants.findOne({ hostelName: hostelName});
-    // if(itemName){
-    //     constRecord.items.prevItemName=itemName;
-    //     if(itemPrice)
-    //     constRecord.items.prevItemPrice=itemPrice;
+    const constRecord = await Constants.findOne({ hostelName: hostelName});
+    if (constRecord.items.has(prevItemName)) {
+        // Delete the entry from the map
+        constRecord.items.delete(prevItemName);
+        constRecord.items.set(itemName,itemPrice);
+        // Save the changes to the document
+        await constRecord.save();
+        console.log('Hostel document updated:', constRecord);
 
-    //     constRecord.save()
-    // console.log('Hostel document updated:', constRecord);
-    //     res.json({
-    //         message: "success",
-    //         error: "0"
-    //     })
-    // }else{
-    //     res.json({
-    //         message: "no list found",
-    //         error: "0"
-    //     })
-    // }
-
+        res.json({
+            message: "success",
+            error: "0"
+        });
+    } else {
+        res.json({
+            message: "failed",
+            error: "1"
+        });
+    }
+} 
   
-  }
+  
     
 
 
