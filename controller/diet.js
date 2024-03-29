@@ -157,7 +157,8 @@ module.exports.messList = async function (req, res) {
               breakfast: currentDayMeal.breakfast,
               lunch: currentDayMeal.lunch,
               dinner: currentDayMeal.dinner,
-              meal_type: meal_type
+              meal_type: meal_type,
+              timeStamp : entry.timeStamp
             };
             messRecords.push(messRecordObj);
             console.log('Found meal for the current date:', currentDayMeal);
@@ -177,7 +178,7 @@ module.exports.messList = async function (req, res) {
               breakfast: currentDayMeal.breakfast,
               lunch: currentDayMeal.lunch,
               dinner: currentDayMeal.dinner,
-              meal_type: meal_type
+              timeStamp : entry.timeStamp
             };
             messRecords.push(messRecordObj);
             console.log('Found meal for the current date:', currentDayMeal);
@@ -198,7 +199,9 @@ module.exports.messList = async function (req, res) {
               breakfast: currentDayMeal.breakfast,
               lunch: currentDayMeal.lunch,
               dinner: currentDayMeal.dinner,
-              meal_type: meal_type
+              meal_type: meal_type,
+              timeStamp : entry.timeStamp
+
             };
             messRecords.push(messRecordObj);
             console.log('Found meal for the current date:', currentDayMeal);
@@ -231,6 +234,9 @@ module.exports.messList = async function (req, res) {
         console.log('Invalid or missing "meals" array in the entry');
       }
     }
+
+       // Sort messRecords based on timeStamp
+    messRecords.sort((a, b) => new Date(b.timeStamp) - new Date(a.timeStamp));
 
     res.status(200).json({
       message: message,
