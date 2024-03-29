@@ -982,6 +982,8 @@ module.exports.createmonthlydietRecord = async function (req, res) {
     // Find the student's diet record based on roll number, month, and year
     const studentRecord = await DietRecords.findOne({ rollNumber, month, year, hostelName, roomNumber });
 
+    console.log("\nFound record :"+studentRecord);
+
     if (!studentRecord) {
       // Student record not found, you can handle this case as needed
       console.log("Student record not found.creating new");
@@ -1553,6 +1555,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
             // }
 
             console.log('you can scan');
+            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
             res.status(200).json({
               message: "you can scan",
               error: "Leave",
@@ -1638,6 +1641,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                       scan: "yes"
                     });
                     currentMeal.lunch = 1;
+            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
                     studentRecord.meals[recordIndex].dinner = 0;
                     recordIndex++;
                     while (true) {
@@ -1680,7 +1684,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                     }
 
                     currentMeal.lunch = 1; // we are setting it again as 1 here
-
+            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
                     res.status(200).json({
                       message: "Prev diet effected, consecutive 3 meals not found",
                       error: "error",
@@ -1753,7 +1757,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                   }
                 }
                 currentMeal.lunch = 1;
-
+            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
                 // checking if the leave has been applied for next month
                 if (nextMonthLeave == 1) {
                   // search for next month record , if found it means there is a leave , bcz in this case only the next month entry will be generated
@@ -1807,7 +1811,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
                   try {
                     // Save the updated student record
-                    timeStamp: "" + timestamp + " : " + formatedTime_24;
+            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
                     await nextMonthStudentRecord.save();
                     console.log('Meal records updated and saved successfully.');
                   } catch (error) {
@@ -1871,6 +1875,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                   }
                 }
                 currentMeal.lunch = 1;
+            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
                 // checking if the leave has been applied for next month
                 if (nextMonthLeave == 1) {
                   // search for next month record , if found it means there is a leave , bcz in this case only the next month entry will be generated
@@ -1945,7 +1950,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
           // update the data record on server
           try {
             // Save the updated student record
-            timeStamp: "" + timestamp + " : " + formatedTime_24;
+            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
             await studentRecord.save();
             console.log('Meal records updated and saved successfully.');
           } catch (error) {
@@ -1972,7 +1977,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
           if (currentMeal.dinner == 0) {
             currentMeal.dinner = 1;
-
+            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
             // also check the prev meals if they are 0 , bcz agar banda koi mess skip krde aur phir next day jaye toh vo meal
             // 0 rhega aur uske next vala jo current hoga vo 1 hojayega,..toh phir number of meals count mai dikat ayegi.
 
@@ -2252,7 +2257,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
                   try {
                     // Save the updated student record
-                    timeStamp: "" + timestamp + " : " + formatedTime_24;
+            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
                     await nextMonthStudentRecord.save();
                     console.log('Meal records updated and saved successfully.');
                   } catch (error) {
@@ -2271,6 +2276,8 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                 studentRecord.meals[recordIndex].lunch = 1;
                 studentRecord.meals[recordIndex].breakfast = 1;
                 currentMeal.dinner = 1;
+            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+
                 recordIndex++;
                 var nextMonthLeave = 0;
                 var nextMonthDate;
@@ -2315,6 +2322,8 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                   }
                 }
                 currentMeal.dinner = 1;
+            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+
                 // checking if the leave has been applied for next month
                 if (nextMonthLeave == 1) {
                   // search for next month record , if found it means there is a leave , bcz in this case only the next month entry will be generated
@@ -2368,7 +2377,8 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
                   try {
                     // Save the updated student record
-                    timeStamp: "" + timestamp + " : " + formatedTime_24;
+            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+
                     await nextMonthStudentRecord.save();
                     console.log('Meal records updated and saved successfully.');
                   } catch (error) {
@@ -2391,7 +2401,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
           // update the data record on server
           try {
             // Save the updated student record
-            timeStamp: "" + timestamp + " : " + formatedTime_24;
+            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
             await studentRecord.save();
             console.log('Meal records updated and saved successfully.');
           } catch (error) {
@@ -2426,9 +2436,15 @@ module.exports.getextrameal = async function (req, res) {
   const studentRecord = await DietRecords.findOne({ rollNumber, month, year, hostelName, roomNumber });
 
 
-  if (!studentRecord) {
+  console.log("RollNumber "+rollNumber);
+  console.log("Student record extra found\n\n\n"+studentRecord+"\n\n\nMilgeyaaaaaaaaa..........");
+
+
+  if (!studentRecord) 
+{
     // Student record not found, you can handle this case as needed
-    console.log("Student record not found.creating new");
+    console.log("Student record not found.creating new..");
+
     dietRecord = new DietRecords({
       _id: new mongoose.Types.ObjectId(),
       rollNumber,
@@ -2467,7 +2483,13 @@ module.exports.getextrameal = async function (req, res) {
     await dietRecord.save();
     // GIVING SOME EXCEPTION AS NULL MEALS CANT PUSH , BUT WORKING FINE
     module.exports.createmonthlydietRecord(req, res); // to again call this function so that once after creating the records , we can set the leave again
-  } else {
+  } 
+  
+  
+  
+  else {
+
+    console.log("mai else mai hu , merko shuru se nhi banaayaaaa....")
     console.log(studentRecord);
 
     if (mealType == 'breakfast') {
