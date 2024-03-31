@@ -667,6 +667,103 @@ module.exports.loginUser = function (req, res) {
 
                         }
                     }
+
+
+                    const emailToHostelMapping = {
+                        "bh7@nitj.ac.in": { hostelName: "Boys Hostel 7", roomNumber: "000" },
+                        "bh7E@nitj.ac.in": { hostelName: "Boys Hostel 7E", roomNumber: "000" },
+                        "bh3@nitj.ac.in": { hostelName: "Boys Hostel 3", roomNumber: "000" },
+                        "bh4@nitj.ac.in": { hostelName: "Boys Hostel 4", roomNumber: "000" },
+                        "bh6@nitj.ac.in": { hostelName: "Boys Hostel 6", roomNumber: "000" },
+                        "mbh.B@nitj.ac.in": { hostelName: "Mega Boys Hostel B", roomNumber: "000" },
+                        "mbh.A@nitj.ac.in": { hostelName: "Mega Boys Hostel A", roomNumber: "000" },
+                        "mbh.F@nitj.ac.in": { hostelName: "Mega Boys Hostel F", roomNumber: "000" },
+                        "mgh.A@nitj.ac.in": { hostelName: "Girls Hostel A", roomNumber: "000" },
+                        "mgh.B@nitj.ac.in": { hostelName: "Girls Hostel B", roomNumber: "000" },
+                        "mgh@nitj.ac.in": { hostelName: "Mega Girls Hostel", roomNumber: "000" }
+                      };
+
+                      // Check if the email exists in the mapping
+                        const email = req.body.email;
+                        const hostelDetails = emailToHostelMapping[email];
+
+                        // If email exists in the mapping, assign the corresponding hostel details to hostel1
+                        if (hostelDetails) {
+                        hostel1 = {
+                            hostelName: hostelDetails.hostelName,
+                            roomNumber: hostelDetails.roomNumber
+                        };
+                        } 
+                        
+                    // if(req.body.email = "bh7@nitj.ac.in"){
+                    //     hostel1={
+                    //         hostelName:"Boys Hostel 7",
+                    //         roomNumber:"000"
+                    //     }  
+                    // }
+                    // if(req.body.email = "bh7E@nitj.ac.in"){
+                    //     hostel1={
+                    //         hostelName:"Boys Hostel 7E",
+                    //         roomNumber:"000"
+                    //     }  
+                    // }
+                    // if(req.body.email = "bh3@nitj.ac.in"){
+                    //     hostel1={
+                    //         hostelName:"Boys Hostel 3",
+                    //         roomNumber:"000"
+                    //     }  
+                    // }
+                    // if(req.body.email = "bh4@nitj.ac.in"){
+                    //     hostel1={
+                    //         hostelName:"Boys Hostel 4",
+                    //         roomNumber:"000"
+                    //     }  
+                    // }
+                    // if(req.body.email = "bh6@nitj.ac.in"){
+                    //     hostel1={
+                    //         hostelName:"Boys Hostel 6",
+                    //         roomNumber:"000"
+                    //     }  
+                    // }
+                    // if(req.body.email = "mbh.B@nitj.ac.in"){
+                    //     hostel1={
+                    //         hostelName:"Mega Boys Hostel B",
+                    //         roomNumber:"000"
+                    //     }  
+                    // }
+                    // if(req.body.email = "mbh.A@nitj.ac.in"){
+                    //     hostel1={
+                    //         hostelName:"Mega Boys Hostel A",
+                    //         roomNumber:"000"
+                    //     }  
+                    // }
+                    // if(req.body.email = "mbh.F@nitj.ac.in"){
+                    //     hostel1={
+                    //         hostelName:"Mega Boys Hostel F",
+                    //         roomNumber:"000"
+                    //     }  
+                    // }
+                    // if(req.body.email = "mgh.A@nitj.ac.in"){
+                    //     hostel1={
+                    //         hostelName:"Girls Hostel A",
+                    //         roomNumber:"000"
+                    //     }  
+                    // }
+
+                    // if(req.body.email = "mgh.B@nitj.ac.in"){
+                    //     hostel1={
+                    //         hostelName:"Girls Hostel B",
+                    //         roomNumber:"000"
+                    //     }  
+                    // }
+                    // if(req.body.email = "mgh@nitj.ac.in"){
+                    //     hostel1={
+                    //         hostelName:"Mega Girls Hostel",
+                    //         roomNumber:"000"
+                    //     }  
+                    // }
+
+
                     if(hostel!=null){
                         hostel1={
                             roomNumber:hostel.roomNumber,
