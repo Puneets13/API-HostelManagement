@@ -14,20 +14,20 @@ const mongoose = require('mongoose');
         let alreadyexist=await  Mess.findOne({rollNumber:rollNumber});    
         let entry= await Hostel.findOne({ $or:[{rollNumber1:rollNumber},{rollNumber2:rollNumber}]});
 // PUNEET SINGH
-            if(entry==null){
-                res.status(200).json({
-                    message:"Hostel not registered",
-                    err:"1"
-                });
-            }
+        if(entry==null){
+            res.status(200).json({
+                message:"Hostel not registered",
+                err:"1"
+            });
+        }
         else if(entry.rollNumber1!=null || entry.rollNumber2 != null){
         console.log(entry.rollNumber1+entry.rollNumber2+entry.email1);
             if(rollNumber==entry.rollNumber1){
              hostelUser = {
                 userName:entry.userName1,
                 email: entry.email1,
-                rollNumber:rollNumber,
-                roomNumber:roomNumber,
+                rollNumber:entry.rollNumber1,
+                roomNumber:entry.roomNumber,
                 hostelName:hostelName
             }
             console.log(hostelUser);
@@ -36,8 +36,8 @@ const mongoose = require('mongoose');
              hostelUser = {
                 userName:entry.userName2,
                 email: entry.email2,
-                rollNumber:rollNumber,
-                roomNumber:roomNumber,
+                rollNumber:entry.rollNumber2,
+                roomNumber:entry.roomNumber,
                 hostelName:hostelName
             }
             console.log(hostelUser);
