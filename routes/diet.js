@@ -18,6 +18,8 @@ router.post('/getDietRecordList',callbackFunctions.getDietRecordList);
 router.post('/messList',callbackFunctions.messList);
 
 router.post('/createExtraMealRecord',callbackFunctions.getextrameal);
+router.post('/getLeaveRecord',callbackFunctions.getLeaveRecord);
+
 
 
 module.exports = router;
