@@ -11,4 +11,11 @@ router.post('/deleteEntry',callbackFunctions.deleteEntry);//delte one entry in l
 router.post('/deleteAllList',callbackFunctions.deleteAllList);// delete whole list
 router.post('/editExtraItem',callbackFunctions.editExtraItem);//change name and price of item
 router.post('/fetchItems',callbackFunctions.fetchItems);//fetch list of constants
+
+
+
+router.post('/addTotalExpenditure',callbackFunctions.addTotalExpenditure);//fetch list of constants
+router.post('/editTotalExpenditure',callbackFunctions.editTotalExpenditure);//fetch list of constants
+
+
 module.exports = router;

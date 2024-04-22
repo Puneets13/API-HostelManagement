@@ -153,6 +153,8 @@ Constants.findOneAndUpdate({hostelName:hostelName}, {$set:{ items: extraMap }}, 
     
  }
 
+
+
  module.exports.deleteEntry= async function(req,res){
     const itemNamer= req.body.itemName;
     const itemName= itemNamer.toUpperCase();
@@ -202,6 +204,7 @@ Constants.findOneAndUpdate({hostelName:hostelName}, {$set:{ items: extraMap }}, 
   
   }
 
+
   module.exports.editExtraItem= async function(req,res){
     const prevItemName= req.body.prevItemName.toUpperCase();
     const hostelName= req.body.hostelName;
@@ -234,4 +237,88 @@ Constants.findOneAndUpdate({hostelName:hostelName}, {$set:{ items: extraMap }}, 
 
 
 
+//FOR EXPENDITURE OF MESS HOSTEL
 
+
+// PASS MONTH AS month_year --> 04_2024
+module.exports.addTotalExpenditure = async function (req, res) {
+    try {
+      const { hostelName, month, expenditure } = req.body;
+      const constRecord = await Constants.findOne({ hostelName });
+  
+      if (constRecord) {
+        const expenditureMap = constRecord.TotalExpenditurePerMonth || new Map();
+        expenditureMap.set(month, expenditure);
+  
+        constRecord.TotalExpenditurePerMonth = expenditureMap;
+        await constRecord.save();
+  
+        res.json({
+          message: 'Expenditure added successfully',
+          error: '0',
+          expenditureMap,
+        });
+      } else {
+        res.json({
+          message: 'Hostel not found',
+          error: '1',
+        });
+      }
+    } catch (error) {
+      console.error('Error adding total expenditure:', error);
+      res.json({
+        message: 'Failed to add expenditure',
+        error: '1',
+      });
+    }
+  };
+  
+
+// PASS MONTH AS month_year --> 04_2024
+
+module.exports.editTotalExpenditure = async function (req, res) {
+  try {
+    const { hostelName, month, newExpenditure } = req.body;
+
+    // Find the Constants document for the specified hostelName
+    const constRecord = await Constants.findOne({ hostelName });
+
+    if (constRecord) {
+      const expenditureMap = constRecord.TotalExpenditurePerMonth || new Map();
+
+      // Check if the month exists in the expenditure map
+      if (expenditureMap.has(month)) {
+        // Update the expenditure for the specified month
+        expenditureMap.set(month, newExpenditure);
+
+        // Update the TotalExpenditurePerMonth field in the Constants document
+        constRecord.TotalExpenditurePerMonth = expenditureMap;
+
+        // Save the updated Constants document
+        await constRecord.save();
+
+        res.json({
+          message: 'Expenditure edited successfully',
+          error: '0',
+          expenditureMap,
+        });
+      } else {
+        res.json({
+          message: 'Month not found in expenditure map',
+          error: '1',
+        });
+      }
+    } else {
+      res.json({
+        message: 'Hostel not found',
+        error: '1',
+      });
+    }
+  } catch (error) {
+    console.error('Error editing total expenditure:', error);
+    res.json({
+      message: 'Failed to edit expenditure',
+      error: '1',
+    });
+  }
+};

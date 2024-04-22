@@ -488,7 +488,7 @@ module.exports.messList = async function (req, res) {
 
 
 
-
+// this function counts the diet of the student till he joined for all months 
 module.exports.countDietOfStudent = async function (req, res) {
 
   try {
@@ -741,6 +741,7 @@ module.exports.countDietPerMonth = async function (req, res) {
 
 
 // make sure to stop at todays date for counting exact diet
+
 // count total diets consumed in a SINGLE HOSTEL by all students in a month
 module.exports.countDietPerMonthForHostel = async function (req, res) {
 
@@ -3180,3 +3181,129 @@ const { month, meals } = studentRecord;
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
+
+
+
+// // make sure to stop at todays date for counting exact diet
+// const axios = require('axios'); // Import axios for making HTTP requests (assuming it's installed in your project)
+
+// module.exports.generateInvoice = async function (req, res) {
+//   try {
+//     const { rollNumber, hostelName, month, year } = req.body;
+
+//     // Constants from Munshi
+//     const totalSpentInaMonth = 2500;
+//     const totalEarnedFromExtra = 500;
+
+
+
+//     // Retrieve the diet count for the specific rollNumber, month, and year
+//     const IndividualdietCount = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countDietPerMonth', {
+//       rollNumber,
+//       month,
+//       year,
+//       hostelName, // Pass hostelName to countDietPerMonth function if required
+//     });
+
+
+//     const  {dietCount}  = IndividualdietCount.data;
+
+
+
+//     // Retrieve diet count for the hostel in the specified month and year
+//     const dietCountResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countDietPerMonthForHostel', {
+//       month,
+//       year,
+//       hostelName,
+//     });
+
+//     const { dietCount2 } = dietCountResponse.data.dietCount;
+
+//     // Calculate perDietCost
+//     const TotaldietsInaMonthForHostel = dietCount2; // Assuming dietCount is the total diet count for the hostel in the specified month
+//     const perDietCost = (totalSpentInaMonth - totalEarnedFromExtra) / TotaldietsInaMonthForHostel;
+
+//     // Find all diet records that match the student's rollNumber, hostelName, month, and year
+//     // const dietRecords = await DietRecords.find({ hostelName, month, year, rollNumber });
+
+
+//     console.log("TotaldietCOuntForHostel "+dietCount2);
+//     console.log("TotalDietConsumed by person till date "+dietCount);
+//     console.log("perdietcost "+perDietCost);
+//     console.log("Response from countDietPerMonth endpoint:", IndividualdietCount.data.dietCount);
+
+//     // Calculate total invoice for the student
+//     const totalInvoice = dietCount * perDietCost;
+
+//     // Respond with the invoice data
+//     res.status(200).json({
+//       rollNumber,
+//       hostelName,
+//       month,
+//       year,
+//       dietCount,
+//       perDietCost,
+//       totalInvoice,
+//       message: 'Invoice generated successfully',
+//     });
+//   } catch (error) {
+//     console.error('Error generating invoice:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// };
+
+
+const axios = require('axios');
+
+module.exports.generateInvoice = async function (req, res) {
+  try {
+    const { rollNumber, hostelName, month, year } = req.body;
+
+    // Constants from Munshi
+    const totalSpentInaMonth = 2500;
+    const totalEarnedFromExtra = 500;
+
+    // Retrieve the diet count for the specific rollNumber, month, and year
+    const individualDietCountResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countDietPerMonth', {
+      rollNumber,
+      month,
+      year,
+      hostelName,
+    });
+
+    const dietCount = individualDietCountResponse.data.dietCount;
+
+    console.log("dietcount "+dietCount)
+    // Retrieve diet count for the hostel in the specified month and year
+    const hostelDietCountResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countDietPerMonthForHostel', {
+      month,
+      year,
+      hostelName,
+    });
+
+    const dietCountForHostel = hostelDietCountResponse.data.dietCount;
+    console.log("dietCountForHostel "+dietCountForHostel)
+
+    // Calculate perDietCost based on hostel diet count
+    const perDietCost = (totalSpentInaMonth - totalEarnedFromExtra) / dietCountForHostel;
+
+    // Calculate total invoice for the student
+    const totalInvoice = dietCount * perDietCost;
+
+    // Respond with the invoice data
+    res.status(200).json({
+      rollNumber,
+      hostelName,
+      month,
+      year,
+      dietCount,
+      perDietCost,
+      totalInvoice,
+      message: 'Invoice generated successfully',
+    });
+  } catch (error) {
+    console.error('Error generating invoice:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

@@ -15,6 +15,10 @@ const constantSchema = new mongoose.Schema({
     messStartDate:{
         type:String
     },
+    TotalExpenditurePerMonth:{
+        type: Map,
+        of: Number
+    },
     items:{
         type: Map,
         of: Number
