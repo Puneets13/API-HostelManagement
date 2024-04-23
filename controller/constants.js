@@ -252,10 +252,11 @@ module.exports.addTotalExpenditure = async function (req, res) {
         constRecord.TotalExpenditurePerMonth = expenditureMap;
         await constRecord.save();
   
+        const TotalExpenditurePerMonth_var = constRecord.TotalExpenditurePerMonth
         res.json({
           message: 'Expenditure added successfully',
           error: '0',
-          expenditureMap,
+          TotalExpenditurePerMonth:TotalExpenditurePerMonth_var,
         });
       } else {
         res.json({
