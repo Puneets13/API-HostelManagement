@@ -536,8 +536,8 @@ module.exports.countDietOfStudent = async function (req, res) {
       console.log("this is the starting month of mess")
       dietRecords.forEach((record) => {
         let firstrec = 0
-        const mealDate = new Date(meal.date);
         record.meals.forEach((meal) => {
+        const mealDate = new Date(meal.date);
           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
             if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
             } else {
@@ -629,13 +629,14 @@ module.exports.countDietPerMonth = async function (req, res) {
     console.log("Today's date:", currentDate.toISOString());
 
 
-
+//IF IT IS THE STARTING MONTH OF THE MESS , IT WILL CALCULATE FROM THE DAY YOU START CONSUMIING MEAL
+// BUT IF IT IS NOT THE STARTING MONTH OF THE MESS, IT WILL COUNT FROM THE 1ST DATE OF THE MONTH.
     if (monthFromConstant == month && yearFromConstant == year) {
       console.log("this is the starting month of mess")
       dietRecords.forEach((record) => {
         let firstrec = 0
-        const mealDate = new Date(meal.date);
         record.meals.forEach((meal) => {
+        const mealDate = new Date(meal.date);
           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
             if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
             } else {
