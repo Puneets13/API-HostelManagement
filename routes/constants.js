@@ -16,6 +16,7 @@ router.post('/fetchItems',callbackFunctions.fetchItems);//fetch list of constant
 
 router.post('/addTotalExpenditure',callbackFunctions.addTotalExpenditure);//fetch list of constants
 router.post('/editTotalExpenditure',callbackFunctions.editTotalExpenditure);//fetch list of constants
+router.post('/fetchTotalExpenditurePerMonth',callbackFunctions.fetchTotalExpenditurePerMonth);//fetch list of constants
 
 
 module.exports = router;

@@ -786,6 +786,9 @@ module.exports.countDietPerMonthForHostel = async function (req, res) {
 
     if (monthFromConstant == month && yearFromConstant == year) {
       console.log("this is the starting month of mess")
+    
+    
+    //kj
       dietRecords.forEach((record) => {
         let firstrec = 0
         record.meals.forEach((meal) => {
@@ -3261,8 +3264,45 @@ module.exports.generateInvoice = async function (req, res) {
     const { rollNumber, hostelName, month, year } = req.body;
 
     // Constants from Munshi
-    const totalSpentInaMonth = 2500;
-    const totalEarnedFromExtra = 500;
+    var totalSpentInaMonth = 0;
+    var totalEarnedFromExtra = 0;
+
+  const hostelDocument = await Constants.findOne({ hostelName });
+
+  if (!hostelDocument) {
+      return res.status(404).json({ 
+          message: 'Hostel not found' 
+      });
+  }
+
+  // to concat month_year to search in map
+  const monthString = String(month).padStart(2, '0'); // Pad with leading zero if necessary
+  const yearString = String(year);
+
+  // Concatenate month and year strings
+    const key = monthString +"_" + yearString;
+
+    // Access the items field from the hostelDocument
+    if(hostelDocument.TotalExpenditurePerMonth.has(key)){
+      totalSpentInaMonth = hostelDocument.TotalExpenditurePerMonth.get(key);
+      console.log(totalSpentInaMonth)
+    }else{
+      res.status(200).json({
+        message: 'Wait till end of month',
+        error:"fail"
+      });
+      return
+    }
+
+
+    const totalEarnedFromExtraResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countExtrasPerMonthForHostel', {
+      month,
+      year,
+      hostelName,
+    });
+
+    totalEarnedFromExtra = totalEarnedFromExtraResponse.data.TotalExtraAmountGenerated ; 
+
 
     // Retrieve the diet count for the specific rollNumber, month, and year
     const individualDietCountResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countDietPerMonth', {
@@ -3284,6 +3324,7 @@ module.exports.generateInvoice = async function (req, res) {
 
     const dietCountForHostel = hostelDietCountResponse.data.dietCount;
     console.log("dietCountForHostel "+dietCountForHostel)
+    console.log("Extra CountForHostel "+ totalEarnedFromExtraResponse.data.TotalExtraAmountGenerated )
 
     // Calculate perDietCost based on hostel diet count
     const perDietCost = (totalSpentInaMonth - totalEarnedFromExtra) / dietCountForHostel;
@@ -3305,5 +3346,98 @@ module.exports.generateInvoice = async function (req, res) {
   } catch (error) {
     console.error('Error generating invoice:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+
+// counting extraMeal amount
+
+module.exports.countExtrasPerMonthForHostel = async function (req, res) {
+  try {
+    const { month, year, hostelName } = req.body;
+
+    // Find all diet records that match the hostelName, month, and year
+    const dietRecords = await DietRecords.find({ hostelName, month, year });
+
+
+    var messStartDate;
+    let constantRecords = await Constants.findOne({ hostelName });
+
+    messStartDate = constantRecords.messStartDate;
+    console.log("Mess start date found : " + messStartDate);
+
+    messStartDate = new Date(messStartDate);
+    messStartDate.setDate(messStartDate.getDate());
+    console.log("mess start date : " + messStartDate);
+
+    const FormattedDate = [
+      messStartDate.getFullYear(),
+      (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
+      messStartDate.getDate().toString().padStart(2, '0')
+    ].join('-');
+
+    console.log("formated date :" + FormattedDate)
+    var monthFromConstant = FormattedDate.split('-')[1].toString();
+    var yearFromConstant = FormattedDate.split('-')[0].toString();
+    console.log("month : " + monthFromConstant)
+    console.log("year : " + yearFromConstant)
+
+
+    const messStartDate_new = new Date(constantRecords.messStartDate);
+    console.log("Mess start date:", messStartDate_new.toISOString());
+
+    const currentDate = new Date();
+    console.log("Today's date:", currentDate.toISOString());
+
+
+
+    // Define a function to calculate total amount of extras from an array of extras
+    const calculateExtrasTotal = (extrasArray) => {
+      let total = 0;
+      let total_item = 0;
+      for (const extra of extrasArray) {
+        total_item += extra.amount;
+        console.log(total_item);
+        for (const item of extra.item) {
+          const itemDetails = item.split(':'); // Split item string to get name and price
+          const itemName = itemDetails[0].trim();
+          const itemPrice = Number(itemDetails[1].trim());
+          total += itemPrice;
+        }
+      }
+      return total;
+    };
+
+    let totalBreakfastExtra = 0;
+    let totalLunchExtra = 0;
+    let totalEveningExtra = 0;
+    let totalDinnerExtra = 0;
+
+    dietRecords.forEach((record) => {
+      record.meals.forEach((meal) => {
+        const mealDate = new Date(meal.date);
+        if (mealDate >= messStartDate_new && mealDate <= currentDate) {
+          totalBreakfastExtra += calculateExtrasTotal(meal.breakfastExtra);
+          totalLunchExtra += calculateExtrasTotal(meal.lunchExtra);
+          totalEveningExtra += calculateExtrasTotal(meal.eveningExtra);
+          totalDinnerExtra += calculateExtrasTotal(meal.dinnerExtra);
+        }
+      });
+    });
+
+    var TotalExtraAmountGenerated = totalBreakfastExtra + totalLunchExtra+totalEveningExtra+totalDinnerExtra;
+    res.json({
+      totalBreakfastExtra,
+      totalLunchExtra,
+      totalEveningExtra,
+      totalDinnerExtra,
+      TotalExtraAmountGenerated : TotalExtraAmountGenerated,
+      message: 'Extras counted successfully',
+      error: '0',
+    });
+  } catch (error) {
+    console.error('Error counting extras:', error);
+    res.status(500).json({ message: 'Failed to count extras', error: '1' });
   }
 };

@@ -9,7 +9,9 @@ router.post('/createmonthlydietRecord',callbackFunctions.createmonthlydietRecord
 router.post('/countDietOfStudent',callbackFunctions.countDietOfStudent);  // count diet of student for all months in a year
 router.post('/countDietPerMonth',callbackFunctions.countDietPerMonth); // count diet of students per month
 router.post('/countDietPerMonthForHostel',callbackFunctions.countDietPerMonthForHostel); // count diet for particular hostel
+
 router.post('/generateInvoice',callbackFunctions.generateInvoice); // count diet for particular hostel
+router.post('/countExtrasPerMonthForHostel',callbackFunctions.countExtrasPerMonthForHostel); // count diet for particular hostel
 
 
 
