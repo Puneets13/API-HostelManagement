@@ -307,6 +307,8 @@ module.exports.editTotalExpenditure= async function(req,res){
   }
 } 
 
+
+
 module.exports.fetchTotalExpenditurePerMonth  = async function (req,res){
   const hostelName = req.body.hostelName;
 

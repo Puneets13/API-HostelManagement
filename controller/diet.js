@@ -3335,18 +3335,21 @@ module.exports.generateInvoice = async function (req, res) {
 
     // Respond with the invoice data
     res.status(200).json({
-      rollNumber,
-      hostelName,
-      month,
-      year,
-      dietCount,
-      perDietCost,
-      totalInvoice,
+      rollNumber:rollNumber,
+      hostelName:hostelName,
+      month:month,
+      year:year,
+      dietCount:dietCount,
+      perDietCost:perDietCost,
+      totalInvoice:totalInvoice,
       message: 'Invoice generated successfully',
     });
   } catch (error) {
     console.error('Error generating invoice:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ 
+      error: 'Internal Server Error',
+      message:"fail" 
+    });
   }
 };
 
