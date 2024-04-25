@@ -3296,7 +3296,7 @@ module.exports.generateInvoice = async function (req, res) {
     }
 
 
-    const totalEarnedFromExtraResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countExtrasPerMonthForHostel', {
+    const totalEarnedFromExtraResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/countExtrasPerMonthForHostel', {
       month,
       year,
       hostelName,
@@ -3306,7 +3306,7 @@ module.exports.generateInvoice = async function (req, res) {
 
 
     // Retrieve the diet count for the specific rollNumber, month, and year
-    const individualDietCountResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countDietPerMonth', {
+    const individualDietCountResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/countDietPerMonth', {
       rollNumber,
       month,
       year,
@@ -3317,7 +3317,7 @@ module.exports.generateInvoice = async function (req, res) {
 
     console.log("dietcount "+dietCount)
     // Retrieve diet count for the hostel in the specified month and year
-    const hostelDietCountResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countDietPerMonthForHostel', {
+    const hostelDietCountResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/countDietPerMonthForHostel', {
       month,
       year,
       hostelName,
@@ -3347,8 +3347,7 @@ module.exports.generateInvoice = async function (req, res) {
   } catch (error) {
     console.error('Error generating invoice:', error);
     res.status(500).json({ 
-      error: 'Internal Server Error',
-      message:"fail" 
+      error: 'Internal Server Error' 
     });
   }
 };
