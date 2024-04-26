@@ -3405,6 +3405,8 @@ module.exports.countExtrasPerMonthForHostel = async function (req, res) {
 // Define a function to print consumed items by student for a specific month and year
 module.exports.printConsumedItemsByStudent = async function (req, res) {
     try {
+
+        console.log("------starting with detailed mess---------")
         const { rollNumber, month, year, hostelName } = req.body;
 
         // Find all diet records that match the rollNumber, month, and year
