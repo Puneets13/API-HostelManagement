@@ -12,6 +12,7 @@ router.post('/countDietPerMonthForHostel',callbackFunctions.countDietPerMonthFor
 
 router.post('/generateInvoice',callbackFunctions.generateInvoice); // count diet for particular hostel
 router.post('/countExtrasPerMonthForHostel',callbackFunctions.countExtrasPerMonthForHostel); // count diet for particular hostel
+router.post('/printConsumedItemsByStudent',callbackFunctions.printConsumedItemsByStudent); // count diet for particular hostel
 
 
 

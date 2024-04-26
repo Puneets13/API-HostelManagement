@@ -8,6 +8,7 @@ const Mess = require('../models/Mess.js');
 const Constants = require('../models/Constants.js');
 const mongoose = require('mongoose');
 const moment = require('moment');
+const axios = require('axios');
 
 
 // const xlsx = require('xlsx-populate');
@@ -158,7 +159,7 @@ module.exports.messList = async function (req, res) {
               lunch: currentDayMeal.lunch,
               dinner: currentDayMeal.dinner,
               meal_type: meal_type,
-              timeStamp : entry.timeStamp
+              timeStamp: entry.timeStamp
             };
             messRecords.push(messRecordObj);
             console.log('Found meal for the current date:', currentDayMeal);
@@ -178,7 +179,7 @@ module.exports.messList = async function (req, res) {
               breakfast: currentDayMeal.breakfast,
               lunch: currentDayMeal.lunch,
               dinner: currentDayMeal.dinner,
-              timeStamp : entry.timeStamp
+              timeStamp: entry.timeStamp
             };
             messRecords.push(messRecordObj);
             console.log('Found meal for the current date:', currentDayMeal);
@@ -200,7 +201,7 @@ module.exports.messList = async function (req, res) {
               lunch: currentDayMeal.lunch,
               dinner: currentDayMeal.dinner,
               meal_type: meal_type,
-              timeStamp : entry.timeStamp
+              timeStamp: entry.timeStamp
 
             };
             messRecords.push(messRecordObj);
@@ -235,7 +236,7 @@ module.exports.messList = async function (req, res) {
       }
     }
 
-       // Sort messRecords based on timeStamp
+    // Sort messRecords based on timeStamp
     messRecords.sort((a, b) => new Date(b.timeStamp) - new Date(a.timeStamp));
 
     res.status(200).json({
@@ -495,7 +496,7 @@ module.exports.countDietOfStudent = async function (req, res) {
     const { rollNumber, year } = req.body;
 
     // Find all documents that match the rollNumber
-    const dietRecords = await DietRecords.find({ rollNumber,  year });
+    const dietRecords = await DietRecords.find({ rollNumber, year });
     // FETCHING THE START DATE FROM THE CONSTANTS SET IN COLLECTION
     const hostelName = req.body.hostelName;
     var messStartDate;
@@ -537,7 +538,7 @@ module.exports.countDietOfStudent = async function (req, res) {
       dietRecords.forEach((record) => {
         let firstrec = 0
         record.meals.forEach((meal) => {
-        const mealDate = new Date(meal.date);
+          const mealDate = new Date(meal.date);
           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
             if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
             } else {
@@ -560,7 +561,7 @@ module.exports.countDietOfStudent = async function (req, res) {
 
           const mealDate = new Date(meal.date);
           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
-    
+
             {
               firstrec = 1;
               totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
@@ -629,14 +630,14 @@ module.exports.countDietPerMonth = async function (req, res) {
     console.log("Today's date:", currentDate.toISOString());
 
 
-//IF IT IS THE STARTING MONTH OF THE MESS , IT WILL CALCULATE FROM THE DAY YOU START CONSUMIING MEAL
-// BUT IF IT IS NOT THE STARTING MONTH OF THE MESS, IT WILL COUNT FROM THE 1ST DATE OF THE MONTH.
+    //IF IT IS THE STARTING MONTH OF THE MESS , IT WILL CALCULATE FROM THE DAY YOU START CONSUMIING MEAL
+    // BUT IF IT IS NOT THE STARTING MONTH OF THE MESS, IT WILL COUNT FROM THE 1ST DATE OF THE MONTH.
     if (monthFromConstant == month && yearFromConstant == year) {
       console.log("this is the starting month of mess")
       dietRecords.forEach((record) => {
         let firstrec = 0
         record.meals.forEach((meal) => {
-        const mealDate = new Date(meal.date);
+          const mealDate = new Date(meal.date);
           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
             if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
             } else {
@@ -659,7 +660,7 @@ module.exports.countDietPerMonth = async function (req, res) {
 
           const mealDate = new Date(meal.date);
           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
-    
+
             {
               firstrec = 1;
               totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
@@ -773,7 +774,7 @@ module.exports.countDietPerMonthForHostel = async function (req, res) {
     console.log("year : " + yearFromConstant)
 
 
-    
+
     // Fetch mess start date from constants set in collection
     // const constantRecords = await Constants.findOne({ hostelName });
     const messStartDate_new = new Date(constantRecords.messStartDate);
@@ -787,13 +788,13 @@ module.exports.countDietPerMonthForHostel = async function (req, res) {
 
     if (monthFromConstant == month && yearFromConstant == year) {
       console.log("this is the starting month of mess")
-    
-    
-    //kj
+
+
+      //kj
       dietRecords.forEach((record) => {
         let firstrec = 0
         record.meals.forEach((meal) => {
-       
+
           const mealDate = new Date(meal.date);
           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
             if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
@@ -816,7 +817,7 @@ module.exports.countDietPerMonthForHostel = async function (req, res) {
         record.meals.forEach((meal) => {
           const mealDate = new Date(meal.date);
           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
-    
+
             {
               firstrec = 1;
               totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
@@ -1179,7 +1180,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
     // Find the student's diet record based on roll number, month, and year
     const studentRecord = await DietRecords.findOne({ rollNumber, month, year, hostelName, roomNumber });
 
-    console.log("\nFound record :"+studentRecord);
+    console.log("\nFound record :" + studentRecord);
 
     if (!studentRecord) {
       // Student record not found, you can handle this case as needed
@@ -1218,7 +1219,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
     }
     else {
       console.log(studentRecord);
-//kiran
+      //kiran
       // to find the particular index from the student record
       var recordIndex = -1;
       const mealsArray = studentRecord.meals;
@@ -1696,7 +1697,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
           // update the data record on server
           try {
             // Save the updated student record
-            timeStamp= "" + timestamp + " : " + formatedTime_24;
+            timeStamp = "" + timestamp + " : " + formatedTime_24;
             await studentRecord.save();
             // await nextMonthStudentRecord.save();
             console.log('Meal records updated and saved successfully.');
@@ -1752,7 +1753,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
             // }
 
             console.log('you can scan');
-            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+            studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24
             res.status(200).json({
               message: "you can scan",
               error: "Leave",
@@ -1838,7 +1839,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                       scan: "yes"
                     });
                     currentMeal.lunch = 1;
-            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+                    studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24
                     studentRecord.meals[recordIndex].dinner = 0;
                     recordIndex++;
                     while (true) {
@@ -1881,7 +1882,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                     }
 
                     currentMeal.lunch = 1; // we are setting it again as 1 here
-            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+                    studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24
                     res.status(200).json({
                       message: "Prev diet effected, consecutive 3 meals not found",
                       error: "error",
@@ -1954,7 +1955,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                   }
                 }
                 currentMeal.lunch = 1;
-            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+                studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24
                 // checking if the leave has been applied for next month
                 if (nextMonthLeave == 1) {
                   // search for next month record , if found it means there is a leave , bcz in this case only the next month entry will be generated
@@ -2008,7 +2009,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
                   try {
                     // Save the updated student record
-            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+                    studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24
                     await nextMonthStudentRecord.save();
                     console.log('Meal records updated and saved successfully.');
                   } catch (error) {
@@ -2072,7 +2073,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                   }
                 }
                 currentMeal.lunch = 1;
-            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+                studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24
                 // checking if the leave has been applied for next month
                 if (nextMonthLeave == 1) {
                   // search for next month record , if found it means there is a leave , bcz in this case only the next month entry will be generated
@@ -2147,7 +2148,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
           // update the data record on server
           try {
             // Save the updated student record
-            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+            studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24
             await studentRecord.save();
             console.log('Meal records updated and saved successfully.');
           } catch (error) {
@@ -2174,7 +2175,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
           if (currentMeal.dinner == 0) {
             currentMeal.dinner = 1;
-            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+            studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24
             // also check the prev meals if they are 0 , bcz agar banda koi mess skip krde aur phir next day jaye toh vo meal
             // 0 rhega aur uske next vala jo current hoga vo 1 hojayega,..toh phir number of meals count mai dikat ayegi.
 
@@ -2454,7 +2455,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
                   try {
                     // Save the updated student record
-            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+                    studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24
                     await nextMonthStudentRecord.save();
                     console.log('Meal records updated and saved successfully.');
                   } catch (error) {
@@ -2473,7 +2474,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                 studentRecord.meals[recordIndex].lunch = 1;
                 studentRecord.meals[recordIndex].breakfast = 1;
                 currentMeal.dinner = 1;
-            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+                studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24
 
                 recordIndex++;
                 var nextMonthLeave = 0;
@@ -2519,7 +2520,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
                   }
                 }
                 currentMeal.dinner = 1;
-            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+                studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24
 
                 // checking if the leave has been applied for next month
                 if (nextMonthLeave == 1) {
@@ -2574,7 +2575,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
 
                   try {
                     // Save the updated student record
-            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+                    studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24
 
                     await nextMonthStudentRecord.save();
                     console.log('Meal records updated and saved successfully.');
@@ -2598,7 +2599,7 @@ module.exports.createmonthlydietRecord = async function (req, res) {
           // update the data record on server
           try {
             // Save the updated student record
-            studentRecord.timeStamp= "" + timestamp + " : " + formatedTime_24
+            studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24
             await studentRecord.save();
             console.log('Meal records updated and saved successfully.');
           } catch (error) {
@@ -2633,12 +2634,11 @@ module.exports.getextrameal = async function (req, res) {
   const studentRecord = await DietRecords.findOne({ rollNumber, month, year, hostelName, roomNumber });
 
 
-  console.log("RollNumber "+rollNumber);
-  console.log("Student record extra found\n\n\n"+studentRecord+"\n\n\nMilgeyaaaaaaaaa..........");
+  console.log("RollNumber " + rollNumber);
+  console.log("Student record extra found\n\n\n" + studentRecord + "\n\n\nMilgeyaaaaaaaaa..........");
 
 
-  if (!studentRecord) 
-{
+  if (!studentRecord) {
     // Student record not found, you can handle this case as needed
     console.log("Student record not found.creating new..");
 
@@ -2665,10 +2665,10 @@ module.exports.getextrameal = async function (req, res) {
         breakfast: 0,
         lunch: 0,
         dinner: 0,
-        breakfastExtra:[],
-        lunchExtra:[],
-        eveningExtra:[],
-        dinnerExtra:[]
+        breakfastExtra: [],
+        lunchExtra: [],
+        eveningExtra: [],
+        dinnerExtra: []
 
         // HERE DO WE NEED TO INIIALISE THE breakfastextraMeal array
       };
@@ -2680,10 +2680,10 @@ module.exports.getextrameal = async function (req, res) {
     await dietRecord.save();
     // GIVING SOME EXCEPTION AS NULL MEALS CANT PUSH , BUT WORKING FINE
     module.exports.createmonthlydietRecord(req, res); // to again call this function so that once after creating the records , we can set the leave again
-  } 
-  
-  
-  
+  }
+
+
+
   else {
 
     console.log("mai else mai hu , merko shuru se nhi banaayaaaa....")
@@ -2727,7 +2727,7 @@ module.exports.getextrameal = async function (req, res) {
             }
             studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
             currentMeal.breakfastExtra.push(extras);
-            
+
             res.status(200).json({
               message: "you have consumed extras",
               error: "No error",
@@ -2745,7 +2745,7 @@ module.exports.getextrameal = async function (req, res) {
 
           }
         }
-      }else{
+      } else {
         console.log("record not found");
       }
 
@@ -2760,7 +2760,7 @@ module.exports.getextrameal = async function (req, res) {
       }
     }
 
-    
+
     if (mealType == 'lunch') {
 
       console.log("iam in lunch")
@@ -2795,9 +2795,9 @@ module.exports.getextrameal = async function (req, res) {
             }
             studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
             currentMeal.lunchExtra.push(extras);
-            
+
             res.status(200).json({
-              message: "you have consumed extras", 
+              message: "you have consumed extras",
               error: "No error",
               scan: "yes"
             });
@@ -2813,7 +2813,7 @@ module.exports.getextrameal = async function (req, res) {
 
           }
         }
-      }else{
+      } else {
         console.log("record not found");
       }
 
@@ -2864,7 +2864,7 @@ module.exports.getextrameal = async function (req, res) {
             }
             studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
             currentMeal.eveningExtra.push(extras);
-            
+
             res.status(200).json({
               message: "you have consumed extras",
               error: "No error",
@@ -2882,7 +2882,7 @@ module.exports.getextrameal = async function (req, res) {
 
           }
         }
-      }else{
+      } else {
         console.log("record not found");
       }
 
@@ -2931,7 +2931,7 @@ module.exports.getextrameal = async function (req, res) {
             }
             studentRecord.timeStamp = "" + timestamp + " : " + formatedTime_24;
             currentMeal.dinnerExtra.push(extras);
-            
+
             res.status(200).json({
               message: "you have consumed extras",
               error: "No error",
@@ -2949,7 +2949,7 @@ module.exports.getextrameal = async function (req, res) {
 
           }
         }
-      }else{
+      } else {
         console.log("record not found");
       }
 
@@ -3123,64 +3123,64 @@ module.exports.getDietRecordList = async function (req, res) {
 
 module.exports.getLeaveRecord = async function (req, res) {
 
-  const { rollNumber, hostelName, roomNumber} = req.body;
+  const { rollNumber, hostelName, roomNumber } = req.body;
   let responseDataList = [];
   try {
     // Find the student's diet record based on roll number, month, and year
     const studentRecord = await DietRecords.find({ rollNumber, hostelName, roomNumber });
     console.log(studentRecord);
- 
-/* 
-[
-{
-  month : 04,
-  datesList : [
-    date: 01-04-2024,
-    count_diet:3
-    onLeave:false
-  ]
-},
-{
-  month : 05,
-  datesList:[
-    date: 02-04-2024,
-    count_diet:3
-    onLeave:false
-  ]
-}
-]
 
- */
+    /* 
+    [
+    {
+      month : 04,
+      datesList : [
+        date: 01-04-2024,
+        count_diet:3
+        onLeave:false
+      ]
+    },
+    {
+      month : 05,
+      datesList:[
+        date: 02-04-2024,
+        count_diet:3
+        onLeave:false
+      ]
+    }
+    ]
+    
+     */
 
-console.log("------------here-------------");
-const { month, meals } = studentRecord;
-  for (let data = 0; data < studentRecord.length; data++) {
+    console.log("------------here-------------");
+    const { month, meals } = studentRecord;
+    for (let data = 0; data < studentRecord.length; data++) {
 
-    console.log(data+"\n------------------\n")
-    const responseData = [
-      {
+      console.log(data + "\n------------------\n")
+      const responseData = [
+        {
           month: data.month,
           datesList: data.meals.map(meal => ({
-          date: meal.date,
-          count_diet: meal.breakfast + meal.lunch + meal.dinner,
-          onLeave: false // Assuming this is a default value
-        })
-        )
-      }
-    ];
-  
-    responseDataList.push(responseData);
-  }
+            date: meal.date,
+            count_diet: meal.breakfast + meal.lunch + meal.dinner,
+            onLeave: false // Assuming this is a default value
+          })
+          )
+        }
+      ];
 
-  res.status(200).json({
-    message : "success",
-    attendanceRecord:responseDataList
-  })
+      responseDataList.push(responseData);
+    }
+
+    res.status(200).json({
+      message: "success",
+      attendanceRecord: responseDataList
+    })
 
 
-  // Prepare response data in the desired format
- 
-  }catch (error) {
+    // Prepare response data in the desired format
+
+  } catch (error) {
     console.error('Error fetching data:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -3190,475 +3190,6 @@ const { month, meals } = studentRecord;
 
 
 
-
-// first code
-
-// // make sure to stop at todays date for counting exact diet
-// const axios = require('axios'); // Import axios for making HTTP requests (assuming it's installed in your project)
-
-// module.exports.generateInvoice = async function (req, res) {
-//   try {
-//     const { rollNumber, hostelName, month, year } = req.body;
-
-//     // Constants from Munshi
-//     const totalSpentInaMonth = 2500;
-//     const totalEarnedFromExtra = 500;
-
-
-
-//     // Retrieve the diet count for the specific rollNumber, month, and year
-//     const IndividualdietCount = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countDietPerMonth', {
-//       rollNumber,
-//       month,
-//       year,
-//       hostelName, // Pass hostelName to countDietPerMonth function if required
-//     });
-
-
-//     const  {dietCount}  = IndividualdietCount.data;
-
-
-
-//     // Retrieve diet count for the hostel in the specified month and year
-//     const dietCountResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countDietPerMonthForHostel', {
-//       month,
-//       year,
-//       hostelName,
-//     });
-
-//     const { dietCount2 } = dietCountResponse.data.dietCount;
-
-//     // Calculate perDietCost
-//     const TotaldietsInaMonthForHostel = dietCount2; // Assuming dietCount is the total diet count for the hostel in the specified month
-//     const perDietCost = (totalSpentInaMonth - totalEarnedFromExtra) / TotaldietsInaMonthForHostel;
-
-//     // Find all diet records that match the student's rollNumber, hostelName, month, and year
-//     // const dietRecords = await DietRecords.find({ hostelName, month, year, rollNumber });
-
-
-//     console.log("TotaldietCOuntForHostel "+dietCount2);
-//     console.log("TotalDietConsumed by person till date "+dietCount);
-//     console.log("perdietcost "+perDietCost);
-//     console.log("Response from countDietPerMonth endpoint:", IndividualdietCount.data.dietCount);
-
-//     // Calculate total invoice for the student
-//     const totalInvoice = dietCount * perDietCost;
-
-//     // Respond with the invoice data
-//     res.status(200).json({
-//       rollNumber,
-//       hostelName,
-//       month,
-//       year,
-//       dietCount,
-//       perDietCost,
-//       totalInvoice,
-//       message: 'Invoice generated successfully',
-//     });
-//   } catch (error) {
-//     console.error('Error generating invoice:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// };
-
-
-
-
-
-
-// // 2nd code where functions are expanded manually
-
-
-// const axios = require('axios');
-// module.exports.generateInvoice = async function (req, res) {
-//   try {
-//     const { rollNumber, hostelName, month, year } = req.body;
-
-//     // Constants from Munshi
-//     var totalSpentInaMonth = 0;
-//     var totalEarnedFromExtra = 0;
-
-//   const hostelDocument = await Constants.findOne({ hostelName });
-
-//   if (!hostelDocument) {
-//       return res.status(404).json({ 
-//           message: 'Hostel not found' 
-//       });
-//   }
-
-//   // to concat month_year to search in map
-//   const monthString = String(month).padStart(2, '0'); // Pad with leading zero if necessary
-//   const yearString = String(year);
-
-//   // Concatenate month and year strings
-//     const key = monthString +"_" + yearString;
-
-//     // Access the items field from the hostelDocument
-//     if(hostelDocument.TotalExpenditurePerMonth.has(key)){
-//       totalSpentInaMonth = hostelDocument.TotalExpenditurePerMonth.get(key);
-//       console.log(totalSpentInaMonth)
-//     }else{
-//       res.status(200).json({
-//         message: 'Wait till end of month',
-//         error:"fail"
-//       });
-//       return
-//     }
-
-//     var TotalExtraAmountGenerated ;
-//     var dietCount;
-//     var dietCountForHostel ; 
-
-// // CALCULATING 3 DIFFERENT PARAMETERS HERE AGAIN
-// try {
-//   const { month, year, hostelName } = req.body;
-
-//   // Find all diet records that match the hostelName, month, and year
-//   const dietRecords = await DietRecords.find({ hostelName, month, year });
-
-
-//   var messStartDate;
-//   let constantRecords = await Constants.findOne({ hostelName });
-
-//   messStartDate = constantRecords.messStartDate;
-//   console.log("Mess start date found : " + messStartDate);
-
-//   messStartDate = new Date(messStartDate);
-//   messStartDate.setDate(messStartDate.getDate());
-//   console.log("mess start date : " + messStartDate);
-
-//   const FormattedDate = [
-//     messStartDate.getFullYear(),
-//     (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
-//     messStartDate.getDate().toString().padStart(2, '0')
-//   ].join('-');
-
-//   console.log("formated date :" + FormattedDate)
-//   var monthFromConstant = FormattedDate.split('-')[1].toString();
-//   var yearFromConstant = FormattedDate.split('-')[0].toString();
-//   console.log("month : " + monthFromConstant)
-//   console.log("year : " + yearFromConstant)
-
-
-//   const messStartDate_new = new Date(constantRecords.messStartDate);
-//   console.log("Mess start date:", messStartDate_new.toISOString());
-
-//   const currentDate = new Date();
-//   console.log("Today's date:", currentDate.toISOString());
-
-
-
-//   // Define a function to calculate total amount of extras from an array of extras
-//   const calculateExtrasTotal = (extrasArray) => {
-//     let total = 0;
-//     let total_item = 0;
-//     for (const extra of extrasArray) {
-//       total_item += extra.amount;
-//       console.log(total_item);
-//       for (const item of extra.item) {
-//         const itemDetails = item.split(':'); // Split item string to get name and price
-//         const itemName = itemDetails[0].trim();
-//         const itemPrice = Number(itemDetails[1].trim());
-//         total += itemPrice;
-//       }
-//     }
-//     return total;
-//   };
-
-//   let totalBreakfastExtra = 0;
-//   let totalLunchExtra = 0;
-//   let totalEveningExtra = 0;
-//   let totalDinnerExtra = 0;
-
-//   dietRecords.forEach((record) => {
-//     record.meals.forEach((meal) => {
-//       const mealDate = new Date(meal.date);
-//       if (mealDate >= messStartDate_new && mealDate <= currentDate) {
-//         totalBreakfastExtra += calculateExtrasTotal(meal.breakfastExtra);
-//         totalLunchExtra += calculateExtrasTotal(meal.lunchExtra);
-//         totalEveningExtra += calculateExtrasTotal(meal.eveningExtra);
-//         totalDinnerExtra += calculateExtrasTotal(meal.dinnerExtra);
-//       }
-//     });
-//   });
-
-//    TotalExtraAmountGenerated = totalBreakfastExtra + totalLunchExtra+totalEveningExtra+totalDinnerExtra;
-//   // res.json({
-//   //   totalBreakfastExtra,
-//   //   totalLunchExtra,
-//   //   totalEveningExtra,
-//   //   totalDinnerExtra,
-//   //   TotalExtraAmountGenerated : TotalExtraAmountGenerated,
-//   //   message: 'Extras counted successfully',
-//   //   error: '0',
-//   // });
-// } catch (error) {
-//   console.error('Error counting extras:', error);
-//   // res.status(500).json({ message: 'Failed to count extras', error: '1' });
-// }
-//     // const totalEarnedFromExtraResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/countExtrasPerMonthForHostel', {
-//     //   month,
-//     //   year,
-//     //   hostelName,
-//     // });
-
-//     // totalEarnedFromExtra = totalEarnedFromExtraResponse.data.TotalExtraAmountGenerated ; 
-
-
-
-
-// //   // ANOTHER FUNCTION DEFINEING HERE
-
-//   try {
-//     const { rollNumber, month, year } = req.body;
-//     // Find all documents that match the rollNumber
-//     const dietRecords = await DietRecords.find({ rollNumber, month, year });
-//     // FETCHING THE START DATE FROM THE CONSTANTS SET IN COLLECTION
-//     const hostelName = req.body.hostelName;
-//     var messStartDate;
-//     let constantRecords = await Constants.findOne({ hostelName });
-
-//     messStartDate = constantRecords.messStartDate;
-//     console.log("Mess start date found : " + messStartDate);
-
-//     messStartDate = new Date(messStartDate);
-//     messStartDate.setDate(messStartDate.getDate());
-//     console.log("mess start date : " + messStartDate);
-
-//     const FormattedDate = [
-//       messStartDate.getFullYear(),
-//       (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
-//       messStartDate.getDate().toString().padStart(2, '0')
-//     ].join('-');
-
-//     console.log("formated date :" + FormattedDate)
-//     var monthFromConstant = FormattedDate.split('-')[1].toString();
-//     var yearFromConstant = FormattedDate.split('-')[0].toString();
-//     console.log("month : " + monthFromConstant)
-//     console.log("year : " + yearFromConstant)
-
-//     let totalDiet = 0;
-//     console.log("month from front : " + month)
-
-
-//     const messStartDate_new = new Date(constantRecords.messStartDate);
-//     console.log("Mess start date:", messStartDate_new.toISOString());
-
-//     const currentDate = new Date();
-//     console.log("Today's date:", currentDate.toISOString());
-
-
-// //IF IT IS THE STARTING MONTH OF THE MESS , IT WILL CALCULATE FROM THE DAY YOU START CONSUMIING MEAL
-// // BUT IF IT IS NOT THE STARTING MONTH OF THE MESS, IT WILL COUNT FROM THE 1ST DATE OF THE MONTH.
-//     if (monthFromConstant == month && yearFromConstant == year) {
-//       console.log("this is the starting month of mess")
-//       dietRecords.forEach((record) => {
-//         let firstrec = 0
-//         record.meals.forEach((meal) => {
-//         const mealDate = new Date(meal.date);
-//           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
-//             if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
-//             } else {
-//               firstrec = 1;
-//               totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-//               console.log("i m considered :" + meal.date)
-//             }
-
-//           } else {
-//             console.log("i m not considered")
-//           }
-//         });
-//       });
-
-//     } else {
-//       // Iterate through the retrieved diet records and calculate the total diet
-//       console.log("this is not the starting month of mess")
-//       dietRecords.forEach((record) => {
-//         record.meals.forEach((meal) => {
-
-//           const mealDate = new Date(meal.date);
-//           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
-    
-//             {
-//               firstrec = 1;
-//               totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-//               console.log("i m considered :" + meal.date)
-//             }
-
-//           } else {
-//             console.log("i m not considered")
-//           }
-//         });
-//       });
-//     }
-//     dietCount = totalDiet
-//     // res.status(200).json({
-//     //   dietCount: totalDiet,
-//     //   message: 'Total diet count retrieved successfully',
-//     // });
-//   } catch (error) {
-//     console.error('Error:', error);
-//     // res.status(500).json({
-//     //   error: error.message,
-//     // });
-//   }
-
-
-//     // // Retrieve the diet count for the specific rollNumber, month, and year
-//     // const individualDietCountResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/countDietPerMonth', {
-//     //   rollNumber,
-//     //   month,
-//     //   year,
-//     //   hostelName,
-//     // });
-
-//     // const dietCount = individualDietCountResponse.data.dietCount;
-
-//     console.log("dietcount "+dietCount)
-//     // Retrieve diet count for the hostel in the specified month and year
-//     // const hostelDietCountResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/countDietPerMonthForHostel', {
-//     //   month,
-//     //   year,
-//     //   hostelName,
-//     // });
-
-
-
-//     try {
-//       const { month, year, hostelName } = req.body;
-//       // Find all documents that match the rollNumber
-//       const dietRecords = await DietRecords.find({ hostelName, month, year });  // search by seeing the hostelName
-  
-//       let constantRecords = await Constants.findOne({ hostelName });
-  
-//       messStartDate = constantRecords.messStartDate;
-//       console.log("Mess start date found : " + messStartDate);
-  
-//       messStartDate = new Date(messStartDate);
-//       messStartDate.setDate(messStartDate.getDate());
-//       console.log("mess start date : " + messStartDate);
-  
-//       const FormattedDate = [
-//         messStartDate.getFullYear(),
-//         (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
-//         messStartDate.getDate().toString().padStart(2, '0')
-//       ].join('-');
-  
-//       console.log("formated date :" + FormattedDate)
-//       var monthFromConstant = FormattedDate.split('-')[1].toString();
-//       var yearFromConstant = FormattedDate.split('-')[0].toString();
-//       console.log("month : " + monthFromConstant)
-//       console.log("year : " + yearFromConstant)
-  
-  
-      
-//       // Fetch mess start date from constants set in collection
-//       // const constantRecords = await Constants.findOne({ hostelName });
-//       const messStartDate_new = new Date(constantRecords.messStartDate);
-//       console.log("Mess start date:", messStartDate_new.toISOString());
-  
-//       const currentDate = new Date();
-//       console.log("Today's date:", currentDate.toISOString());
-  
-  
-//       let totalDiet = 0;
-  
-//       if (monthFromConstant == month && yearFromConstant == year) {
-//         console.log("this is the starting month of mess")
-      
-      
-//       //kj
-//         dietRecords.forEach((record) => {
-//           let firstrec = 0
-//           record.meals.forEach((meal) => {
-         
-//             const mealDate = new Date(meal.date);
-//             if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
-//               if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
-//               } else {
-//                 firstrec = 1;
-//                 totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-//                 console.log("i m considered :" + meal.date)
-//               }
-  
-//             } else {
-//               console.log("i m not considered")
-//             }
-//           });
-//         });
-  
-//       } else {
-//         // Iterate through the retrieved diet records and calculate the total diet
-//         console.log("this is not the starting month of mess")
-//         dietRecords.forEach((record) => {
-//           record.meals.forEach((meal) => {
-//             const mealDate = new Date(meal.date);
-//             if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
-      
-//               {
-//                 firstrec = 1;
-//                 totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-//                 console.log("i m considered :" + meal.date)
-//               }
-  
-//             } else {
-//               console.log("i m not considered")
-//             }
-//           });
-//         });
-//       }
-
-//       dietCountForHostel = totalDiet;
-  
-//       // res.status(200).json({
-//       //   dietCount: totalDiet,
-//       //   message: 'Total diet count retrieved successfully for a month',
-//       // });
-//     } catch (error) {
-//       console.error('Error:', error);
-//       // res.status(500).json({
-//       //   error: error.message,
-//       // });
-//     }
-
-//     // dietCountForHostel = hostelDietCountResponse.data.dietCount;
-//     // console.log("dietCountForHostel "+dietCountForHostel)
-//     // console.log("Extra CountForHostel "+ totalEarnedFromExtraResponse.data.TotalExtraAmountGenerated )
-
-//     // Calculate perDietCost based on hostel diet count
-//     const perDietCost = (totalSpentInaMonth - totalEarnedFromExtra) / dietCountForHostel;
-
-//     // Calculate total invoice for the student
-//     const totalInvoice = dietCount * perDietCost;
-
-//     // Respond with the invoice data
-//     res.status(200).json({
-//       rollNumber:rollNumber,
-//       hostelName:hostelName,
-//       month:month,
-//       year:year,
-//       dietCount:dietCount,
-//       perDietCost:perDietCost,
-//       totalInvoice:totalInvoice,
-//       message: 'Invoice generated successfully',
-//     });
-//   } catch (error) {
-//     console.error('Error generating invoice:', error);
-//     res.status(500).json({ 
-//       error: 'Internal Server Error' 
-//     });
-//   }
-// };
-
-
-
-
-
-
-
-// 2nd code where APIS call are made
-/*
-const axios = require('axios');
 module.exports.generateInvoice = async function (req, res) {
   try {
     const { rollNumber, hostelName, month, year } = req.body;
@@ -3667,136 +3198,36 @@ module.exports.generateInvoice = async function (req, res) {
     var totalSpentInaMonth = 0;
     var totalEarnedFromExtra = 0;
 
-  const hostelDocument = await Constants.findOne({ hostelName });
+    const hostelDocument = await Constants.findOne({ hostelName });
 
-  if (!hostelDocument) {
-      return res.status(404).json({ 
-          message: 'Hostel not found' 
+    if (!hostelDocument) {
+      return res.status(404).json({
+        message: 'Hostel not found'
       });
-  }
+    }
 
-  // to concat month_year to search in map
-  const monthString = String(month).padStart(2, '0'); // Pad with leading zero if necessary
-  const yearString = String(year);
+    // to concat month_year to search in map
+    const monthString = String(month).padStart(2, '0'); // Pad with leading zero if necessary
+    const yearString = String(year);
 
-  // Concatenate month and year strings
-    const key = monthString +"_" + yearString;
+    // Concatenate month and year strings
+    const key = monthString + "_" + yearString;
 
     // Access the items field from the hostelDocument
-    if(hostelDocument.TotalExpenditurePerMonth.has(key)){
+    if (hostelDocument.TotalExpenditurePerMonth.has(key)) {
       totalSpentInaMonth = hostelDocument.TotalExpenditurePerMonth.get(key);
       console.log(totalSpentInaMonth)
-    }else{
+    } else {
       res.status(200).json({
         message: 'Wait till end of month',
-        error:"fail"
+        error: "fail"
       });
       return
     }
 
-    var totalEarnedFromExtra ;
+    var totalEarnedFromExtra;
     var dietCount;
-    var dietCountForHostel ; 
-
-    const totalEarnedFromExtraResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countExtrasPerMonthForHostel', {
-      month,
-      year,
-      hostelName,
-    });
-
-    totalEarnedFromExtra = totalEarnedFromExtraResponse.data.TotalExtraAmountGenerated ; 
-
-
-    // Retrieve the diet count for the specific rollNumber, month, and year
-    const individualDietCountResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countDietPerMonth', {
-      rollNumber,
-      month,
-      year,
-      hostelName,
-    });
-
-     dietCount = individualDietCountResponse.data.dietCount;
-
-    console.log("dietcount "+dietCount)
-    // Retrieve diet count for the hostel in the specified month and year
-    const hostelDietCountResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countDietPerMonthForHostel', {
-      month,
-      year,
-      hostelName,
-    });
-
-
-    dietCountForHostel = hostelDietCountResponse.data.dietCount;
-    console.log("dietCountForHostel "+dietCountForHostel)
-    console.log("Extra CountForHostel "+ totalEarnedFromExtraResponse.data.TotalExtraAmountGenerated )
-
-    // Calculate perDietCost based on hostel diet count
-    const perDietCost = (totalSpentInaMonth - totalEarnedFromExtra) / dietCountForHostel;
-
-    // Calculate total invoice for the student
-    const totalInvoice = dietCount * perDietCost;
-
-    // Respond with the invoice data
-    res.status(200).json({
-      rollNumber:rollNumber,
-      hostelName:hostelName,
-      month:month,
-      year:year,
-      dietCount:dietCount,
-      perDietCost:perDietCost,
-      totalInvoice:totalInvoice,
-      message: 'Invoice generated successfully',
-    });
-  } catch (error) {
-    console.error('Error generating invoice:', error);
-    res.status(500).json({ 
-      error: 'Internal Server Error' 
-    });
-  }
-};
-*/
-
-
-
-const axios = require('axios');
-module.exports.generateInvoice = async function (req, res) {
-  try {
-    const { rollNumber, hostelName, month, year } = req.body;
-
-    // Constants from Munshi
-    var totalSpentInaMonth = 0;
-    var totalEarnedFromExtra = 0;
-
-  const hostelDocument = await Constants.findOne({ hostelName });
-
-  if (!hostelDocument) {
-      return res.status(404).json({ 
-          message: 'Hostel not found' 
-      });
-  }
-
-  // to concat month_year to search in map
-  const monthString = String(month).padStart(2, '0'); // Pad with leading zero if necessary
-  const yearString = String(year);
-
-  // Concatenate month and year strings
-    const key = monthString +"_" + yearString;
-
-    // Access the items field from the hostelDocument
-    if(hostelDocument.TotalExpenditurePerMonth.has(key)){
-      totalSpentInaMonth = hostelDocument.TotalExpenditurePerMonth.get(key);
-      console.log(totalSpentInaMonth)
-    }else{
-      res.status(200).json({
-        message: 'Wait till end of month',
-        error:"fail"
-      });
-      return
-    }
-
-    var totalEarnedFromExtra ;
-    var dietCount;
-    var dietCountForHostel ; 
+    var dietCountForHostel;
 
     const totalEarnedFromExtraResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/hostelbook/countExtrasPerMonthForHostel', {
       month,
@@ -3804,7 +3235,7 @@ module.exports.generateInvoice = async function (req, res) {
       hostelName,
     });
 
-    totalEarnedFromExtra = totalEarnedFromExtraResponse.data.TotalExtraAmountGenerated ; 
+    totalEarnedFromExtra = totalEarnedFromExtraResponse.data.TotalExtraAmountGenerated;
 
 
     // Retrieve the diet count for the specific rollNumber, month, and year
@@ -3815,9 +3246,9 @@ module.exports.generateInvoice = async function (req, res) {
       hostelName,
     });
 
-     dietCount = individualDietCountResponse.data.dietCount;
+    dietCount = individualDietCountResponse.data.dietCount;
 
-    console.log("dietcount "+dietCount)
+    console.log("dietcount " + dietCount)
     // Retrieve diet count for the hostel in the specified month and year
     const hostelDietCountResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/hostelbook/countDietPerMonthForHostel', {
       month,
@@ -3827,8 +3258,8 @@ module.exports.generateInvoice = async function (req, res) {
 
 
     dietCountForHostel = hostelDietCountResponse.data.dietCount;
-    console.log("dietCountForHostel "+dietCountForHostel)
-    console.log("Extra CountForHostel "+ totalEarnedFromExtraResponse.data.TotalExtraAmountGenerated )
+    console.log("dietCountForHostel " + dietCountForHostel)
+    console.log("Extra CountForHostel " + totalEarnedFromExtraResponse.data.TotalExtraAmountGenerated)
 
     // Calculate perDietCost based on hostel diet count
     const perDietCost = (totalSpentInaMonth - totalEarnedFromExtra) / dietCountForHostel;
@@ -3838,19 +3269,19 @@ module.exports.generateInvoice = async function (req, res) {
 
     // Respond with the invoice data
     res.status(200).json({
-      rollNumber:rollNumber,
-      hostelName:hostelName,
-      month:month,
-      year:year,
-      dietCount:dietCount,
-      perDietCost:perDietCost,
-      totalInvoice:totalInvoice,
+      rollNumber: rollNumber,
+      hostelName: hostelName,
+      month: month,
+      year: year,
+      dietCount: dietCount,
+      perDietCost: perDietCost,
+      totalInvoice: totalInvoice,
       message: 'Invoice generated successfully',
     });
   } catch (error) {
     console.error('Error generating invoice:', error);
-    res.status(500).json({ 
-      error: 'Internal Server Error' 
+    res.status(500).json({
+      error: 'Internal Server Error'
     });
   }
 };
@@ -3872,349 +3303,6 @@ module.exports.generateInvoice = async function (req, res) {
 
 
 
-
-
-
-
-// new code 
-
-
-
-// module.exports.generateInvoice = async function (req, res) {
-//   try {
-//     const { rollNumber, hostelName, month, year } = req.body;
-
-//     // Find hostel document by hostelName
-//     const hostelDocument = await Constants.findOne({ hostelName });
-
-//     if (!hostelDocument) {
-//       return res.status(404).json({ message: 'Hostel not found' });
-//     }
-
-//     // Calculate the key for TotalExpenditurePerMonth map
-//     const monthString = String(month).padStart(2, '0');
-//     const key = `${monthString}_${year}`;
-
-//     // Retrieve total spent in the specified month and year from hostelDocument
-//     const totalSpentInaMonth = hostelDocument.TotalExpenditurePerMonth.get(key) || 0;
-
-//     if (totalSpentInaMonth === 0) {
-//       return res.status(200).json({ message: 'Wait till end of month', error: 'fail' });
-//     }
-
-//     // Calculate total extra amount generated for the hostel in the specified month and year
-//     const TotalExtraAmountGenerated = await calculateTotalExtraAmount(month, year, hostelName);
-
-//     // Calculate total diet count for the student in the specified month and year
-//     const dietCount = await calculateTotalDietCount(rollNumber, month, year);
-
-//     // Calculate total diet count for the hostel in the specified month and year
-//     const dietCountForHostel = await calculateTotalHostelDietCount(month, year, hostelName);
-
-//     // Calculate perDietCost based on hostel diet count
-//     const perDietCost = (totalSpentInaMonth - TotalExtraAmountGenerated) / dietCountForHostel;
-
-//     // Calculate total invoice for the student
-//     const totalInvoice = dietCount * perDietCost;
-
-//     // Respond with the invoice data
-//     res.status(200).json({
-//       rollNumber,
-//       hostelName,
-//       month,
-//       year,
-//       dietCount,
-//       perDietCost,
-//       totalInvoice,
-//       message: 'Invoice generated successfully',
-//     });
-//   } catch (error) {
-//     console.error('Error generating invoice:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// };
-
-// // Function to calculate total extra amount generated for the hostel in a given month and year
-// async function calculateTotalExtraAmount(month, year, hostelName) {
-// let totalExtraAmount = 0;
-
-//     // Find all diet records that match the hostelName, month, and year
-//     const dietRecords = await DietRecords.find({ hostelName, month, year });
-//     var messStartDate;
-//     let constantRecords = await Constants.findOne({ hostelName });
-
-//     messStartDate = constantRecords.messStartDate;
-//     console.log("Mess start date found : " + messStartDate);
-
-//     messStartDate = new Date(messStartDate);
-//     messStartDate.setDate(messStartDate.getDate());
-//     console.log("mess start date : " + messStartDate);
-
-//     const FormattedDate = [
-//       messStartDate.getFullYear(),
-//       (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
-//       messStartDate.getDate().toString().padStart(2, '0')
-//     ].join('-');
-
-//     console.log("formated date :" + FormattedDate)
-//     var monthFromConstant = FormattedDate.split('-')[1].toString();
-//     var yearFromConstant = FormattedDate.split('-')[0].toString();
-//     console.log("month : " + monthFromConstant)
-//     console.log("year : " + yearFromConstant)
-
-
-//     const messStartDate_new = new Date(constantRecords.messStartDate);
-//     console.log("Mess start date:", messStartDate_new.toISOString());
-
-//     const currentDate = new Date();
-//     console.log("Today's date:", currentDate.toISOString());
-
-
-
-//     // Define a function to calculate total amount of extras from an array of extras
-//     const calculateExtrasTotal = (extrasArray) => {
-//       let total = 0;
-//       let total_item = 0;
-//       for (const extra of extrasArray) {
-//         total_item += extra.amount;
-//         console.log(total_item);
-//         for (const item of extra.item) {
-//           const itemDetails = item.split(':'); // Split item string to get name and price
-//           const itemName = itemDetails[0].trim();
-//           const itemPrice = Number(itemDetails[1].trim());
-//           total += itemPrice;
-//         }
-//       }
-//       return total;
-//     };
-
-//     let totalBreakfastExtra = 0;
-//     let totalLunchExtra = 0;
-//     let totalEveningExtra = 0;
-//     let totalDinnerExtra = 0;
-
-//     dietRecords.forEach((record) => {
-//       record.meals.forEach((meal) => {
-//         const mealDate = new Date(meal.date);
-//         if (mealDate >= messStartDate_new && mealDate <= currentDate) {
-//           totalBreakfastExtra += calculateExtrasTotal(meal.breakfastExtra);
-//           totalLunchExtra += calculateExtrasTotal(meal.lunchExtra);
-//           totalEveningExtra += calculateExtrasTotal(meal.eveningExtra);
-//           totalDinnerExtra += calculateExtrasTotal(meal.dinnerExtra);
-//         }
-//       });
-//     });
-
-//    totalExtraAmount = totalBreakfastExtra + totalLunchExtra+totalEveningExtra+totalDinnerExtra;
-   
-
-
-//   return totalExtraAmount;
-// }
-
-// // Function to calculate total diet count for a specific student in a given month and year
-// async function calculateTotalDietCount(rollNumber, month, year) {
-//  let totalDietCount = 0;
-
-//   try {
-//     // Find all documents that match the rollNumber
-//     const dietRecords = await DietRecords.find({ rollNumber, month, year });
-//     // FETCHING THE START DATE FROM THE CONSTANTS SET IN COLLECTION
-//     const hostelName = req.body.hostelName;
-//     var messStartDate;
-//     let constantRecords = await Constants.findOne({ hostelName });
-
-//     messStartDate = constantRecords.messStartDate;
-//     console.log("Mess start date found : " + messStartDate);
-
-//     messStartDate = new Date(messStartDate);
-//     messStartDate.setDate(messStartDate.getDate());
-//     console.log("mess start date : " + messStartDate);
-
-//     const FormattedDate = [
-//       messStartDate.getFullYear(),
-//       (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
-//       messStartDate.getDate().toString().padStart(2, '0')
-//     ].join('-');
-
-//     console.log("formated date :" + FormattedDate)
-//     var monthFromConstant = FormattedDate.split('-')[1].toString();
-//     var yearFromConstant = FormattedDate.split('-')[0].toString();
-//     console.log("month : " + monthFromConstant)
-//     console.log("year : " + yearFromConstant)
-
-//     let totalDiet = 0;
-//     console.log("month from front : " + month)
-
-
-//     const messStartDate_new = new Date(constantRecords.messStartDate);
-//     console.log("Mess start date:", messStartDate_new.toISOString());
-
-//     const currentDate = new Date();
-//     console.log("Today's date:", currentDate.toISOString());
-
-
-// //IF IT IS THE STARTING MONTH OF THE MESS , IT WILL CALCULATE FROM THE DAY YOU START CONSUMIING MEAL
-// // BUT IF IT IS NOT THE STARTING MONTH OF THE MESS, IT WILL COUNT FROM THE 1ST DATE OF THE MONTH.
-//     if (monthFromConstant == month && yearFromConstant == year) {
-//       console.log("this is the starting month of mess")
-//       dietRecords.forEach((record) => {
-//         let firstrec = 0
-//         record.meals.forEach((meal) => {
-//         const mealDate = new Date(meal.date);
-//           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
-//             if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
-//             } else {
-//               firstrec = 1;
-//               totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-//               console.log("i m considered :" + meal.date)
-//             }
-
-//           } else {
-//             console.log("i m not considered")
-//           }
-//         });
-//       });
-
-//     } else {
-//       // Iterate through the retrieved diet records and calculate the total diet
-//       console.log("this is not the starting month of mess")
-//       dietRecords.forEach((record) => {
-//         record.meals.forEach((meal) => {
-
-//           const mealDate = new Date(meal.date);
-//           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
-    
-//             {
-//               firstrec = 1;
-//               totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-//               console.log("i m considered :" + meal.date)
-//             }
-
-//           } else {
-//             console.log("i m not considered")
-//           }
-//         });
-//       });
-//     }
-//     totalDietCount = totalDietCount
-
-//   } catch (error) {
-//     console.error('Error:', error);
-    
-//   }
-//   return totalDietCount;
-// }
-
-// // Function to calculate total diet count for the hostel in a given month and year
-// async function calculateTotalHostelDietCount(month, year, hostelName) {
-
-//   let totalHostelDietCount = 0;
-
-//   try {
-//     // Find all documents that match the rollNumber
-//     const dietRecords = await DietRecords.find({ hostelName, month, year });  // search by seeing the hostelName
-
-//     let constantRecords = await Constants.findOne({ hostelName });
-
-//     messStartDate = constantRecords.messStartDate;
-//     console.log("Mess start date found : " + messStartDate);
-
-//     messStartDate = new Date(messStartDate);
-//     messStartDate.setDate(messStartDate.getDate());
-//     console.log("mess start date : " + messStartDate);
-
-//     const FormattedDate = [
-//       messStartDate.getFullYear(),
-//       (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
-//       messStartDate.getDate().toString().padStart(2, '0')
-//     ].join('-');
-
-//     console.log("formated date :" + FormattedDate)
-//     var monthFromConstant = FormattedDate.split('-')[1].toString();
-//     var yearFromConstant = FormattedDate.split('-')[0].toString();
-//     console.log("month : " + monthFromConstant)
-//     console.log("year : " + yearFromConstant)
-
-
-    
-//     // Fetch mess start date from constants set in collection
-//     // const constantRecords = await Constants.findOne({ hostelName });
-//     const messStartDate_new = new Date(constantRecords.messStartDate);
-//     console.log("Mess start date:", messStartDate_new.toISOString());
-
-//     const currentDate = new Date();
-//     console.log("Today's date:", currentDate.toISOString());
-
-
-//     let totalDiet = 0;
-
-//     if (monthFromConstant == month && yearFromConstant == year) {
-//       console.log("this is the starting month of mess")
-    
-    
-//     //kj
-//       dietRecords.forEach((record) => {
-//         let firstrec = 0
-//         record.meals.forEach((meal) => {
-       
-//           const mealDate = new Date(meal.date);
-//           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
-//             if (firstrec == 0 && (meal.breakfast == 0 && meal.lunch == 0 && meal.dinner == 0)) {
-//             } else {
-//               firstrec = 1;
-//               totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-//               console.log("i m considered :" + meal.date)
-//             }
-
-//           } else {
-//             console.log("i m not considered")
-//           }
-//         });
-//       });
-
-//     } else {
-//       // Iterate through the retrieved diet records and calculate the total diet
-//       console.log("this is not the starting month of mess")
-//       dietRecords.forEach((record) => {
-//         record.meals.forEach((meal) => {
-//           const mealDate = new Date(meal.date);
-//           if (mealDate >= messStartDate_new && mealDate <= currentDate) {  // count only when the current date is greater then the mess start date
-    
-//             {
-//               firstrec = 1;
-//               totalDiet += (meal.breakfast != 2 ? 1 : 0) + (meal.lunch != 2 ? 1 : 0) + (meal.dinner != 2 ? 1 : 0);
-//               console.log("i m considered :" + meal.date)
-//             }
-
-//           } else {
-//             console.log("i m not considered")
-//           }
-//         });
-//       });
-//     }
-
-//     totalHostelDietCount = totalHostelDietCount;
-   
-//   } catch (error) {
-//     console.error('Error:', error);
-//   }
-//   return totalHostelDietCount;
-// }
-
-// // Helper function to calculate total amount of extras
-// function calculateExtrasTotal(extrasArray) {
-//   let total = 0;
-
-//   extrasArray.forEach((extra) => {
-//     extra.item.forEach((item) => {
-//       const [itemName, itemPrice] = item.split(':');
-//       total += Number(itemPrice.trim());
-//     });
-//   });
-
-//   return total;
-// }
 
 
 // counting extraMeal amount
@@ -4292,13 +3380,13 @@ module.exports.countExtrasPerMonthForHostel = async function (req, res) {
       });
     });
 
-    var TotalExtraAmountGenerated = totalBreakfastExtra + totalLunchExtra+totalEveningExtra+totalDinnerExtra;
+    var TotalExtraAmountGenerated = totalBreakfastExtra + totalLunchExtra + totalEveningExtra + totalDinnerExtra;
     res.json({
       totalBreakfastExtra,
       totalLunchExtra,
       totalEveningExtra,
       totalDinnerExtra,
-      TotalExtraAmountGenerated : TotalExtraAmountGenerated,
+      TotalExtraAmountGenerated: TotalExtraAmountGenerated,
       message: 'Extras counted successfully',
       error: '0',
     });
@@ -4306,4 +3394,186 @@ module.exports.countExtrasPerMonthForHostel = async function (req, res) {
     console.error('Error counting extras:', error);
     res.status(500).json({ message: 'Failed to count extras', error: '1' });
   }
+};
+
+
+
+
+
+
+
+// Define a function to print consumed items by student for a specific month and year
+module.exports.printConsumedItemsByStudent = async function (req, res) {
+    try {
+        const { rollNumber, month, year, hostelName } = req.body;
+
+        // Find all diet records that match the rollNumber, month, and year
+        const dietRecords = await DietRecords.find({ rollNumber, month, year, hostelName });
+
+        // Check if any records found for the student
+        if (dietRecords.length === 0) {
+            return res.status(404).json({
+                message: 'No records found for the student for the specified month and year'
+            });
+        }
+
+
+        var messStartDate;
+        let constantRecords = await Constants.findOne({ hostelName });
+    
+        messStartDate = constantRecords.messStartDate;
+        console.log("Mess start date found : " + messStartDate);
+    
+        messStartDate = new Date(messStartDate);
+        messStartDate.setDate(messStartDate.getDate());
+        console.log("mess start date : " + messStartDate);
+    
+        const FormattedDate = [
+          messStartDate.getFullYear(),
+          (messStartDate.getMonth() + 1).toString().padStart(2, '0'),
+          messStartDate.getDate().toString().padStart(2, '0')
+        ].join('-');
+    
+        console.log("formated date :" + FormattedDate)
+        var monthFromConstant = FormattedDate.split('-')[1].toString();
+        var yearFromConstant = FormattedDate.split('-')[0].toString();
+        console.log("month : " + monthFromConstant)
+        console.log("year : " + yearFromConstant)
+    
+    
+        const messStartDate_new = new Date(constantRecords.messStartDate);
+        console.log("Mess start date:", messStartDate_new.toISOString());
+    
+        const currentDate = new Date();
+        console.log("Today's date:", currentDate.toISOString());
+  
+
+        // Initialize an array to store consumed items
+        let consumedItems = [];
+
+        // Iterate through each record and add consumed items to the array
+        dietRecords.forEach(record => {
+            record.meals.forEach((meal) => {
+                const mealDate = new Date(meal.date);
+                if (mealDate >= messStartDate_new && mealDate <= currentDate) {
+                    const consumedItem = {
+                        date: meal.date,
+                        breakfast: null,
+                        lunch: null,
+                        dinner: null,
+                        breakfastExtra: [],
+                        lunchExtra: [],
+                        eveningExtra: [],
+                        dinnerExtra: [],
+                        extraTotal : null
+                    };
+
+                    console.log(meal);
+                    console.log("--------");
+                    
+                    // Check for breakfast
+                    if (meal.breakfast == 1) {
+                        consumedItem.breakfast = 'Consumed';
+                    } else if (meal.breakfast == 2) {
+                        consumedItem.breakfast = 'On Leave';
+                    }
+
+                    let extraTotalBreakfast = 0 , extraTotalLunch =0 , extraTotalSnacks = 0,extraTotalDinner =0 ;
+                   
+                    // Check for breakfastExtra
+                    if (meal.breakfastExtra && meal.breakfastExtra.length > 0) {
+                        meal.breakfastExtra.forEach(extra => {
+                          console.log("ExtraAmount "+extra.amount)
+                          extraTotalBreakfast  =  extraTotalBreakfast + extra.amount
+                            extra.item.forEach(item => {
+                                const itemDetails = item.split(':');
+                                const itemName = itemDetails[0].trim();
+                                const itemPrice = Number(itemDetails[1].trim());
+                                // extraTotalBreakfast += itemPrice;
+                                consumedItem.breakfastExtra.push({ item: itemName, amount: itemPrice });
+                            });
+                        });
+                    }
+
+                    // Check for lunch
+                    if (meal.lunch == 1) {
+                        consumedItem.lunch = 'Consumed';
+                    } else if (meal.lunch == 2) {
+                        consumedItem.lunch = 'On Leave';
+                    }
+
+                    // Check for lunchExtra
+                    if (meal.lunchExtra && meal.lunchExtra.length > 0) {
+                        meal.lunchExtra.forEach(extra => {
+                          extraTotalLunch  = extraTotalLunch + extra.amount
+                          console.log("ExtraAmount "+extra.amount)
+                            extra.item.forEach(item => {
+                                const itemDetails = item.split(':');
+                                const itemName = itemDetails[0].trim();
+                                const itemPrice = Number(itemDetails[1].trim());
+                                // extraTotalLunch  += itemPrice;
+                                consumedItem.lunchExtra.push({ item: itemName, amount: itemPrice });
+                            });
+                        });
+                    }
+
+                    // Check for dinner
+                    if (meal.dinner == 1) {
+                        consumedItem.dinner = 'Consumed';
+                    } else if (meal.dinner == 2) {
+                        consumedItem.dinner = 'On Leave';
+                    }
+
+                    // Check for dinnerExtra
+                    if (meal.dinnerExtra && meal.dinnerExtra.length > 0) {
+                        meal.dinnerExtra.forEach(extra => {
+                          extraTotalDinner  = extraTotalDinner + extra.amount
+                          console.log("ExtraAmount "+extra.amount)
+                            extra.item.forEach(item => {
+                                const itemDetails = item.split(':');
+                                const itemName = itemDetails[0].trim();
+                                const itemPrice = Number(itemDetails[1].trim());
+                                // extraTotalDinner += itemPrice 
+                                consumedItem.dinnerExtra.push({ item: itemName, amount: itemPrice });
+                            });
+                        });
+                    }
+
+                    // Check for eveningExtra
+                    if (meal.eveningExtra && meal.eveningExtra.length > 0) {
+                        meal.eveningExtra.forEach(extra => {
+                          extraTotalSnacks  = extraTotalSnacks + extra.amount
+                          console.log("ExtraAmount"+extra.amount)
+                            extra.item.forEach(item => {
+                                const itemDetails = item.split(':');
+                                const itemName = itemDetails[0].trim();
+                                const itemPrice = Number(itemDetails[1].trim());
+                                extraTotalSnacks +=itemPrice;
+                                consumedItem.eveningExtra.push({ item: itemName, amount: itemPrice });
+                            });
+                        });
+                    }
+                    console.log("All extras "+ extraTotalBreakfast+ extraTotalLunch+extraTotalSnacks+extraTotalDinner)
+                    var allExtrasTemp = extraTotalBreakfast+ extraTotalLunch+extraTotalSnacks+extraTotalDinner;
+                    console.log("All extras 2 "+allExtrasTemp)
+                    consumedItem.extraTotal = extraTotalBreakfast+ extraTotalLunch+extraTotalSnacks+extraTotalDinner;
+
+                    consumedItems.push(consumedItem);
+                }
+            });
+        });
+
+        // Return the consumed items as a response
+        return res.status(200).json({
+            message: 'Consumed items retrieved successfully',
+            consumedItems: consumedItems
+        });
+    } catch (error) {
+        // Handle errors
+        console.error('Error retrieving consumed items by student:', error);
+        return res.status(500).json({
+            message: 'Internal server error',
+            error: error.message
+        });
+    }
 };
