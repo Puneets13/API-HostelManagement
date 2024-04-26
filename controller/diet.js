@@ -3407,10 +3407,10 @@ module.exports.printConsumedItemsByStudent = async function (req, res) {
     try {
 
         console.log("------starting with detailed mess---------")
-        const { rollNumber, month, year, hostelName } = req.body;
+        const { rollNumber, month, year, hostelName,roomNumber } = req.body;
 
         // Find all diet records that match the rollNumber, month, and year
-        const dietRecords = await DietRecords.find({ rollNumber, month, year, hostelName });
+        const dietRecords = await DietRecords.find({ rollNumber, month, year, hostelName ,roomNumber});
 
         // Check if any records found for the student
         if (dietRecords.length === 0) {
