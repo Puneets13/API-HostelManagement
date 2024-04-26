@@ -3460,14 +3460,14 @@ module.exports.printConsumedItemsByStudent = async function (req, res) {
                 if (mealDate >= messStartDate_new && mealDate <= currentDate) {
                     const consumedItem = {
                         date: meal.date,
-                        breakfast: null,
-                        lunch: null,
-                        dinner: null,
+                        breakfast: "",
+                        lunch: "",
+                        dinner: "",
                         breakfastExtra: [],
                         lunchExtra: [],
                         eveningExtra: [],
                         dinnerExtra: [],
-                        extraTotal : null
+                        extraTotal : 0
                     };
 
                     console.log(meal);
