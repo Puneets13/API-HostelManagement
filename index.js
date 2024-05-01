@@ -1,6 +1,4 @@
-// DATABASE NAME = userLoginSystem
 // Cluster0
-
 const express = require('express');
 const bodyparser = require('body-parser');
 const userRouter = require('./routes/user.js');
@@ -10,24 +8,12 @@ const userRouter4 = require('./routes/mess.js');
 const userRouter5 = require("./routes/constants.js");
 const userRouter6 = require("./routes/diet.js");
 const moment = require('moment');
-
-
 const http = require('http');
 const socketIo = require('socket.io');
-
-
 const mongoose = require('mongoose');
 const path = require('path');
 const jwt = require('jsonwebtoken');  //for verifying the login button we include jsonwebtoken
 const fileupload = require('express-fileupload') //for uploading file on cloudinary (IMAGES UPLOADING)
-// const GridFsStorage=require('multer-gridfs-storage');
-// const methodOverride= require('method-override');
-// const crypto=require('crypto');
-// const Grid=require('gridfs-stream');
-//depencies
-// const multer=require('multer')
-
-
 // // for excel conversion 
 const DietModel = require('./models/diet.js');
 // const { exportDataToExcel } = require('./controller/excelUtils.js');
@@ -78,50 +64,6 @@ mongoose.connection.on('connected', connected => {
 });
 
 
-// const Meal = mongoose.model('Meal', DietModel);
-
-// // Socket.io setup
-// io.on('connection', (socket) => {
-//     console.log('A user connected');
-  
-//     // Listen for disconnect events
-//     socket.on('disconnect', () => {
-//       console.log('User disconnected');
-//     });
-//   });
-
-  
-//   // Mongoose middleware to capture changes
-// DietModel.post('save', function (doc) {
-//     // Emit the updated document to connected clients
-//     io.emit('mealUpdated', doc);
-//   });
-  
-//   // Serve the Socket.io client library
-//   app.get('/socket.io.js', (req, res) => {
-//     res.sendFile(__dirname + '/node_modules/socket.io/client-dist/socket.io.js');
-//   });
-  
-
-// const db = mongoose.connection;
-
-// const changeStream = DietModel.watch();
-// var collectionData;
-// changeStream.on('change', async () => {
-//     try {
-//         const todayDate = moment().format('YYYY-MM-DD');
-//                  collectionData = await DietModel.find({
-//                     'meals.date': todayDate,
-//                     // Add more conditions if needed
-//                 }).lean();
-
-//         await exportDataToExcel("Boys Hostel 7");
-
-//     } catch (error) {
-//         console.error('Error processing change:', error);
-//     }
-// });
-
 // THE APP WILL CALL ALL THE PATHS THAT ARE WRITTEN IN userRoutes object variable
 app.use('/nitj_hostels', userRouter);
 app.use('/nitj_hostels/hostelbook', userRouter2);
@@ -131,7 +73,7 @@ app.use('/nitj_hostels/hostelbook', userRouter5);
 app.use('/nitj_hostels/hostelbook', userRouter6);
 
 app.get("/nitj_hostels", (req, res) => {
-    res.send("hii mesg sent")
+    res.send("hii welcome to nitj")
 });
 //IN CASE USER WRITE ANY BAD URL THEN ERROR GOT PRINTED
 app.use((req, res, next) => {

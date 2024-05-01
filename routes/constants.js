@@ -13,7 +13,6 @@ router.post('/editExtraItem',callbackFunctions.editExtraItem);//change name and 
 router.post('/fetchItems',callbackFunctions.fetchItems);//fetch list of constants
 
 
-
 router.post('/addTotalExpenditure',callbackFunctions.addTotalExpenditure);//fetch list of constants
 router.post('/editTotalExpenditure',callbackFunctions.editTotalExpenditure);//fetch list of constants
 router.post('/fetchTotalExpenditurePerMonth',callbackFunctions.fetchTotalExpenditurePerMonth);//fetch list of constants

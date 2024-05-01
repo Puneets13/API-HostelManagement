@@ -28,24 +28,14 @@ router.post("/hostelbook/sendEmail",callbackFunctions.sendRegisterationEmail);
 
 // to get user with particular id 
 router.get('/:id',callbackFunctions.getUser);
-
-
 // to delete the user with particular id 
 router.delete('/:id', callbackFunctions.deleteUser);
-
 // to delete all the data INCLUDING THE IMAGE AS WELL
 //  QUERY WILL BE USED INSTEAD OF PARAMS HERE FOR DELETING THE IMAGE AS WELLL AS DATA 
 router.delete('/deleteProfile/:id', callbackFunctions.deleteProfile);
-
 //for otp verification
-
-
 // to update the user array Profile
 router.put('/:id', callbackFunctions.UpdateUser);
-
 router.put('/password/:id',callbackFunctions.updatePassword);
-
 router.post('/uploadProfile/:id',callbackFunctions.setUserProfile);
-
-
 module.exports = router;
