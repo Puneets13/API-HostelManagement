@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+const { checkauth } = require('../middleware/user_jwt.js');
 const callbackFunctions = require('../controller/diet.js');
 
 router.post('/createmonthlydietRecord',callbackFunctions.createmonthlydietRecord); // daily scanner
@@ -13,7 +14,7 @@ router.post('/printConsumedItemsByStudent',callbackFunctions.printConsumedItemsB
 router.post('/applyLeave',callbackFunctions.applyLeave); // leave
 router.post('/getDietRecordList',callbackFunctions.getDietRecordList);
 router.post('/messList',callbackFunctions.messList);
-router.post('/createExtraMealRecord',callbackFunctions.getextrameal);
+router.post('/createExtraMealRecord',checkauth,callbackFunctions.getextrameal);
 router.post('/getLeaveRecord',callbackFunctions.getLeaveRecord);
 
 

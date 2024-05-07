@@ -640,7 +640,6 @@ module.exports.loginUser = function (req, res) {
                     })
                 }
                 if (result) {
-                    // if result match then create the token
                     let size = 200;
                     let avatar = "https://gravatar.com/avatar/?s=" + size + '&d=retro';
                     console.log("User logged in");
@@ -660,6 +659,17 @@ module.exports.loginUser = function (req, res) {
                     //     email: user[0].email,
                     //     avatar: avatar[0].avatar,
                     // }
+                    const token = jwt.sign(
+                        {
+                            email: user[0].email,
+                            userId: user[0]._id
+                        },
+                        "This is secret key", // Replace with your secret key
+                        {
+                            expiresIn: "12h" // Token expires in 12 hours
+                        }
+                    );
+
                     let hostel= await Hostel.findOne({$or:[{email1: req.body.email},{email2:req.body.email}]});
                     let hostel1={};
                     if(hostel==null){
@@ -707,6 +717,7 @@ module.exports.loginUser = function (req, res) {
                         message: "User logged in",
                         error: "successful",
                         user: user[0],
+                        token:token,
                            //to get the 0th index user values out of the array received form find() function
                         hostel:hostel1 
                     })
