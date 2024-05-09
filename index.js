@@ -1,4 +1,4 @@
-// Cluster0
+require('dotenv').config();
 const express = require('express');
 const bodyparser = require('body-parser');
 const userRouter = require('./routes/user.js');
@@ -10,32 +10,14 @@ const userRouter6 = require("./routes/diet.js");
 const moment = require('moment');
 const http = require('http');
 const socketIo = require('socket.io');
+
 const mongoose = require('mongoose');
 const path = require('path');
 const jwt = require('jsonwebtoken');  //for verifying the login button we include jsonwebtoken
 const fileupload = require('express-fileupload') //for uploading file on cloudinary (IMAGES UPLOADING)
-// // for excel conversion 
-const DietModel = require('./models/diet.js');
-// const { exportDataToExcel } = require('./controller/excelUtils.js');
 
 
 const app = express();
-
-const server = http.createServer(app);
-const io = socketIo(server);
-
-
-// app.set('view engine','ejs');//
-
-
-// // const express = require('express');
-// const http = require('http');
-// const { setupSocketIO } = require('./controller/messListUpdate.js'); // Adjust the path based on your project structure
-// const server = http.createServer(app);
-
-// const io = setupSocketIO(server);
-
-
 
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
@@ -44,7 +26,8 @@ const PORT = process.env.PORT || 1313;
 mongoose.set('strictQuery', false);
 
 
-const mongouri = 'mongodb+srv://admin:admin123@cluster0.ywihdcq.mongodb.net/NITJ_HOSTEL_MANAGEMENT?retryWrites=true&w=majority';
+// const mongouri = 'mongodb+srv://admin:admin123@cluster0.ywihdcq.mongodb.net/NITJ_HOSTEL_MANAGEMENT?retryWrites=true&w=majority';
+const mongouri = process.env.CONNECTION_STRING;
 mongoose.connect(mongouri);
 
 // CLOUDINARY

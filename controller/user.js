@@ -1,4 +1,5 @@
 // THIS FILE CONTAINS ALL THE CALLBACK FUNCTIONS OF VARIOUS ROUTES
+require('dotenv').config();
 const nodemailer=require('nodemailer');
 const jwt = require('jsonwebtoken'); //for signup and login facility to verify the user
 const User = require('../models/User.js');
@@ -7,21 +8,18 @@ const User2 = require('../models/User2.js');
 const Hostel= require('../models/Hostel.js');
 //for otp verification
 const UserOTPVerification=require('../models/UserOTPVerification');
-
 const UserForgetPassVerification = require('../models/UserForgetpasswordVerifications');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');   //for encrypting the password to be sent over the server
-const { findOne } = require('../models/User.js');
-// const Hostels = require('../models/Hostels.js');
 
 // define the cloudinary variable 
 const cloudinary = require('cloudinary').v2;
 
 // CONFIGURE THE USER BY TAKING API KEY AND API_SECRET FROM cloudinary offical website
 cloudinary.config({
-    cloud_name: 'dytrs9xrm',    //get these values from the cloudinary after login
-    api_key: '497511148242921',
-    api_secret: 'Q_600GQHaMngyaWWBfllQRkk-iQ'
+    cloud_name: process.env.cloudinary_cloud_name,    //get these values from the cloudinary after login
+    api_key: process.env.cloudinary_api_key,
+    api_secret: process.env.cloudinary_api_secret
 });
 
 
@@ -29,8 +27,8 @@ cloudinary.config({
 let transporter=nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'nitjhostelsapp@gmail.com',
-        pass:'dlhcqeiiqiicqfqx'
+        user: process.env.nit_login_email,
+        pass: process.env.nit_login_pass
     }
 })
 
