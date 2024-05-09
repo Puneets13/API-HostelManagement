@@ -648,7 +648,7 @@ module.exports.loginUser = function (req, res) {
                         },
                         "@#$#$__NITJALANDHAR_MESSMANGEMENT__@#$#$", // Replace with your secret key
                         {
-                            expiresIn: "1m" // Token expires in 12 hours
+                            expiresIn: "12h" // Token expires in 12 hours
                         }
                     );
 
