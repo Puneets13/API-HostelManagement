@@ -12,8 +12,8 @@ router.post('/Signup', callbackFunctions.createUser);
 
 
 //Lab work android
-router.post('/Signup2', callbackFunctions.createUser2);
-router.post('/login2',callbackFunctions.loginUser2);
+// router.post('/Signup2', callbackFunctions.createUser2);
+// router.post('/login2',callbackFunctions.loginUser2);
 
 router.post("/verifyOTP",callbackFunctions.otpverify);//otp verifiaction 
 router.post('/resendOTP',callbackFunctions.resentOTP);

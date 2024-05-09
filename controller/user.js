@@ -643,30 +643,14 @@ module.exports.loginUser = function (req, res) {
                     let size = 200;
                     let avatar = "https://gravatar.com/avatar/?s=" + size + '&d=retro';
                     console.log("User logged in");
-                    // const token = jwt.sign({
-                    //     username: user[0].username,
-                    //     email: user[0].email,
-                    //     avatar: avatar
-
-                    // },
-                    //     "This is secret key",   //this key is to be used in check_auth file for verification in verify function
-                    //     {
-                    //         expiresIn: '24h'
-                    //     });
-                    // var user = {
-                    //     _id:user[0].ID,
-                    //     username: user[0].username,
-                    //     email: user[0].email,
-                    //     avatar: avatar[0].avatar,
-                    // }
                     const token = jwt.sign(
                         {
                             email: user[0].email,
                             userId: user[0]._id
                         },
-                        "This is secret key", // Replace with your secret key
+                        "@#$#$__NITJALANDHAR_MESSMANGEMENT__@#$#$", // Replace with your secret key
                         {
-                            expiresIn: "12h" // Token expires in 12 hours
+                            expiresIn: "1m" // Token expires in 12 hours
                         }
                     );
 
