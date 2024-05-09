@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { checkauth } = require('../middleware/user_jwt.js');
 
 const callbackFunctions = require('../controller/status.js');
 const Status = require('../models/Status.js');

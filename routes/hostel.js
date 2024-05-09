@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+const { checkauth } = require('../middleware/user_jwt.js');
 
 const callbackFunctions = require('../controller/hostel.js');
 const Hostel = require('../models/Hostel.js');
