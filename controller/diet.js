@@ -3229,6 +3229,7 @@ module.exports.generateInvoice = async function (req, res) {
     var dietCount;
     var dietCountForHostel;
 
+    console.log("Before 1 API")
     const totalEarnedFromExtraResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/hostelbook/countExtrasPerMonthForHostel', {
       month,
       year,
@@ -3237,7 +3238,7 @@ module.exports.generateInvoice = async function (req, res) {
 
     totalEarnedFromExtra = totalEarnedFromExtraResponse.data.TotalExtraAmountGenerated;
 
-
+    console.log("Before 2 API")
     // Retrieve the diet count for the specific rollNumber, month, and year
     const individualDietCountResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/hostelbook/countDietPerMonth', {
       rollNumber,
@@ -3247,6 +3248,8 @@ module.exports.generateInvoice = async function (req, res) {
     });
 
     dietCount = individualDietCountResponse.data.dietCount;
+
+    console.log("Before 3 API")
 
     console.log("dietcount " + dietCount)
     // Retrieve diet count for the hostel in the specified month and year
