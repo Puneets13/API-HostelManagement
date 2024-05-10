@@ -8,7 +8,6 @@ const hostelSchema = new mongoose.Schema({
     },
     hostelName: {
         type: String,
-
     },
     userName1:{
         type:String

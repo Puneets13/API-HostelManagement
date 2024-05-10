@@ -8,7 +8,9 @@ router.post('/createmonthlydietRecord',checkauth,callbackFunctions.createmonthly
 router.post('/countDietOfStudent',checkauth,callbackFunctions.countDietOfStudent);  // count diet of student for "all months" in a year
 router.post('/countDietPerMonth',checkauth,callbackFunctions.countDietPerMonth); // count diet of students per month
 router.post('/countDietPerMonthForHostel',checkauth,callbackFunctions.countDietPerMonthForHostel); // count diet for particular hostel
-router.post('/generateInvoice',checkauth,callbackFunctions.generateInvoice); // count diet for particular hostel
+
+router.post('/generateInvoice',callbackFunctions.generateInvoice); // count diet for particular hostel
+
 router.post('/countExtrasPerMonthForHostel',checkauth,callbackFunctions.countExtrasPerMonthForHostel); // count diet for particular hostel
 router.post('/printConsumedItemsByStudent',checkauth,callbackFunctions.printConsumedItemsByStudent); // count diet for particular hostel
 router.post('/applyLeave',checkauth,callbackFunctions.applyLeave); // leave

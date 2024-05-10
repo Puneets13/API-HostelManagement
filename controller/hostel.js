@@ -108,7 +108,7 @@ module.exports.registerRoom = async function (req, res) {
                 message:"user already registered"
             })
         }
-    
+   
         if (room_exist) {
             if (room_exist.email2!=null) {
                 res.status(200).json({
