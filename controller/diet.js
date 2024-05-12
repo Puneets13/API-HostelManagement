@@ -3230,7 +3230,8 @@ module.exports.generateInvoice = async function (req, res) {
     var dietCountForHostel;
 
     console.log("Before 1 API")
-    const totalEarnedFromExtraResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/hostelbook/countExtrasPerMonthForHostel', {
+     const totalEarnedFromExtraResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/hostelbook/countExtrasPerMonthForHostel', {
+      // const totalEarnedFromExtraResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countExtrasPerMonthForHostel', {
       month,
       year,
       hostelName,
@@ -3241,19 +3242,21 @@ module.exports.generateInvoice = async function (req, res) {
     console.log("Before 2 API")
     // Retrieve the diet count for the specific rollNumber, month, and year
     const individualDietCountResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/hostelbook/countDietPerMonth', {
-      rollNumber,
+      // const individualDietCountResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countDietPerMonth', {
+    rollNumber,
       month,
       year,
       hostelName,
     });
 
     dietCount = individualDietCountResponse.data.dietCount;
+    console.log("dietcount " + dietCount)
 
     console.log("Before 3 API")
 
-    console.log("dietcount " + dietCount)
     // Retrieve diet count for the hostel in the specified month and year
     const hostelDietCountResponse = await axios.post('https://api-hostelmanagement-nitjhostels.onrender.com/nitj_hostels/hostelbook/countDietPerMonthForHostel', {
+      // const hostelDietCountResponse = await axios.post('http://localhost:1313/nitj_hostels/hostelbook/countDietPerMonthForHostel', {
       month,
       year,
       hostelName,
@@ -3350,22 +3353,49 @@ module.exports.countExtrasPerMonthForHostel = async function (req, res) {
 
 
     // Define a function to calculate total amount of extras from an array of extras
+    // const calculateExtrasTotal = (extrasArray) => {
+    //   let total = 0;
+    //   let total_item = 0;
+    //   for (const extra of extrasArray) {
+    //     total_item += extra.amount;
+    //     console.log(total_item);
+    //     for (const item of extra.item) {
+    //       const itemDetails = item.split(':'); // Split item string to get name and price
+    //       // const itemName = itemDetails[0].trim();
+    //       const itemPrice = Number(itemDetails[1].trim());
+    //       total += itemPrice;
+    //     }
+    //   }
+    //   return total;
+    // };
+
     const calculateExtrasTotal = (extrasArray) => {
       let total = 0;
-      let total_item = 0;
       for (const extra of extrasArray) {
-        total_item += extra.amount;
-        console.log(total_item);
-        for (const item of extra.item) {
-          const itemDetails = item.split(':'); // Split item string to get name and price
-          const itemName = itemDetails[0].trim();
-          const itemPrice = Number(itemDetails[1].trim());
-          total += itemPrice;
+        if (extra.amount) { // Ensure extra has an 'amount' property
+          total += extra.amount;
+        }
+        if (extra.item && Array.isArray(extra.item)) {
+          for (const item of extra.item) {
+            const itemDetails = item.split(':'); // Split item string to get name and price
+            if (itemDetails.length === 2) { // Ensure the split array has two elements
+              const itemPrice = Number(itemDetails[1].trim());
+              if (!isNaN(itemPrice)) { // Check if itemPrice is a valid number
+                total += itemPrice;
+              } else {
+                console.error('Invalid item price:', itemPrice);
+              }
+            } else {
+              console.error('Invalid item format:', item);
+            }
+          }
+        } else {
+          console.error('Invalid or missing "item" property:', extra.item);
         }
       }
       return total;
     };
-
+    
     let totalBreakfastExtra = 0;
     let totalLunchExtra = 0;
     let totalEveningExtra = 0;
