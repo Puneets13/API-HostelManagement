@@ -10,7 +10,7 @@ router.post('/countDietPerMonth',callbackFunctions.countDietPerMonth); // count 
 router.post('/countDietPerMonthForHostel',callbackFunctions.countDietPerMonthForHostel); // count diet for particular hostel
 router.post('/generateInvoice',checkauth,callbackFunctions.generateInvoice); // count diet for particular hostel
 router.post('/countExtrasPerMonthForHostel',callbackFunctions.countExtrasPerMonthForHostel); // count diet for particular hostel
-router.post('/printConsumedItemsByStudent',checkauth,callbackFunctions.printConsumedItemsByStudent); // count diet for particular hostel
+router.post('/printConsumedItemsByStudent',callbackFunctions.printConsumedItemsByStudent); // count diet for particular hostel
 router.post('/applyLeave',checkauth,callbackFunctions.applyLeave); // leave
 router.post('/getDietRecordList',checkauth,callbackFunctions.getDietRecordList);
 router.post('/messList',checkauth,callbackFunctions.messList);
