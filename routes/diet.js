@@ -5,7 +5,7 @@ const { checkauth } = require('../middleware/user_jwt.js');
 const callbackFunctions = require('../controller/diet.js');
 
 router.post('/createmonthlydietRecord',checkauth,callbackFunctions.createmonthlydietRecord); // daily scanner
-router.post('/countDietOfStudent',checkauth,callbackFunctions.countDietOfStudent);  // count diet of student for "all months" in a year
+router.post('/countDietOfStudent',callbackFunctions.countDietOfStudent);  // count diet of student for "all months" in a year
 router.post('/countDietPerMonth',callbackFunctions.countDietPerMonth); // count diet of students per month
 router.post('/countDietPerMonthForHostel',callbackFunctions.countDietPerMonthForHostel); // count diet for particular hostel
 router.post('/generateInvoice',checkauth,callbackFunctions.generateInvoice); // count diet for particular hostel
