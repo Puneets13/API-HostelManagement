@@ -3225,6 +3225,18 @@ module.exports.generateInvoice = async function (req, res) {
       return
     }
 
+
+    // check if that entry exist or not in dietRecords
+    const dietRecords = await DietRecords.find({ rollNumber, hostelName, month, year });
+    if (!dietRecords) {
+      res.status(200).json({
+        message: 'Wait till end of month',
+        error: "fail"
+      });
+      return
+    }
+
+
     var totalEarnedFromExtra;
     var dietCount;
     var dietCountForHostel;
@@ -3268,11 +3280,19 @@ module.exports.generateInvoice = async function (req, res) {
     console.log("Extra CountForHostel " + totalEarnedFromExtraResponse.data.TotalExtraAmountGenerated)
 
     // Calculate perDietCost based on hostel diet count
-    const perDietCost = (totalSpentInaMonth - totalEarnedFromExtra) / dietCountForHostel;
+    let perDietCost = (totalSpentInaMonth - totalEarnedFromExtra) / dietCountForHostel;
 
     // Calculate total invoice for the student
-    const totalInvoice = dietCount * perDietCost;
+    let totalInvoice = dietCount * perDietCost;
 
+    if (!perDietCost && perDietCost !== 0) {
+      perDietCost = 0;
+  }
+
+  if (!totalInvoice && totalInvoice !== 0) {
+    totalInvoice = 0;
+}
+   
     // Respond with the invoice data
     res.status(200).json({
       rollNumber: rollNumber,
