@@ -5,7 +5,7 @@ const { checkauth } = require('../middleware/user_jwt.js');
 const callbackFunctions = require('../controller/constants.js');
 
 // router.post('/setdailymeal',callbackFunctions.setdailymeal);//daily scanner meal amount
-router.post('/createcollection',checkauth,callbackFunctions.createConstants);//setting value of constants
+router.post('/createcollection',callbackFunctions.createConstants);//setting value of constants
 router.post('/deletecollection',checkauth,callbackFunctions.deleteCollection);//deleting all collection at end of sem
 router.post('/addExtraItem',checkauth,callbackFunctions.addExtraItem);//add  items to list
 router.post('/deleteEntry',checkauth,callbackFunctions.deleteEntry);//delte one entry in list

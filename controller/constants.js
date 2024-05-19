@@ -32,7 +32,6 @@ module.exports.setdailymeal = async function (req, res) {
 module.exports.createConstants = async function (req, res) {
   const hostelName = req.body.hostelName;
   const initialAmount = req.body.initialAmount;
-  const dailyDietCharge = req.body.dailyDietCharge;
   const messStartDate = req.body.messStartDate;
 
   const existingConstant = await Constants.findOne({ hostelName: hostelName });
@@ -52,7 +51,6 @@ module.exports.createConstants = async function (req, res) {
     let constantObject2 = new Constants({
       _id: new mongoose.Types.ObjectId,
       hostelName: hostelName,
-      dailyDietCharge: dailyDietCharge,
       initialAmount: initialAmount,
       messStartDate: messStartDate,
     })
