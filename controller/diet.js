@@ -595,6 +595,8 @@ module.exports.countDietPerMonth = async function (req, res) {
     const { rollNumber, month, year } = req.body;
     // Find all documents that match the rollNumber
     const dietRecords = await DietRecords.find({ rollNumber, month, year });
+    
+
     // FETCHING THE START DATE FROM THE CONSTANTS SET IN COLLECTION
     const hostelName = req.body.hostelName;
     var messStartDate;
@@ -3200,8 +3202,8 @@ module.exports.generateInvoice = async function (req, res) {
 
     const hostelDocument = await Constants.findOne({ hostelName });
 
-    if (!hostelDocument) {
-      return res.status(404).json({
+    if (!hostelDocument.TotalExpenditurePerMonth) {
+      return res.status(200).json({
         message: 'Hostel not found'
       });
     }
@@ -3229,6 +3231,7 @@ module.exports.generateInvoice = async function (req, res) {
     // check if that entry exist or not in dietRecords
     const dietRecords = await DietRecords.find({ rollNumber, hostelName, month, year });
     if (!dietRecords) {
+      console.log("no entry in diet records");
       res.status(200).json({
         message: 'Wait till end of month',
         error: "fail"
